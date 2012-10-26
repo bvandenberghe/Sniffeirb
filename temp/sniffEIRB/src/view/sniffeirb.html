@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Sniff'eirb</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web app qui sniff le réseau.">
+    <meta name="author" content="RSR">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+  </head>
+
+<!-- Corps de la page -->
+<body class="gradient-horizontal">
+	
+	<!-- Header -->
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+		<!-- Menus -->
+          <a class="brand" href="#">Sniff'eirb</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Lancer</a></li>
+              <li><a href="#">Arrêter</a></li>
+              <li><a href="#modal_parametre" data-toggle="modal">Paramètre</a></li>
+              <li><a href="#about">Cartographie</a></li>
+              <li><a href="#contact">Aide</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<!-- Contenu de la page -->
+    <div class="container-fluid">
+		<div class="row-fluid">
+			<!-- Liste des IP à gauche -->
+			<div class="span3">
+			  <div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">Adresse IPv4</li>
+					<li class="active"><a href="#">192.168.0.2</a></li>
+					<li><a href="#">192.168.0.213</a></li>
+					<li><a href="#">192.168.0.10</a></li>
+					<li><a href="#">192.168.0.23</a></li>
+					<li class="nav-header">Adresse IPv6</li>
+					<li><a href="#">fe80::6555::dc56::e879::fd67</a></li>
+					<li><a href="#">ab23::43cc::8909::eb23::1203</a></li>
+					<li><a href="#">fe23::3232::ab40::2342::90dc</a></li>
+				 </ul>
+			  </div>
+			</div>
+			
+			<!-- Contenu de droite -->
+			<div class="span9">
+				
+				<!-- Message d'information en haut à droite -->
+				<div class="alert">
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					<strong>Warning : n'oubliez pas de passer en mode furtif ! </strong> 
+				</div>
+			
+				<!-- Onglets dans la partie de la présentation des informations collectées -->
+				<div class="tabbable" style="background: #f5f5f5; padding: 20px;">
+					<ul class="nav nav-tabs">
+					  <li class="active"><a href="#onglet_global" data-toggle="tab">Global</a></li>
+					  <li><a href="#onglet_statistiques" data-toggle="tab">Statistiques</a></li>
+					  <li><a href="#onglet_cookies" data-toggle="tab">Cookies</a></li>
+					  <li><a href="#onglet_html" data-toggle="tab">HTML</a></li>
+					</ul>
+					
+					<!-- Description de chaque partie contenu correspondant aux onglets -->
+					<div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+						<!-- Contenu de l'onlet "Global"-->
+						<div class="tab-pane active" id="onglet_global" >
+							
+							<!-- zone de saisie, pour filtrer les données -->
+							<input type="text" data-provide="typeahead">
+							
+							<!-- Tableau des données -->
+							<table class="table table-condensed table-hover">
+								<!-- En tête du tableau -->
+							  <thead>
+								<tr>
+								  <th>Num</th>
+								  <th>Dest</th>
+								  <th>Taille</th>
+								  <th>Protocole</th>
+								  <th>Port</th>
+								</tr>
+							  </thead>
+							  <!-- Corps du tableau -->
+							  <tbody>
+								<tr class="error">
+								  <td>1</td>
+								  <td>178.201.23.12</td>
+								  <td>24k</td>
+								  <td>HTTP</td>
+								  <td>80</td>
+							  </tr>
+								<tr class="success">
+								  <td>2</td>
+								  <td>178.201.23.12</td>
+								  <td>234k</td>
+								  <td>ICMP</td>
+								  <td>89</td>
+							  </tr>
+								<tr class="error">
+								  <td>3</td>
+								  <td>178.201.23.12</td>
+								  <td>90k</td>
+								  <td>IMAP</td>
+								  <td>22</td>
+							  </tr>
+								<tr class="success">
+								  <td>4</td>
+								  <td>178.201.23.12</td>
+								  <td>2039k</td>
+								  <td>SNMP</td>
+								  <td>890</td>
+							  </tr>
+								<tr class="info">
+								  <td>5</td>
+								  <td>178.201.23.12</td>
+								  <td>878k</td>
+								  <td>FTP</td>
+								  <td>26</td>
+							  </tr>			  
+					  </tbody>
+					</table>
+							<!-- Boutons pour exporter les données sniffées, ou pour les effacer-->
+							<button class="btn btn-primary" type="button">Exporter</button>
+							<button class="btn btn-primary" type="button">Effacer</button>
+						</div>
+						
+						<!-- Contenu de l'onglet Statistique -->
+						<div class="tab-pane" id="onglet_statistiques">
+							<p>Statistiques</p>
+						</div>
+						<!-- Contenu de l'onglet Cookies -->
+						<div class="tab-pane" id="onglet_cookies">
+							<p>Cookies</p>
+						</div>
+						<!-- Contenu de l'onglet Html -->
+						<div class="tab-pane" id="onglet_html">
+							<p>Html</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+
+	<!-- Modals : ce qui correspond aux "pop-up" qui tombe depuis le haut de la fenêtre -->
+		
+		<!-- Modal : paramètre-->
+		<div class="modal hide fade" id="modal_parametre">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Paramètres</h3>
+			</div>
+			<div class="modal-body">
+				<label class="checkbox">
+					<input type="checkbox" value="">
+					Option one 
+				</label>
+			 
+				<label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+					Option one 
+				</label>
+				<label class="radio">
+					<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+					Option two 
+				</label>
+			</div>
+		  
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+
+	<!-- Footer de la page -->
+		<footer>
+			<p>&copy; Sniff'eirb 2012</p>
+		</footer>
+
+    </div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+  	</body>
+</html>
