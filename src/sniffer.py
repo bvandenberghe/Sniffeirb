@@ -12,7 +12,7 @@ class SnifferThread(Thread):
 		Thread.__init__(self)
 		self.filter = filter
 	def run(self):
-		sniff(prn=self.callback)
+		sniff(prn=self.callback, filter="!(host 127.0.0.1)")
 	def callback(self,pkt):
 		sniff_buffer.append(pkt)#'%TCP.payload%'
 

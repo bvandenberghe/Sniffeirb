@@ -1,26 +1,45 @@
 # -*- coding: utf-8 -*-
 import json
 import sys
-class JsonDisplayHandler:
-	
-	@staticmethod
-	def getFormatPacketFunction(view):
-		if view == "global":
-			return JsonDisplayHandler.packetToJson_global
-		print "the view "+view+" has not been found"
-		sys.exit()
-	
-	@staticmethod
-	def packetListToJson(packetList, view):
-		finalJson="["
-		for pkt in packetList:
-			finalJson+=JsonDisplayHandler.getFormatPacketFunction(view)(pkt)
+from scapy.all import *
+
+def packetListToJson(packetList, indexFrom, view):
+	finalJson="["
+	for (num,pkt) in enumerate(packetList):
+		finalJson+=packetToJson(pkt, num+indexFrom, view)+", "
+	if len(packetList)>0:
 		finalJson=finalJson[:len(finalJson)-2]
-		finalJson+="]"
-		return finalJson
-		
-	@staticmethod
-	def packetToJson_global(pkt):
-		jsonToDisplay={"num":"undefined", "src":pkt.src, "dst":pkt.dst, "size":"undefined", "protocol":"undefined", "port":"undefined"}
-		return json.dumps(jsonToDisplay,sort_keys=True, indent=4)
-		
+	finalJson+="]"
+	return finalJson
+	
+
+def packetToJson(pkt, pktNumber, view):
+	#print vars(pkt)
+	jsonToDisplay=None
+	if(view=="global"):
+		jsonToDisplay=getGlobalViewJsonFormat(pkt, pktNumber)
+	if(jsonToDisplay==None):
+		print "error, the view "+view+" has not been found"
+		sys.exit()
+	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
+	
+	
+def getProtocol(pkt):
+	protocol="other"
+	if TCP in pkt:
+		protocol="TCP"
+	elif UDP in pkt:
+		protocol="UDP"
+	elif ICMP in pkt:
+		protocol="ICMP"
+	return protocol
+
+def getGlobalViewJsonFormat(pkt, pktNumber):
+	protocol=getProtocol(pkt)
+	if(protocol=="TCP" or protocol =="UDP"):
+		dport=pkt.dport
+	else:
+		dport=""
+	return {"num":pktNumber, "src":pkt.sprintf("%IP.src%"), "dst":pkt.sprintf("%IP.dst%"), "size":pkt.sprintf("%IP.len%"), "protocol":protocol, "port":dport}		
+
+

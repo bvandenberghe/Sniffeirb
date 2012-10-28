@@ -105,42 +105,42 @@
 								</tr>
 							  </thead>
 							  <!-- Corps du tableau -->
-							  <tbody>
-								<tr class="error">
-								  <td>1</td>
-								  <td>178.201.23.12</td>
-								  <td>24k</td>
-								  <td>HTTP</td>
-								  <td>80</td>
-							  </tr>
-								<tr class="success">
-								  <td>2</td>
-								  <td>178.201.23.12</td>
-								  <td>234k</td>
-								  <td>ICMP</td>
-								  <td>89</td>
-							  </tr>
-								<tr class="error">
-								  <td>3</td>
-								  <td>178.201.23.12</td>
-								  <td>90k</td>
-								  <td>IMAP</td>
-								  <td>22</td>
-							  </tr>
-								<tr class="success">
-								  <td>4</td>
-								  <td>178.201.23.12</td>
-								  <td>2039k</td>
-								  <td>SNMP</td>
-								  <td>890</td>
-							  </tr>
-								<tr class="info">
-								  <td>5</td>
-								  <td>178.201.23.12</td>
-								  <td>878k</td>
-								  <td>FTP</td>
-								  <td>26</td>
-							  </tr>			  
+							  <tbody id="packets">
+								<!--	<tr class="error">
+									  <td>1</td>
+									  <td>178.201.23.12</td>
+									  <td>24k</td>
+									  <td>HTTP</td>
+									  <td>80</td>
+								  </tr>
+									<tr class="success">
+									  <td>2</td>
+									  <td>178.201.23.12</td>
+									  <td>234k</td>
+									  <td>ICMP</td>
+									  <td>89</td>
+								  </tr>
+									<tr class="error">
+									  <td>3</td>
+									  <td>178.201.23.12</td>
+									  <td>90k</td>
+									  <td>IMAP</td>
+									  <td>22</td>
+								  </tr>
+									<tr class="success">
+									  <td>4</td>
+									  <td>178.201.23.12</td>
+									  <td>2039k</td>
+									  <td>SNMP</td>
+									  <td>890</td>
+								  </tr>
+									<tr class="info">
+									  <td>5</td>
+									  <td>178.201.23.12</td>
+									  <td>878k</td>
+									  <td>FTP</td>
+									  <td>26</td>
+								  </tr>  -->
 					  </tbody>
 					</table>
 							<!-- Boutons pour exporter les données sniffées, ou pour les effacer-->
@@ -208,5 +208,50 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="bootstrap/js/jquery.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
+    
+    <script>
+    
+    
+    packetCount=0
+	$(document).ready(startDisplayPackets());
+	
+	function startDisplayPackets()
+	{
+		window.setInterval("launchRetrievePackets()",500);
+	}
+	function launchRetrievePackets()
+	{
+		retrievePackets(packetCount, -1);
+	}
+	function retrievePackets(from, to) { 
+		$.ajax({
+		  url: "/sniff?from="+from+"&to="+to+"",
+		  dataType: "json",
+		  success: function(data) {
+			//$('.result').html(data);
+			if(data!=0)//code d'erreur
+			{
+				//alert(data[0]);
+				//alert(data[0].src);
+				//var obj = jQuery.parseJSON(data[0]);
+				for (var i=0;i<data.length;i++)
+				{
+					packetCount++;
+					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].src+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
+					$("#packets").append(html);
+				}
+				//alert(data);
+			}
+		  },
+		  error:function(XMLHttpRequest, textStatus, errorThrows){
+		  	//erreur ...
+		  	//alert('pas ok');
+		  }
+		});
+	}
+
+    </script>
+    
+    
   	</body>
 </html>
