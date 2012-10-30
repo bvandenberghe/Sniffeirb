@@ -18,9 +18,7 @@ else:
 	PORT = int(sys.argv[1])
 	print 'serveur ouvert sur le port ',PORT
 
-#démarrage du thread du sniffer
-sniffer = SnifferThread("")
-sniffer.start()
+
 #démarrage du thread du serveur web
 httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
 httpd.serve_forever()

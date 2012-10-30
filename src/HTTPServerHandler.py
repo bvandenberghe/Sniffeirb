@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from sniffeirb_globals import *
+from sniffer import *
 import sys
 import SimpleHTTPServer
 import SocketServer
@@ -41,6 +42,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		
 		splitParams=self.path.split('?')
 		self.path=splitParams[0]
+		
 		if(len(splitParams)>1):
 			parameters=splitParams[1]
 		else:
@@ -66,6 +68,13 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			d = dict(plop='blabla')
 			self.wfile.write(tmp.safe_substitute(d))
 			
+		elif self.path=='/start':
+			print "demarage???"
+			#démarrage du thread du sniffer
+			sniffer = SnifferThread("")
+			sniffer.start()
+			self.wfile.write("1")#code d'erreur
+		
 		elif self.path=='/sniffall':
 		
 			self.send_response(200)
