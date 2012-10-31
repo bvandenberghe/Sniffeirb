@@ -1,18 +1,22 @@
 //globals variables
 packetCount=0;
 data = undefined;
+sniff_run=0;
+intervalId=undefined;
 
 
-//$(document).ready(startDisplayPackets());
 
 //none stop query to retrieve data packet	
 function startDisplayPackets(){
-	window.setInterval("launchRetrievePackets()",500);
+	intervalId=window.setInterval("launchRetrievePackets()",500);
+	console.log(intervalId);
 }
 
 //to retreive only new data
 function launchRetrievePackets(){
-	retrievePackets(packetCount, -1);
+	if(sniff_run==1){
+		retrievePackets(packetCount, -1);
+	}
 }
 
 //retrieve data from the server
@@ -43,6 +47,7 @@ function retrievePackets(from, to) {
 
 //in order to start the sniffer
 $('#start').click(function() {
+	sniff_run=1;
 	$.ajax({
 		  url: "/start",
 		  type: "get",
@@ -52,9 +57,24 @@ $('#start').click(function() {
 			startDisplayPackets()
 		  },
 		  error:function(XMLHttpRequest, textStatus, errorThrows){
-		  	alert('pas ok '+data);
+		  	alert('erreur '+data);
 		  }
 		});
 });
 
-
+//in order to start the sniffer
+$('#stop').click(function() {
+	sniff_run=0;
+	$.ajax({
+		  url: "/stop",
+		  type: "get",
+		  dataType: "json",
+		  success: function(data) {
+			console.log(intervalId);
+			window.clearInterval(intervalId)
+		},
+		  error:function(XMLHttpRequest, textStatus, errorThrows){
+		  	alert('erreur '+data);
+		  }
+		});
+});

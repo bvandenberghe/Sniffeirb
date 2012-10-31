@@ -69,11 +69,18 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.wfile.write(tmp.safe_substitute(d))
 			
 		elif self.path=='/start':
-			print "demarage???"
+			print "on commence à sniffer1"
 			#démarrage du thread du sniffer
+			sniff_run=1;
 			sniffer = SnifferThread("")
 			sniffer.start()
-			self.wfile.write("1")#code d'erreur
+			self.wfile.write("1")#return true
+
+		elif self.path=='/stop':
+			print "on arrete de sniffer"
+			#arrêt du thread du sniffer
+			sniff_run=0;
+			self.wfile.write("1")#return true
 		
 		elif self.path=='/sniffall':
 		
