@@ -1,3 +1,2 @@
 sniff_buffer = []
-sniff_run=1
-
+sniff_run = None

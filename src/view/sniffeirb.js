@@ -1,7 +1,6 @@
 //globals variables
 packetCount=0;
 data = undefined;
-sniff_run=0;
 intervalId=undefined;
 
 
@@ -30,7 +29,7 @@ function retrievePackets(from, to) {
 				for (var i=0;i<data.length;i++)
 				{
 					packetCount++;
-					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].dst+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
+					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].src+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
 					$("#packets").append(html);
 
 				}
@@ -44,37 +43,40 @@ function retrievePackets(from, to) {
 		});
 	}
 
-
 //in order to start the sniffer
-$('#start').click(function() {
-	sniff_run=1;
-	$.ajax({
-		  url: "/start",
-		  type: "get",
-		  dataType: "json",
-		  success: function(data) {
-
-			startDisplayPackets()
-		  },
-		  error:function(XMLHttpRequest, textStatus, errorThrows){
-		  	alert('erreur '+data);
-		  }
-		});
-});
-
-//in order to start the sniffer
-$('#stop').click(function() {
-	sniff_run=0;
-	$.ajax({
-		  url: "/stop",
-		  type: "get",
-		  dataType: "json",
-		  success: function(data) {
-			console.log(intervalId);
-			window.clearInterval(intervalId)
-		},
-		  error:function(XMLHttpRequest, textStatus, errorThrows){
-		  	alert('erreur '+data);
-		  }
-		});
+$('#startstop').click(function() {
+	if(sniff_run==1)
+	{
+		sniff_run=0;
+		$.ajax({
+			  url: "/stop",
+			  type: "get",
+			  dataType: "json",
+			  success: function(data) {
+				console.log(intervalId);
+				window.clearInterval(intervalId)
+				$('#startstop').text("Lancer");
+			},
+			  error:function(XMLHttpRequest, textStatus, errorThrows){
+				alert('erreur '+data);
+			  }
+			});
+		
+	}
+	else
+	{
+		sniff_run=1;
+		$.ajax({
+			  url: "/start",
+			  type: "get",
+			  dataType: "json",
+			  success: function(data) {
+				$('#startstop').text("Arrêter");
+				startDisplayPackets()
+			  },
+			  error:function(XMLHttpRequest, textStatus, errorThrows){
+				alert('erreur '+data);
+			  }
+			});
+	}
 });

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
+import os
 
 from sniffer import *
 from sniffeirb_globals import *
@@ -19,18 +19,11 @@ else:
 	PORT = int(sys.argv[1])
 	print 'serveur ouvert sur le port ',PORT
 
-
-#démarrage du thread du serveur web
-httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
-webbrowser.open('http://localhost:',PORT)
-httpd.serve_forever()
-
-
-
-
-
-
-
-
-
-	
+try:
+	#démarrage du thread du serveur web
+	httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
+	webbrowser.open('http://localhost:',PORT)
+	httpd.serve_forever()
+except KeyboardInterrupt:
+	print "forcing program to quit..."
+	os.kill(os.getpgid(0),9)

@@ -32,12 +32,6 @@ def getProtocol(pkt):
 		protocol="UDP"
 	elif ICMP in pkt:
 		protocol="ICMP"
-	elif DNS in pkt:
-		protocol="DNS"
-	elif ARP in pkt:
-		protocol="ARP"
-	elif DHCP in pkt:
-		protocol="DHCP"
 	return protocol
 
 def getGlobalViewJsonFormat(pkt, pktNumber):

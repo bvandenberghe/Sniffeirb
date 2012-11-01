@@ -34,8 +34,7 @@
           <a class="brand" href="#">Sniff'eirb</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#" id="start">Lancer</a></li>
-              <li><a href="#" id="stop">Arrêter</a></li>
+			<li class="active"><a href="#" id="startstop">Lancer</a></li>
               <li><a href="#modal_parametre" data-toggle="modal">Paramètre</a></li>
               <li><a href="#about">Cartographie</a></li>
               <li><a href="#contact">Aide</a></li>
@@ -181,6 +180,15 @@
     <script type="text/javascript" src="bootstrap/js/jquery.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="sniffeirb.js"></script>
+    <script>
+		sniff_run=$sniff_run;
+		if(sniff_run==1)
+		{
+			$('#startstop').text("Arrêter");
+			startDisplayPackets();
+		}
+    </script>
+
 
   	</body>
 </html>

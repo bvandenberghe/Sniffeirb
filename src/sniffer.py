@@ -4,8 +4,9 @@ from threading import Thread
 import sys, os
 from scapy.all import *
 import array
-import sniffeirb_globals as GLOBAL
-	
+from sniffeirb_globals import *
+import sys
+from patchSniffScapy import *
 
 #sniff et ecrit les nouveaux packets dans le buffer
 class SnifferThread(Thread):
@@ -15,18 +16,20 @@ class SnifferThread(Thread):
 	def run(self):
 		try:
 			sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
-    		except KeyboardInterrupt:
-        		exit(0)
+		except KeyboardInterrupt:
+			print "sniffer thread exited ..."
+			exit(0)
 	def callback(self,pkt):
-		pkt.show()
-		GLOBAL.sniff_buffer.append(pkt)#'%TCP.payload%'
+		sniff_buffer.append(pkt)#'%TCP.payload%'
 
 #condition to stop the sniffer	
 def stopperCheck():
-	if GLOBAL.sniff_run!=1: 
-		# Time to stop the sniffer
+	global sniff_run
+	#print sniff_run
+	if sniff_run==0: 
+		# Time to stop the sniffer ;)
 		return True
-        return False
+	return False
 
 
 

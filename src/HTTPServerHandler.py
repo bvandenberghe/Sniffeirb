@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import sniffeirb_globals as GLOBAL
+from sniffeirb_globals import *
 from sniffer import *
 import sys
+import os
 import SimpleHTTPServer
 import SocketServer
 from JsonDisplayHandler import packetListToJson
@@ -10,10 +11,11 @@ TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
 def getSniffedPackets(indexFrom,indexTo):
-	buffSize=len(GLOBAL.sniff_buffer)
+	global sniff_buffer
+	buffSize=len(sniff_buffer)
 	if(buffSize<indexTo or indexTo==-1):
 		indexTo=buffSize
-	tmp=packetListToJson(GLOBAL.sniff_buffer[indexFrom:indexTo],indexFrom,"global")
+	tmp=packetListToJson(sniff_buffer[indexFrom:indexTo],indexFrom,"global")
 	return tmp
 
 #fonction qui renvoie le template d'un fichier	
@@ -38,9 +40,9 @@ def get_values_array(parameters):
 	return values
 
 class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+	sniffer=None
 	def do_GET(self):
-		global sniff_run		
-		
+		global sniff_run
 		splitParams=self.path.split('?')
 		self.path=splitParams[0]
 		
@@ -59,30 +61,40 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			d = dict(plop='blabla')
 			self.wfile.write(tmp.safe_substitute(d))
 			
-		elif self.path=="/":
+		elif self.path=="/" or self.path=="/sniffeirb.html":
 		
 			self.send_response(200)
 			self.send_header('Content-type','text/html')
 			self.end_headers()
 			
 			tmp=get_page_template(TEMPLATE_PATH+"/"+"sniffeirb.html")
-			d = dict(plop='blabla')
+			sniffRunValue=sniff_run
+			if sniffRunValue==None:
+				sniffRunValue=0
+			d = dict(sniff_run=sniffRunValue)
 			self.wfile.write(tmp.safe_substitute(d))
 			
 		elif self.path=='/start':
-			print "on commence à sniffer1"
-			#démarrage du thread du sniffer
-			GLOBAL.sniff_run=1;
-			sniffer = SnifferThread("")
-			sniffer.start()
-			self.wfile.write("1")#return true
+			self.send_response(200)
+			self.send_header('Content-type','application/json')
+			self.end_headers()
+			if sniff_run==None or sniff_run==0:
+				print "on commence à sniffer1"
+				#démarrage du thread du sniffer
+				sniff_run=1;
+				sniffer = SnifferThread("")
+				sniffer.start()
+				self.wfile.write("1")#return true
 
 		elif self.path=='/stop':
-			print "on arrete de sniffer"
-			#arrêt du thread du sniffer
-			GLOBAL.sniff_run=0;
-			print "dans le /stop", GLOBAL.sniff_run
-			self.wfile.write("1")#return true
+			self.send_response(200)
+			self.send_header('Content-type','application/json')
+			self.end_headers()
+			if sniff_run==1:
+				print "on arrete de sniffer"
+				#arrêt du thread du sniffer
+				sniff_run=0;
+				self.wfile.write("1")#return true
 		
 		elif self.path=='/sniffall':
 		
@@ -115,12 +127,12 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			if len(array)<2:
 				self.wfile.write("0")#code d'erreur
 			else:
-				print "from "+ indexFrom+ "  to "+indexTo
+				#print "from "+ indexFrom+ "  to "+indexTo
 				self.wfile.write(getSniffedPackets(int(indexFrom),int(indexTo)))
 			
 		elif self.path=='/shutdown':
-			print "Le serveur a été quitté"
-			httpd.shutdown()
+			print "forcing program to quit ..."
+			os.kill(os.getpgid(0),9)
 		else:
 			self.path=TEMPLATE_PATH+self.path
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
