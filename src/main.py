@@ -7,6 +7,7 @@ import sys
 from sniffer import *
 from sniffeirb_globals import *
 from HTTPServerHandler import *
+import webbrowser
 
 PORT = 8080
 HOST = "localhost"
@@ -21,7 +22,14 @@ else:
 
 #démarrage du thread du serveur web
 httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
+webbrowser.open('http://localhost:',PORT)
 httpd.serve_forever()
+
+
+
+
+
+
 
 
 

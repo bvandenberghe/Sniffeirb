@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sniffeirb_globals import *
+import sniffeirb_globals as GLOBAL
 from sniffer import *
 import sys
 import SimpleHTTPServer
@@ -10,10 +10,10 @@ TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
 def getSniffedPackets(indexFrom,indexTo):
-	buffSize=len(sniff_buffer)
+	buffSize=len(GLOBAL.sniff_buffer)
 	if(buffSize<indexTo or indexTo==-1):
 		indexTo=buffSize
-	tmp=packetListToJson(sniff_buffer[indexFrom:indexTo],indexFrom,"global")
+	tmp=packetListToJson(GLOBAL.sniff_buffer[indexFrom:indexTo],indexFrom,"global")
 	return tmp
 
 #fonction qui renvoie le template d'un fichier	
@@ -39,6 +39,7 @@ def get_values_array(parameters):
 
 class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
+		global sniff_run		
 		
 		splitParams=self.path.split('?')
 		self.path=splitParams[0]
@@ -71,7 +72,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=='/start':
 			print "on commence à sniffer1"
 			#démarrage du thread du sniffer
-			sniff_run=1;
+			GLOBAL.sniff_run=1;
 			sniffer = SnifferThread("")
 			sniffer.start()
 			self.wfile.write("1")#return true
@@ -79,7 +80,8 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=='/stop':
 			print "on arrete de sniffer"
 			#arrêt du thread du sniffer
-			sniff_run=0;
+			GLOBAL.sniff_run=0;
+			print "dans le /stop", GLOBAL.sniff_run
 			self.wfile.write("1")#return true
 		
 		elif self.path=='/sniffall':

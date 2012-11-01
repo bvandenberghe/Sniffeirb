@@ -30,7 +30,7 @@ function retrievePackets(from, to) {
 				for (var i=0;i<data.length;i++)
 				{
 					packetCount++;
-					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].src+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
+					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].dst+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
 					$("#packets").append(html);
 
 				}
