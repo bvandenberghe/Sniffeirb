@@ -3,6 +3,7 @@ from sniffeirb_globals import *
 from sniffer import *
 import sys
 import os
+import signal
 import SimpleHTTPServer
 import SocketServer
 from JsonDisplayHandler import packetListToJson
@@ -131,8 +132,12 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.wfile.write(getSniffedPackets(int(indexFrom),int(indexTo)))
 			
 		elif self.path=='/shutdown':
+			self.send_response(200)
+			self.send_header('Content-type','text/html')
+			self.end_headers()
+			self.wfile.write("<html><body><center><h1>Server killed</h1></center></body></html>")
 			print "forcing program to quit ..."
-			os.kill(os.getpgid(0),9)
+			os.killpg(os.getpgid(0),signal.SIGKILL)
 		else:
 			self.path=TEMPLATE_PATH+self.path
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
