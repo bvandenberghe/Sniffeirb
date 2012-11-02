@@ -1,8 +1,9 @@
 //globals variables
-packetCount=0;
-data = undefined;
-intervalId=undefined;
-
+packetCount = 0;
+data = undefined; // ?
+intervalId = undefined; //the id of the time loop
+ipv4list = []; //store the list of ipv4 @ip
+paquets = []; //store all packets received
 
 
 //none stop query to retrieve data packet	
@@ -18,6 +19,25 @@ function launchRetrievePackets(){
 	}
 }
 
+
+//add an @ip into the left menu
+function addIPv4(ipv4){
+	//we check if the @ip is already into the list	
+	for (var i=0;i<ipv4list.length;i++){
+		if(ipv4list[i]==ipv4){
+			return 0;
+		}
+	}
+
+	//we add the new @ip to the list		
+	ipv4list.push(ipv4);
+	var htmlMenu = "<li><a href=\"#\">"+ipv4list[i]+"</a></li>";
+	console.log("htmlMenu : "+htmlMenu);
+	$("#IPV4").append(htmlMenu);
+	
+}
+
+
 //retrieve data from the server
 function retrievePackets(from, to) { 		
 	$.ajax({
@@ -25,15 +45,19 @@ function retrievePackets(from, to) {
 		  dataType: "json",
 		  success: function(data) {
 			if(data!=0)//code d'erreur
-			{
+			{	
 				for (var i=0;i<data.length;i++)
-				{
+				{				
+					//on enregistre tous les paquets dans un tableau
+					paquets.push(data[i]);
+					//on enregistre les nouvelles adresse ip dans un tableau				
+					addIPv4(data[i].src);	
 					packetCount++;
+				
+					//TODO : on les affiche selon le filtre (pour le moment pas de filtre donc on affiche tout)
 					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].src+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
 					$("#packets").append(html);
-
 				}
-
 			}
 		  },
 		  error:function(XMLHttpRequest, textStatus, errorThrows){
@@ -43,7 +67,7 @@ function retrievePackets(from, to) {
 		});
 	}
 
-//in order to start the sniffer
+//in order to start and stop the sniffer
 $('#startstop').click(function() {
 	if(sniff_run==1)
 	{

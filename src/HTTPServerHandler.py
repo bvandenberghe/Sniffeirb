@@ -79,7 +79,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_header('Content-type','application/json')
 			self.end_headers()
 			if sniff_run==None or sniff_run==0:
-				print "on commence à sniffer1"
+				print "on commence à sniffer"
 				#démarrage du thread du sniffer
 				sniff_run=1;
 				sniffer = SnifferThread("")
