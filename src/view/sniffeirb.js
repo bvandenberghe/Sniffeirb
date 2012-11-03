@@ -67,6 +67,14 @@ function retrievePackets(from, to) {
 		});
 	}
 
+//clean the screen
+$('#effacer').click(function() {
+	ipv4list = [];
+	paquets = [];
+	$("#packets").html('');
+	$("#IPV4").html('');
+});
+
 //in order to start and stop the sniffer
 $('#startstop').click(function() {
 	if(sniff_run==1)
