@@ -23,7 +23,7 @@ function launchRetrievePackets(){
 //add an @ip into the left menu
 function addIPv4(ipv4){
 	//we check if the @ip is already into the list	
-	for (var i=0;i<ipv4list.length;i++){
+	for (var i=0, length = ipv4list.length ;i<length;i++){
 		if(ipv4list[i]==ipv4){
 			return 0;
 		}
@@ -46,7 +46,7 @@ function retrievePackets(from, to) {
 		  success: function(data) {
 			if(data!=0)//code d'erreur
 			{	
-				for (var i=0;i<data.length;i++)
+				for (var i=0, length = data.length ;i<length;i++)
 				{				
 					//on enregistre tous les paquets dans un tableau
 					paquets.push(data[i]);
