@@ -19,7 +19,7 @@ usage : '''+sys.argv[0]+''' [OPTIONS]
 
 Web Interface :
 	--web-interface (-wi) launch web interface
-	--port (-p) : port (8080 default) 
+	--port (-p) : port (8080 default)
 	--nav (-n) : open the default web browser on http://localhost:PORT
 Misc:
 	--help (-h)  : print this help summary page.
@@ -69,18 +69,19 @@ while(i<argSize):
 try:
 	#démarrage du thread du serveur web
 	if(LAUNCHSNIFFER):
-		globals.sniff_run=1;
-		globals.sniffer = SnifferThread("")
-		globals.sniffer.start()
-		print "sniffing ..."
-	if(WEBINTERFACE):
-		httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
-		print 'serveur ouvert sur le port ',PORT
-		if(LAUNCHBROWSER):
-			print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
-			webbrowser.open('http://localhost:'+str(PORT))
-		httpd.serve_forever()
+			globals.sniff_run=1;
+			globals.sniffer = SnifferThread("")
+			globals.sniffer.start()
+			print "sniffing ..."
+	if(WEBINTERFACE):	
+			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
+			print 'serveur ouvert sur le port ', PORT
+			if(LAUNCHBROWSER):
+				print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
+				webbrowser.open('http://localhost:'+str(PORT),new=2)
+			httpd.serve_forever()
+	signal.pause()
 except KeyboardInterrupt:
-	print "forcing program to quit..."
 	os.killpg(os.getpgid(0),signal.SIGKILL)
+
 

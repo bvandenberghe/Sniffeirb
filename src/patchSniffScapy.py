@@ -76,6 +76,8 @@ L2socket: use the provided L2socket
                 if count > 0 and c >= count:
                     break
         except KeyboardInterrupt:
+            print "forcing program to quit..."
+            os.killpg(os.getpgid(0),signal.SIGKILL)
             break
     s.close()
     return plist.PacketList(lst,"Sniffed")

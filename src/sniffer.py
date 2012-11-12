@@ -19,8 +19,8 @@ class SnifferThread(Thread):
 		try:
 			sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
 		except KeyboardInterrupt:
-			print "sniffer thread exited ..."
-			exit(0)
+			print "forcing program to quit..."
+			os.killpg(os.getpgid(0),signal.SIGKILL)
 	def callback(self,pkt):
 		#sniff_buffer.append(pkt)#'%TCP.payload%'
 		insertPacket(pkt,self.db)
