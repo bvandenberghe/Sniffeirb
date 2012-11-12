@@ -5,7 +5,6 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 import sys
 import os
-
 from sniffer import *
 from sniffeirb_globals import *
 from HTTPServerHandler import *

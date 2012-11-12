@@ -7,6 +7,7 @@ import array
 from sniffeirb_globals import *
 import sys
 from patchSniffScapy import *
+from mongoHandler import *
 
 #sniff et ecrit les nouveaux packets dans le buffer
 class SnifferThread(Thread):
@@ -20,8 +21,9 @@ class SnifferThread(Thread):
 			print "sniffer thread exited ..."
 			exit(0)
 	def callback(self,pkt):
-		sniff_buffer.append(pkt)#'%TCP.payload%'
-
+		#sniff_buffer.append(pkt)#'%TCP.payload%'
+		insertPacket(pkt)
+		
 #condition to stop the sniffer	
 def stopperCheck():
 	global sniff_run
