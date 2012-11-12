@@ -1,5 +1,4 @@
 from pymongo import Connection
-from sniffeirb_globals import *
 
 def connectMongo(database):
 	global db
