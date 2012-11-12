@@ -1,3 +1,0 @@
-global.sniff_buffer = []
-global.sniff_run=None
-global.sniffer=None
