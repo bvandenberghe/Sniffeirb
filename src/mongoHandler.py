@@ -18,8 +18,8 @@ def insertPacket(pkt,db):
 			sport=""
 		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto , "type" : Type}
 		if(proto=="TCP"):
-			db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "data" : pkt.sprintf("%Raw%") }}},upsert=True)
+			db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "data" : pkt.sprintf("%Raw.load%") }}},upsert=True)
 		elif(proto=="UDP"):
-			db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "data" : pkt.sprintf("%Raw%") }}},upsert=True)
+			db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "data" : pkt.sprintf("%Raw.load%") }}},upsert=True)
 		#for p in db.stream.find():
 		#	print p

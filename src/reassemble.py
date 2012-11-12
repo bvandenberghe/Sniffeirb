@@ -4,7 +4,7 @@ from threading import Thread
 import sys, os
 from scapy.all import *
 import array
-from sniffeirb_globals import *
+import globals
 import sys
 
 #get Packets from specified IP and reassemble pages

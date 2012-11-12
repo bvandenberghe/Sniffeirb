@@ -4,7 +4,7 @@ from threading import Thread
 import sys, os
 from scapy.all import *
 import array
-from sniffeirb_globals import *
+import globals
 import sys
 from patchSniffScapy import *
 from mongoHandler import *
@@ -27,9 +27,8 @@ class SnifferThread(Thread):
 		
 #condition to stop the sniffer	
 def stopperCheck():
-	global sniff_run
 	#print sniff_run
-	if sniff_run==0: 
+	if globals.sniff_run==0: 
 		# Time to stop the sniffer ;)
 		return True
 	return False
