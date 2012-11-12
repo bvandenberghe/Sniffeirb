@@ -3,11 +3,9 @@
 from pymongo import Connection
 from JsonDisplayHandler import getProtocol
 from scapy.all import *
-from sniffeirb_globals import *
 
 
-def insertPacket(pkt):
-	global db;
+def insertPacket(pkt,db):
 	proto=getProtocol(pkt)
 	Type="unknown"
 	if(IP in pkt):

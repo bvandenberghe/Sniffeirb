@@ -10,7 +10,7 @@ from sniffeirb_globals import *
 from HTTPServerHandler import *
 import webbrowser
 import signal
-
+from connect import *
 PORT = 8080
 HOST = "localhost"
 
