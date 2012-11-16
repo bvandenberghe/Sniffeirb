@@ -11,7 +11,7 @@ from HTTPServerHandler import *
 import webbrowser
 import signal
 from connect import *
-
+import datetime
 
 def printUsage():
 	print'''
@@ -19,11 +19,12 @@ usage : '''+sys.argv[0]+''' [OPTIONS]
 
 Web Interface :
 	--web-interface (-wi) launch web interface
-	--port (-p) : port (8080 default)
+	--port (-p) <port> : change web interface port (8080 default)
 	--nav (-n) : open the default web browser on http://localhost:PORT
 Misc:
 	--help (-h)  : print this help summary page.
 	--sniff (-s) : launch sniffer
+	--session (-S) <session_name>: use an already existing session
 	'''
 
 
@@ -43,6 +44,7 @@ WEBINTERFACE=False
 LAUNCHSNIFFER=False
 LAUNCHBROWSER=False
 i=0
+globals.sessionId=str(datetime.datetime.now().strftime("sess_%d-%m-%Y-%H%M%S"))
 while(i<argSize):
 	if(sys.argv[i]=="-p" or sys.argv[i]=="--port"):
 		if(argSize>i+1):
@@ -62,11 +64,14 @@ while(i<argSize):
 	if(sys.argv[i]=="-h" or sys.argv[i]=="--help"):
 		printUsage()
 		exit()
+	if(sys.argv[i]=="-S" or sys.argv[i]=="--session"):
+		globals.sessionId=str(sys.argv[i+1])
 	i=i+1
 
 
 
 try:
+	print "Session Name : "+str(globals.sessionId)
 	#démarrage du thread du serveur web
 	if(LAUNCHSNIFFER):
 			globals.sniff_run=1;

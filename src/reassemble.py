@@ -8,13 +8,13 @@ import array
 import sys
 from lianatree import *
 from connect import connectMongo
-
+import globals
 
 
 def reassemble_stream (src, dst, sport, dport):
 	#start reassembling stream from datastream
-	#connection to DB
-	db = connectMongo('idsession')
+
+	db = connectMongo(globals.sessionId)
 	#get data from column stream for specified fields
 	flow=db.stream.find_one({"proto": "TCP", "src": src, "dst": dst, "sport": sport, "dport": dport})
 	#sort by IP sequence number /!\ issue a warning if twice same ip sequence number and makes 2 != streams
@@ -49,5 +49,6 @@ def reassemble_stream (src, dst, sport, dport):
 # sinon, à la fin de la boucle si le flag vaut false, on s'arrête		
 		
 
-reassemble_stream('147.210.183.243', '172.20.0.42', 3128, 54896)
+
+#reassemble_stream('147.210.183.243', '172.20.0.42', 3128, 54896)
 
