@@ -49,5 +49,5 @@ def reassemble_stream (src, dst, sport, dport):
 # sinon, à la fin de la boucle si le flag vaut false, on s'arrête		
 		
 
-reassemble_stream('147.210.183.243', '172.20.0.42', 3128, 36096)
+reassemble_stream('147.210.183.243', '172.20.0.42', 3128, 54896)
 

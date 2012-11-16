@@ -19,7 +19,7 @@ class LianaTree:
         self.packets = {}
     
     def feed(self, packet):
-        if "syn" in packet['flags']:
+        if "S" in packet['flags']:
             self.initseqs.add(packet['seq'])
         # si flags syn a 1 je note le num de sequence
         if "data" in packet:

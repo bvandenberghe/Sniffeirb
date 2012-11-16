@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from pymongo import Connection
+import bson
 from JsonDisplayHandler import getProtocol
 from scapy.all import *
 
@@ -17,17 +17,19 @@ def insertPacket(pkt,db):
 			dport=""
 			sport=""
 		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto , "type" : Type}
-		data=pkt.sprintf("%Raw.load%")
+		
 		if(proto=="TCP"):
-			if(data!=""):
-				db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "data" :  data}}},upsert=True)
+			data=bson.binary.Binary(str(pkt[TCP].payload))
+			if(data):
+				db.stream.update(spec, { "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "data" :  data}}},upsert=True)
 			else:
-				db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack}}},upsert=True)
+				db.stream.update(spec, { "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack}}},upsert=True)
 				
 		elif(proto=="UDP"):
-			if(data!=""):
-				db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time, "data" : data }}},upsert=True)
+			data=bson.binary.Binary(str(pkt[UDP].payload))
+			if(data):
+				db.stream.update(spec, { "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time, "data" : data }}},upsert=True)
 			else:
-				db.stream.update(spec, { "$push" : {"packets" : { "flags" : "TODO", "ts" : pkt.time}}},upsert=True)
+				db.stream.update(spec, { "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time}}},upsert=True)
 		#for p in db.stream.find():
 		#	print p
