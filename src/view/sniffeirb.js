@@ -1,5 +1,5 @@
 //globals variables
-packetCount = 0;
+timestampCount = 0;
 data = undefined; // ?
 intervalId = undefined; //the id of the time loop
 ipv4list = []; //store the list of ipv4 @ip
@@ -11,11 +11,14 @@ function startDisplayPackets(){
 	intervalId=window.setInterval("launchRetrievePackets()",500);
 	console.log(intervalId);
 }
-
+function displayAllPacketsOnce()
+{
+	retrievePackets(0, -1);
+}
 //to retreive only new data
 function launchRetrievePackets(){
 	if(sniff_run==1){
-		retrievePackets(packetCount, -1);
+		retrievePackets(timestampCount, -1);
 	}
 }
 
@@ -52,10 +55,14 @@ function retrievePackets(from, to) {
 					paquets.push(data[i]);
 					//on enregistre les nouvelles adresse ip dans un tableau				
 					addIPv4(data[i].src);	
-					packetCount++;
-				
+					if(data[i].initTS>timestampCount)
+						timestampCount=data[i].initTS;
+					var pktDate = new Date();
+					
+					pktDate.setTime(data[i].initTS*1000);
+					date=pktDate.getDate()+"/"+(pktDate.getMonth()+1)+"/"+pktDate.getFullYear()+" "+pktDate.getHours()+":"+pktDate.getMinutes()+":"+pktDate.getSeconds()+":"+pktDate.getMilliseconds();
 					//TODO : on les affiche selon le filtre (pour le moment pas de filtre donc on affiche tout)
-					var html ="<tr class=\"success\"><td>"+data[i].num+"</td><td>"+data[i].src+"</td><td>"+data[i].size+"</td><td>"+data[i].protocol+"</td><td>"+data[i].port+"</td></tr>";
+					var html ="<tr class=\"success\"><td>"+date+"</td><td>"+data[i].src+" <b>:"+data[i].sport+"</b></td><td>"+data[i].dst+" <b>:"+data[i].dport+"</b></td><td>"+data[i].proto+"</td><td>"+data[i].size+"</td></tr>";
 					$("#packets").append(html);
 				}
 			}

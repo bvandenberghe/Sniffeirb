@@ -6,17 +6,24 @@ import os
 import signal
 import SimpleHTTPServer
 import SocketServer
-from JsonDisplayHandler import packetListToJson
+from JsonDisplayHandler import packetToJson
 from string import Template
 TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
 def getSniffedPackets(indexFrom,indexTo):
-	buffSize=len(globals.sniff_buffer)
-	if(buffSize<indexTo or indexTo==-1):
-		indexTo=buffSize
-	tmp=packetListToJson(globals.sniff_buffer[indexFrom:indexTo],indexFrom,"global")
-	return tmp
+	db = connectMongo(globals.sessionId)
+	#get data from column stream for specified fields
+	nb=0
+	finalJson="["
+	for stream in db.stream.find({"proto": "TCP"}):
+		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
+			finalJson+=packetToJson(stream, "global")+", "
+			nb+=1
+	if nb>0:
+		finalJson=finalJson[:len(finalJson)-2]
+	finalJson+="]"
+	return finalJson
 
 #fonction qui renvoie le template d'un fichier	
 def get_page_template(page_name):
@@ -76,19 +83,19 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type','application/json')
 			self.end_headers()
-			if sniff_run==None or sniff_run==0:
+			if globals.sniff_run==None or globals.sniff_run==0:
 				print "on commence à sniffer"
 				#démarrage du thread du sniffer
 				globals.sniff_run=1;
 				globals.sniffer = SnifferThread("")
-				sniffer.start()
+				globals.sniffer.start()
 				self.wfile.write("1")#return true
 
 		elif self.path=='/stop':
 			self.send_response(200)
 			self.send_header('Content-type','application/json')
 			self.end_headers()
-			if sniff_run==1:
+			if globals.sniff_run==1:
 				print "on arrete de sniffer"
 				#arrêt du thread du sniffer
 				globals.sniff_run=0;
@@ -126,7 +133,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.wfile.write("0")#code d'erreur
 			else:
 				#print "from "+ indexFrom+ "  to "+indexTo
-				self.wfile.write(getSniffedPackets(int(indexFrom),int(indexTo)))
+				self.wfile.write(getSniffedPackets(float(indexFrom),float(indexTo)))
 			
 		elif self.path=='/shutdown':
 			self.send_response(200)

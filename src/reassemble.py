@@ -28,7 +28,7 @@ def reassemble_stream (src, dst, sport, dport):
 	#cheetah's algorithm
 	flow_tab = []
 	data = [{'data': liana.packets[x]['data'], 'initseq': liana.packets[x]['seq'], 'nextseq': liana.packets[x]['nextseq']} for x in liana.packets if not liana.packets[x]['prev']]
-	print data
+	#print data
 	for d in data:
 		test_bool = False
 		for x in liana.packets:
@@ -36,7 +36,7 @@ def reassemble_stream (src, dst, sport, dport):
 				d['data']=d['data']+(liana.packets[x]['data'])
 				d['nextseq']+=len(liana.packets[x]['data'])
 				test_bool = True
-				print "tour"+ str(x)
+				#print "tour"+ str(x)
 		if test_bool==False:
 			break
 	return d

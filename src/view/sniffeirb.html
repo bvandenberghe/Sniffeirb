@@ -93,11 +93,11 @@
 								<!-- En tête du tableau -->
 							  <thead>
 								<tr>
-								  <th>Num</th>
-								  <th>Dest</th>
-								  <th>Taille</th>
-								  <th>Protocole</th>
-								  <th>Port</th>
+								  <th>Initialisation time</th>
+								  <th>Source</th>
+								  <th>Destination</th>
+								  <th>Protocol</th>
+								  <th>Size</th>
 								</tr>
 							  </thead>
 							  <!-- Corps du tableau -->
@@ -180,6 +180,10 @@
 		{
 			$('#startstop').text("Arrêter");
 			startDisplayPackets();
+		}
+		else
+		{
+			displayAllPacketsOnce();
 		}
     </script>
 

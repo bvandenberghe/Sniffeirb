@@ -22,7 +22,6 @@ class SnifferThread(Thread):
 			print "forcing program to quit..."
 			os.killpg(os.getpgid(0),signal.SIGKILL)
 	def callback(self,pkt):
-		#sniff_buffer.append(pkt)#'%TCP.payload%'
 		insertPacket(pkt,self.db)
 		
 #condition to stop the sniffer	
