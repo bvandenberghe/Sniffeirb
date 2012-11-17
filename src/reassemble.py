@@ -39,9 +39,10 @@ def reassemble_stream (src, dst, sport, dport):
 				print "tour"+ str(x)
 		if test_bool==False:
 			break
-	for d in data:
-		print d
-		print "###################################################################################################################################################\n"
+	return d
+	#for d in data:
+	#	print d
+	#	print "###################################################################################################################################################\n"
 
 # on ne supprime pas les données du liana tree ... quand tous les nextseq pointent sur des trucs vides : ceci est la condition d'arret 
 # en debut de boucle, on place le flag à false

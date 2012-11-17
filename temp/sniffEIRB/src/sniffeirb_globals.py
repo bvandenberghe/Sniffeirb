@@ -1,1 +1,0 @@
-sniff_buffer = []
