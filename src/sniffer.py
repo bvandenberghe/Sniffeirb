@@ -16,11 +16,7 @@ class SnifferThread(Thread):
 		self.filter = filter
 		self.db=connectMongo(globals.sessionId)
 	def run(self):
-		try:
-			sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
-		except KeyboardInterrupt:
-			print "forcing program to quit..."
-			os.killpg(os.getpgid(0),signal.SIGKILL)
+		sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
 	def callback(self,pkt):
 		insertPacket(pkt,self.db)
 		

@@ -28,12 +28,7 @@ Misc:
 	'''
 
 
-
-
-
-
 argSize=len(sys.argv)
-
 if(argSize==1):
 	printUsage()
 	exit()
@@ -43,7 +38,7 @@ HOST = "localhost"
 WEBINTERFACE=False
 LAUNCHSNIFFER=False
 LAUNCHBROWSER=False
-i=0
+i=1
 globals.sessionId=str(datetime.datetime.now().strftime("sess_%d-%m-%Y-%H%M%S"))
 while(i<argSize):
 	if(sys.argv[i]=="-p" or sys.argv[i]=="--port"):
@@ -52,41 +47,63 @@ while(i<argSize):
 			i=i+1
 		else:
 			printUsage()
-	if(sys.argv[i]=="-wi" or sys.argv[i]=="--web-interface"):
+	elif(sys.argv[i]=="-wi" or sys.argv[i]=="--web-interface"):
+		if not os.geteuid()==0:
+  			print "\nWarning: need root privileges to start the sniffer from Web Interface\n"
 		WEBINTERFACE=True
-	if(sys.argv[i]=="-s" or sys.argv[i]=="--sniff"):
+	elif(sys.argv[i]=="-s" or sys.argv[i]=="--sniff"):
 		if not os.geteuid()==0:
   			sys.exit("\nNeed root privileges to use this option\n")
   		else:
 			LAUNCHSNIFFER=True
-	if(sys.argv[i]=="-n" or sys.argv[i]=="--nav"):
+	elif(sys.argv[i]=="-n" or sys.argv[i]=="--nav"):
 		LAUNCHBROWSER=True
-	if(sys.argv[i]=="-h" or sys.argv[i]=="--help"):
+	elif(sys.argv[i]=="-h" or sys.argv[i]=="--help"):
 		printUsage()
 		exit()
-	if(sys.argv[i]=="-S" or sys.argv[i]=="--session"):
+	elif(sys.argv[i]=="-S" or sys.argv[i]=="--session"):
 		globals.sessionId=str(sys.argv[i+1])
+		i+=1
+	else:
+		print "argument: "+sys.argv[i]+" unknown"
+		printUsage()
+		exit()
 	i=i+1
 
 
 
+print "Session Name : "+str(globals.sessionId)
 try:
-	print "Session Name : "+str(globals.sessionId)
 	#démarrage du thread du serveur web
 	if(LAUNCHSNIFFER):
-			globals.sniff_run=1;
-			globals.sniffer = SnifferThread("")
-			globals.sniffer.start()
-			print "sniffing ..."
-	if(WEBINTERFACE):	
-			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler)
-			print 'serveur ouvert sur le port ', PORT
-			if(LAUNCHBROWSER):
-				print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
-				webbrowser.open('http://localhost:'+str(PORT),new=2)
-			httpd.serve_forever()
+		globals.sniff_run=1
+		globals.sniffer = SnifferThread("")
+		globals.sniffer.start()
+		print "sniffing ..."
+	if(WEBINTERFACE):
+		httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
+		httpd.allow_reuse_address = True # Prevent 'cannot bind to address' errors on restart
+		httpd.server_bind()     # Manually bind, to support allow_reuse_address
+		httpd.server_activate() # (see above comment)
+		if(LAUNCHBROWSER):
+			print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
+			webbrowser.open('http://localhost:'+str(PORT),new=2)
+		httpd.serve_forever()
+		print 'serveur ouvert sur le port ', PORT
+		signal.pause()
+except KeyboardInterrupt:
+	print "Keyboard interruption detected"
+	pass
+finally:
+	print "server shutting down ..."
+	httpd.shutdown()
+	print "program exiting ..." 
+	globals.sniff_run=0
+	exit()
+'''
+try:
 	signal.pause()
 except KeyboardInterrupt:
 	os.killpg(os.getpgid(0),signal.SIGKILL)
-
+'''
 
