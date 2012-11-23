@@ -62,9 +62,35 @@ function retrievePackets(from, to) {
 					pktDate.setTime(data[i].initTS*1000);
 					date=pktDate.getDate()+"/"+(pktDate.getMonth()+1)+"/"+pktDate.getFullYear()+" "+pktDate.getHours()+":"+pktDate.getMinutes()+":"+pktDate.getSeconds()+":"+pktDate.getMilliseconds();
 					//TODO : on les affiche selon le filtre (pour le moment pas de filtre donc on affiche tout)
-					var html ="<tr class=\"success\"><td>"+date+"</td><td>"+data[i].src+" <b>:"+data[i].sport+"</b></td><td>"+data[i].dst+" <b>:"+data[i].dport+"</b></td><td>"+data[i].proto+"</td><td>"+data[i].size+"</td></tr>";
-					$("#packets").append(html);
+					var html ="<tr class=\"success dataclick\" id=\"viewdata"+i+"\" data-url=\"/getdata?src="+data[i].src+"&dst="+data[i].dst+"&sport="+data[i].sport+"&dport="+data[i].dport+"\" ><td>"+date+"</td><td>"+data[i].src+"<b>:"+data[i].sport+"</b></td><td>"+data[i].dst+" <b>:"+data[i].dport+"</b></td><td>"+data[i].proto+"</td><td>"+data[i].size+"</td></tr>";
+					$("#packets").append(html);					
+					
 				}
+				/*
+				$('[rel=popover]').popover({
+						placement : 'bottom',
+						title : 'raw data',
+						content : 'loading ...'
+					});*/
+				$('.dataclick').bind('click',function(){
+					var el=$(this);
+					$.ajax({
+						type: "GET",
+						url: el.attr("data-url"),
+						dataType: "json",
+						success: function(data) {
+							var finalDisplayedData="";
+							for(i=0;i<data.length;i++)
+							{
+								
+								finalDisplayedData+="lianatree "+(i+1)+"<hr>"+data[i].data+"<hr>"
+							}
+							$("#displayData").html("<tr><td colspan=\"5\"><div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>"+finalDisplayedData+"</strong> </div></td></tr>");
+							//el.attr("data-content", data);
+						}
+					});
+					console.log(el.attr("data-content"));
+				});
 			}
 		  },
 		  error:function(XMLHttpRequest, textStatus, errorThrows){
@@ -73,6 +99,7 @@ function retrievePackets(from, to) {
 		  }
 		});
 	}
+
 
 //clean the screen
 $('#effacer').click(function() {
