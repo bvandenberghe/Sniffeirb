@@ -2,6 +2,8 @@
 import json
 import sys
 from scapy.all import *
+from reassemble import reassemble_stream
+
 
 '''def packetListToJson(packetList, indexFrom, view):
 	finalJson="["
@@ -18,6 +20,8 @@ def packetToJson(pkt, view):
 	jsonToDisplay=None
 	if(view=="global"):
 		jsonToDisplay={"initTS":pkt['initTS'], "src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "size" : "TODO"}
+	if(view=="data"):
+		jsonToDisplay={"src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "data" : pkt['data']}
 		
 	if(jsonToDisplay==None):
 		print "error, the view "+view+" has not been found"

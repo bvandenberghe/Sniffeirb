@@ -80,6 +80,7 @@ try:
 		print "sniffing ..."
 	if(WEBINTERFACE):
 		httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
+		globals.serverThread=httpd
 		httpd.allow_reuse_address = True # Prevent 'cannot bind to address' errors on restart
 		httpd.server_bind()     # Manually bind, to support allow_reuse_address
 		httpd.server_activate()

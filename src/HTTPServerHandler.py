@@ -8,6 +8,7 @@ import SimpleHTTPServer
 import SocketServer
 from JsonDisplayHandler import packetToJson
 from string import Template
+from reassemble import reassemble_stream
 TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
@@ -24,6 +25,25 @@ def getSniffedPackets(indexFrom,indexTo):
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"
 	return finalJson
+
+def getPacketsData(src, dst, sport, dport):
+	db = connectMongo(globals.sessionId)
+	#get data from column stream for specified fields
+	nb=0
+	finalJson="["
+	stream=db.stream.find_one({"proto": "TCP", "src" : src, "dst" : dst, "sport" : sport, "dport" : dport})
+	dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+	for data in dataList:
+		stream['data']=data['data']
+		finalJson+=packetToJson(stream, "data")+", "
+		nb+=1
+	if nb>0:
+		finalJson=finalJson[:len(finalJson)-2]
+	finalJson+="]"
+	return finalJson
+
+	
+
 
 #fonction qui renvoie le template d'un fichier	
 def get_page_template(page_name):
@@ -134,12 +154,17 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			else:
 				#print "from "+ indexFrom+ "  to "+indexTo
 				self.wfile.write(getSniffedPackets(float(indexFrom),float(indexTo)))
-			
+		elif self.path=='/getdata':
+			array=get_values_array(parameters)
+			if(len(array)==4):
+				self.wfile.write(getPacketsData(array["src"],array["dst"],int(array["sport"]),int(array["dport"])))
+		
 		elif self.path=='/shutdown':
 			self.send_response(200)
 			self.send_header('Content-type','text/html')
 			self.end_headers()
-			self.wfile.write("<html><body><center><h1>Server killed</h1></center></body></html>")
+			self.wfile.write("<html><body><center><h1>server shutdown</h1></center></body></html>")
+			globals.sniff_run=0
 			print "forcing program to quit ..."
 			os.killpg(os.getpgid(0),signal.SIGKILL)
 		else:

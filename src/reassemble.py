@@ -39,7 +39,7 @@ def reassemble_stream (src, dst, sport, dport):
 				#print "tour"+ str(x)
 		if test_bool==False:
 			break
-	return d
+	return data
 	#for d in data:
 	#	print d
 	#	print "###################################################################################################################################################\n"
