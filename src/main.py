@@ -14,8 +14,7 @@ from connect import *
 import datetime
 
 def printUsage():
-	print'''
-usage : '''+sys.argv[0]+''' [OPTIONS]
+	print'''usage : '''+sys.argv[0]+''' [OPTIONS]
 
 Web Interface :
 	--web-interface (-wi) launch web interface
@@ -74,7 +73,6 @@ while(i<argSize):
 
 print "Session Name : "+str(globals.sessionId)
 try:
-	#démarrage du thread du serveur web
 	if(LAUNCHSNIFFER):
 		globals.sniff_run=1
 		globals.sniffer = SnifferThread("")
@@ -84,7 +82,7 @@ try:
 		httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
 		httpd.allow_reuse_address = True # Prevent 'cannot bind to address' errors on restart
 		httpd.server_bind()     # Manually bind, to support allow_reuse_address
-		httpd.server_activate() # (see above comment)
+		httpd.server_activate()
 		if(LAUNCHBROWSER):
 			print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
 			webbrowser.open('http://localhost:'+str(PORT),new=2)
