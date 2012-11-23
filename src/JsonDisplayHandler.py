@@ -19,15 +19,23 @@ def packetToJson(pkt, view):
 	#print vars(pkt)
 	jsonToDisplay=None
 	if(view=="global"):
-		jsonToDisplay={"initTS":pkt['initTS'], "src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "size" : "TODO"}
+		jsonToDisplay={"initTS":pkt['initTS'], "src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "size" : getLianaTreeDataSize(pkt['src'],pkt['dst'],pkt['sport'],pkt['dport'])}
 	if(view=="data"):
-		jsonToDisplay={"src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "data" : pkt['data']}
+		jsonToDisplay={"src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "data" : pkt['data'].encode('string_escape')}
 		
 	if(jsonToDisplay==None):
 		print "error, the view "+view+" has not been found"
 		sys.exit()
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
-	
+
+
+#give the sum of all datas in all the lianatrees
+def getLianaTreeDataSize(src, dst, sport, dport):	
+	dataList=reassemble_stream(src, dst, sport, dport)
+	size=0
+	for data in dataList:
+		size+=len(data['data'])
+	return size
 	
 def getProtocol(pkt):
 	protocol="other"
