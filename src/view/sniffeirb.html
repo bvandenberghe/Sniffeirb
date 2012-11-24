@@ -23,6 +23,8 @@
 	  .scroll {
 		 height: 100%;
 		 min-height: 570px; 
+		 overflow: hidden;
+		 overflow-y: auto;
 	  }
     </style>
   </head>
@@ -67,7 +69,7 @@
 
 			<!-- Liste des IP à gauche -->
 			<div class="span3">
-				<div class="well sidebar-nav">
+				<div class="well sidebar-nav" style="padding-left : 5px;padding-right:5px;">
 				<div class="scroll" >	
 					<ul class="nav nav-list">
 						<li class="nav-header" id="IPautre">Preview data</li>
@@ -95,7 +97,7 @@
 						<!-- Contenu de l'onlet "Global"-->
 						<div class="tab-pane active" id="onglet_global" >
 							
-						<div class="scroll" style="height:100%;min-height:570px;" >	
+						<div class="scroll">	
 							<!-- Tableau des données -->
 							<table class="table table-condensed table-hover">
 								<!-- En tête du tableau -->
