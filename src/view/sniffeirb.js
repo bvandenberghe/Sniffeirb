@@ -83,9 +83,9 @@ function retrievePackets(from, to) {
 							for(i=0;i<data.length;i++)
 							{
 								
-								finalDisplayedData+="lianatree "+(i+1)+"<hr>"+data[i].data+"<hr>"
+								finalDisplayedData+="lianatree "+(i+1)+":<br />"+data[i].data+"<hr>"
 							}
-							$("#displayData").html("<tr><td colspan=\"5\"><div class=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>"+finalDisplayedData+"</strong> </div></td></tr>");
+							$("#displayData").html("<div class=\"alert alert-info\"><small><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>"+finalDisplayedData+"</strong> </small></div>");
 							//el.attr("data-content", data);
 						}
 					});
