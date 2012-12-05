@@ -15,7 +15,10 @@ $(document).ready(function(){
     
     $('#packetTable tbody tr').live('click', function () {
     var nTds = $('td', this);
-    
+    var ip = $(nTds[0]).text();
+    var temps = $(nTds[1]).text();
+    console.log("/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text());                
+
     //Onclick event
     $.ajax({
 			type: "GET",
