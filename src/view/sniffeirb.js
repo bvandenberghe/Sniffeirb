@@ -6,13 +6,51 @@ intervalId = undefined; //the id of the time loop
 paquets = []; //store all packets received
 
 //Create the filtertable
-$(document).ready(function(){
-    $('packetTable').dataTable({
+$(document).ready(function() {
+	var oTable;
+	
+	/* Add the events etc before DataTables hides a column */
+	$("thead input").keyup( function () {
+		/* Filter on the column (the index) of this element */
+		oTable.fnFilter( this.value, oTable.oApi._fnVisibleToColumnIndex( 
+			oTable.fnSettings(), $("thead input").index(this) ) );
+	} );
+	
+	/*
+	 * Support functions to provide a little bit of 'user friendlyness' to the textboxes
+	 */
+	$("thead input").each( function (i) {
+		this.initVal = this.value;
+	} );
+	
+	$("thead input").focus( function () {
+		if ( this.className == "search_init" )
+		{
+			this.className = "";
+			this.value = "";
+		}
+	} );
+	
+	$("thead input").blur( function (i) {
+		if ( this.value == "" )
+		{
+			this.className = "search_init";
+			this.value = this.initVal;
+		}
+	} );
+	
+	oTable = $('#packetTable').dataTable( {
+		"sDom": 'RC<"clear">lfrtip',
+		
+		"oLanguage": {
+			"sSearch": "Search all columns:"
+		},
+		"bSortCellsTop": true,
+
     "aaSorting": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'], [4,'asc'] ], //enable sort on each column
-    "bPaginate": false,
-    "bLengthChange": false
-    });
-    
+    "bLengthChange": true
+	} );
+				
     $('#packetTable tbody tr').live('click', function () {
     var nTds = $('td', this);
     
