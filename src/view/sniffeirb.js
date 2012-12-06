@@ -48,7 +48,8 @@ $(document).ready(function() {
 		"bSortCellsTop": true,
 
     "aaSorting": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'], [4,'asc'] ], //enable sort on each column
-    "bLengthChange": true
+    "bLengthChange": true,
+    "sScrollY": "300px"
 	} );
 				
     $('#packetTable tbody tr').live('click', function () {
