@@ -27,11 +27,11 @@ def getSniffedPackets(indexFrom,indexTo):
 	return finalJson
 
 #def getPacketsData(src, dst, sport, dport):
-def getPacketsData(src, dst):
-    temp=src.split(":")
+def getPacketsData(src2, dst2):
+    temp=src2.split(":")
     src=temp[0]
     sport=temp[1]
-    temp=dst.split(":")
+    temp=dst2.split(":")
     dst=temp[0]
     dport=temp[1]
     print (src, sport, dst, dport)
@@ -39,15 +39,14 @@ def getPacketsData(src, dst):
     #get data from column stream for specified fields
     nb=0
     finalJson="["
-    # BUG
-    # Attention, bug sur les requetes mongodb ici ! retourne null si on rajoute le port dest et src !!
-    #
-    stream=db.stream.find_one({"proto": "TCP", "src" : src, "dst" : dst})#, "sport" : sport, "dport" : dport})
-    dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-    for data in dataList:
-	    stream['data']=data['data']
-	    finalJson+=packetToJson(stream, "data")+", "
-	    nb+=1
+
+    stream=db.stream.find_one({"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport)})#, "sport" : sport, "dport" : dport})
+    if stream!=None:
+	    dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+	    for data in dataList:
+		    stream['data']=data['data']
+		    finalJson+=packetToJson(stream, "data")+", "
+		    nb+=1
     if nb>0:
 	    finalJson=finalJson[:len(finalJson)-2]
     finalJson+="]"
