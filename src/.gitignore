@@ -1,3 +1,4 @@
 #We don't want to add the .pyc files into the git repository
 *.pyc
 *.*~
+*.txt

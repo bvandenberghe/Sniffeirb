@@ -23,15 +23,17 @@ def insertPacket(pkt,db):
 		
 		if(proto=="TCP"):
 			data=bson.binary.Binary(str(pkt[TCP].payload))
+			length=len(pkt[TCP].payload)
 			if(data):
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "media" : media, "data" :  data}}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "media" : media, "data" :  data, "dataLength" : length}}},upsert=True)
 			else:
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq,"media" : media, "ack" : pkt.ack}}},upsert=True)
 				
 		elif(proto=="UDP"):
 			data=bson.binary.Binary(str(pkt[UDP].payload))
+			length=len(pkt[UDP].payload)
 			if(data):
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,"media" : media, "data" : data }}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,"media" : media, "data" : data, "dataLength" : length }}},upsert=True)
 			else:
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,"media" : media}}},upsert=True)
 		#for p in db.stream.find():
