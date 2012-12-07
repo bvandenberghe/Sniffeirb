@@ -9,6 +9,7 @@ import sys
 from patchSniffScapy import *
 from mongoHandler import *
 from connect import *
+
 #sniff et ecrit les nouveaux packets dans le buffer
 class SnifferThread(Thread):
 	def __init__ (self,filter):

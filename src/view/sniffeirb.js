@@ -105,7 +105,6 @@ function retrievePackets(from, to) {
 					if(data[i].initTS>timestampCount)
 						timestampCount=data[i].initTS;
 					var pktDate = new Date();
-					
 					pktDate.setTime(data[i].initTS*1000);
 					date=pktDate.getDate()+"/"+(pktDate.getMonth()+1)+"/"+pktDate.getFullYear()+" "+pktDate.getHours()+":"+pktDate.getMinutes()+":"+pktDate.getSeconds()+":"+pktDate.getMilliseconds();
                     //add the new packet into the filtertable                    					
@@ -113,7 +112,7 @@ function retrievePackets(from, to) {
 				        date,
                         data[i].src+":"+data[i].sport,
 				        data[i].dst+":"+data[i].dport,
-				        data[i].proto,
+				        data[i].proto+" - "+data[i].media,
 				        data[i].size])
 				    }
 			}

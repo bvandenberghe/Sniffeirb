@@ -19,7 +19,7 @@ def packetToJson(pkt, view):
 	#print vars(pkt)
 	jsonToDisplay=None
 	if(view=="global"):
-		jsonToDisplay={"initTS":pkt['initTS'], "src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "size" : getLianaTreeDataSize(pkt['src'],pkt['dst'],pkt['sport'],pkt['dport'])}
+		jsonToDisplay={"initTS":pkt['initTS'], "src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'],"media":pkt['media'], "size" : getLianaTreeDataSize(pkt['src'],pkt['dst'],pkt['sport'],pkt['dport'])}
 	if(view=="data"):
 		jsonToDisplay={"src":pkt['src'], "dst":pkt['dst'], "sport":pkt['sport'], "dport":pkt['dport'], "proto":pkt['proto'], "data" : pkt['data'].encode('string_escape')}
 		
