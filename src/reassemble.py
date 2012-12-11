@@ -23,7 +23,7 @@ def reassemble_stream (src, dst, sport, dport):
 	for pkt in flow['packets']:
 		liana.feed(pkt)
 	
-	dataTab=algorithmBuild(liana)
+	dataTab=pathBuilder(liana)
 	dataTab=cleanDataTab(dataTab)
 	return rebuilding(dataTab)
 

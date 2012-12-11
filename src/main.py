@@ -85,10 +85,9 @@ try:
 		httpd.server_bind()     # Manually bind, to support allow_reuse_address
 		httpd.server_activate()
 		if(LAUNCHBROWSER):
-			print "navigateur ouvert à l'adresse http://localhost:"+str(PORT)
 			webbrowser.open('http://localhost:'+str(PORT),new=2)
+		print 'web interface opened on http://localhost:', PORT
 		httpd.serve_forever()
-		print 'serveur ouvert sur le port ', PORT
 		signal.pause()
 except KeyboardInterrupt:
 	print "Keyboard interruption detected"

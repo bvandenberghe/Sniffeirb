@@ -9,6 +9,7 @@ import SocketServer
 from JsonDisplayHandler import packetToJson
 from string import Template
 from reassemble import reassemble_stream
+import cgi
 TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
@@ -44,7 +45,7 @@ def getPacketsData(src2, dst2):
     if stream!=None:
 	    dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 	    for data in dataList:
-		    stream['data']=data
+		    stream['data']=cgi.escape(data)#escape HTML but take care XSS
 		    finalJson+=packetToJson(stream, "data")+", "
 		    nb+=1
     if nb>0:
