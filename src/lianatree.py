@@ -20,6 +20,7 @@ class LianaTree:
     
      #fill the linanaTree with packets and enhance the packet with additionnal information such as next and previous packets
     def feed(self, packet):
+# DEAD CODE
 #        if "S" in packet['flags']:
 #            self.initseqs.add(packet['seq'])
 #            print "debut feed ", self.initseqs

@@ -34,7 +34,7 @@ def getLianaTreeDataSize(src, dst, sport, dport):
 	dataList=reassemble_stream(src, dst, sport, dport)
 	size=0
 	for data in dataList:
-		size+=len(data['data'])
+		size+=len(data)
 	return size
 	
 def getProtocol(pkt):

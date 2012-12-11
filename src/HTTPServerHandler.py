@@ -44,7 +44,7 @@ def getPacketsData(src2, dst2):
     if stream!=None:
 	    dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 	    for data in dataList:
-		    stream['data']=data['data']
+		    stream['data']=data
 		    finalJson+=packetToJson(stream, "data")+", "
 		    nb+=1
     if nb>0:
