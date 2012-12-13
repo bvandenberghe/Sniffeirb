@@ -9,16 +9,15 @@ from protocol import *
 def insertPacket(pkt,db):
 	proto=getProtocol(pkt)
 	Type="unknown"
+	media=""
 	if(IP in pkt):
 		Type="IP"
 		if(proto=="TCP" or proto =="UDP"):
 			dport=pkt.dport
 			sport=pkt.sport
-			media= findMedia(dport,sport)
 		else:
 			dport=""
 			sport=""
-			media=""
 		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto , "media" : media, "type" : Type}
 		
 		if(proto=="TCP"):

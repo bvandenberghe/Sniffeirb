@@ -26,10 +26,7 @@ def reassemble_stream (src, dst, sport, dport):
 	dataTab=pathBuilder(liana)
 	dataTab=cleanDataTab(dataTab)
 	
-	smartFlow = {
-                'payload': rebuilding(dataTab),
-          		'likely': 100
-                }
+	smartFlow = rebuilding(dataTab)
 	
 	return smartFlow
 
@@ -75,9 +72,9 @@ def rebuilding(dataTab):
 	payloads=[]
 	count=0
 	for data in dataTab:
-		payloads.insert(count,"")
+		payloads.insert(count,{"payload":"","likely":100})
 		for p in data:
-			payloads[count]+=p['data']
+			payloads[count]["payload"]+=p['data']
 		count+=1
 	return payloads
 

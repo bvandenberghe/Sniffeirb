@@ -1,4 +1,24 @@
+import re
 # -*- coding: utf-8 -*-
+
+
+#try to determine the protocol and if it uses an exotic port inspect the payload
+def inspectStreamForProtocol(smartFlow, sport, dport):
+	proto=findMedia(sport, dport)
+	if proto!="" and proto!="HTTP":
+		return proto
+	mostProbableMedia=''
+	for data in smartFlow:
+		if (re.search("^HTTP/1.[0-1] [0-9]{1,3} OK\r\n", data["payload"])!=None):
+			mostProbableMedia="HTTP Response"
+		else:
+			regexp_url="((?:http[s]?://)?(?:[a-zA-Z]|[0-9]|[$-_@.&#+/]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
+			result=re.search("^(GET|POST) "+regexp_url+" HTTP/1.[0-1]\r\n", data["payload"])
+			if(result!=None):
+				mostProbableMedia="HTTP "+result.group(1)+" Request "+result.group(2)
+
+	return mostProbableMedia
+
 
 #find the protocol of the media transfered (HTTP, IMAP, POP, ...)
 def findMedia(dport,sport):
@@ -187,7 +207,7 @@ def findMedia(dport,sport):
     elif (dport==79 or sport==79):
         return "finger"
 
-    elif (dport==80 or sport==80):
+    elif (dport==80 or sport==80 or dport==8080 or sport==8080):
         return "HTTP"
 
     elif (dport==81 or sport==81):
@@ -1044,9 +1064,6 @@ def findMedia(dport,sport):
 
     elif (dport==8008 or sport==8008):
         return "Serveur CalDAV"
-
-    elif (dport==8080 or sport==8080):
-        return "http alternatelif"
 
     elif (dport==8098 or sport==8098):
         return "Administration Serveur Microsoft Windows 2003"

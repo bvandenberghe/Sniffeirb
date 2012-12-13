@@ -29,30 +29,29 @@ def getSniffedPackets(indexFrom,indexTo):
 
 #def getPacketsData(src, dst, sport, dport):
 def getPacketsData(src2, dst2):
-    temp=src2.split(":")
-    src=temp[0]
-    sport=temp[1]
-    temp=dst2.split(":")
-    dst=temp[0]
-    dport=temp[1]
-    print (src, sport, dst, dport)
-    db = connectMongo(globals.sessionId)
-    #get data from column stream for specified fields
-    nb=0
-    finalJson="["
-
-    stream=db.stream.find_one({"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport)})#, "sport" : sport, "dport" : dport})
-    if stream!=None:
-	    smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-	    dataList=smartFlow['payload']
-	    for data in dataList:
-		    stream['data']=cgi.escape(data)#escape HTML but take care XSS
-		    finalJson+=packetToJson(stream, "data")+", "
-		    nb+=1
-    if nb>0:
-	    finalJson=finalJson[:len(finalJson)-2]
-    finalJson+="]"
-    return finalJson
+	temp=src2.split(":")
+	src=temp[0]
+	sport=temp[1]
+	temp=dst2.split(":")
+	dst=temp[0]
+	dport=temp[1]
+	print (src, sport, dst, dport)
+	db = connectMongo(globals.sessionId)
+	#get data from column stream for specified fields
+	nb=0
+	finalJson="["
+	spec = {"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport)}
+	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
+	if stream!=None:
+		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+		for data in smartFlow:
+			stream['data']=cgi.escape(data["payload"])#escape HTML but take care XSS
+			finalJson+=packetToJson(stream, "data")+", "
+			nb+=1
+	if nb>0:
+		finalJson=finalJson[:len(finalJson)-2]
+	finalJson+="]"
+	return finalJson
 
 
 #fonction qui renvoie le template d'un fichier	
@@ -147,8 +146,8 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			array=get_values_array(parameters)
 			if(len(array)==2):
 				self.wfile.write(getPacketsData(array["src"],array["dst"]))
-#            if(len(array)==4):
-#            	self.wfile.write(getPacketsData(array["src"],array["dst"],int(array["sport"]),int(array["dport"])))
+#			if(len(array)==4):
+#				self.wfile.write(getPacketsData(array["src"],array["dst"],int(array["sport"]),int(array["dport"])))
 			
 		elif self.path=='/sniff':
 			#/sniff?from=0&to=3 renverra les paquets du numéro 0 au 3
