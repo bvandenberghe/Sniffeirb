@@ -1,0 +1,148 @@
+						Architecture
+
+
+0) Vocabulaire
+===========
+
+Un flux est caractérisé par :
+		* une adresse IP source
+		* un port source
+		* une adresse IP destination
+		* un port destination
+
+Un paquet : Définit par une séquence TCP ou un datagramme UDP.
+
+Protocole : définit le protocole de couche 4 (TCP ou UDP)
+
+Média : définit un protocole de couche application (HTTP, IMAP ..)
+
+Document : un document est défini par les données utiles d'une
+	réponse à une requête (page html, png, css..). 
+
+1) Intro
+======
+Ce document décrit la conception du sniffer, et les principales interfaces utilisées.
+
+
+2) Modèle en couche
+===============
+
++---------------------------------------------+
+|Client (navigateur) Html, ajax.                                                  |
+|                                                                                                           |     (I)
+|                                                                                                           |
++----------------------+----------------------+
+|Serveur web (python)                                                                  |
+| Restitution des                                                                              |   (II)
+| données                                                                                          |                                                    
++---------------------------------------------+
+|Analyse et reconstruction                                                          |
+|des flux/documents                                                                     |  (III)
+|													                                                        |
++----------------------+----------------------+
+|     Base de données                |   acquisition   des données   |
+|              (mongodb)	                  |                                                     |  (IV) et (V)
+|													  |                                                     |
++----------------------+----------------------+
+													  |                                                     |
+								                      |    flux réseau                           |    (VI)
+                                                      |									                    |
+                                                      +----------------------+
+
+3) Excplication des couches
+====================
+
+n° I : Client
+	Console ou navigateur pour lancer une capture du réseau.
+	Navigateur pour visualiser les flux.
+	
+n° II : Serveur web
+	Interface entre les requêtes html du navigateur client, et les actions possibles du sniffer.
+	Formatage des données renvoyées en JSON.
+	
+n° III : Analyse et reconstruction
+	Composant qui analyse un flux pour determiner son protocole, reconstruire le média et 
+	donner un pourcentage de validité du média. (Seulement protocole HTML pour le moment).
+	
+n°IV : Base de données
+	La base de données sert à stocker les flux réseau.	
+	Stocker les données nous permet de rejouer des échanges de données (soit pour le débugage, 
+	soit suite à une amélioration algorithmique du projet).	
+
+n° V : Serveur web, acquisition des données
+	Composant qui récupère les données du flux réseau, et les met dans la base de données. Les
+	paquets sont regroupé par flux.
+	
+n° VI : flux réseau
+	Ce composant représente les paquets qui circulent sur le réseau, ou des fichiers au format .pcap.
+
+
+4) Interfaçage
+===========
+
+Dans cette partie nous décrivons les mode de communication entre les différentes couches.
+
+n° I <-> n°II:
+	La couche I envoie des requêtes HTTP (GET ou POST) à la couche II.
+	La couche II réponds avec des données formaté en JSON.
+	
+n°II<->n°III: 
+	La couche II fait appelle à des fonctions de la couche III ( reassemble_stream...)
+	La couche III répond avec un objet contenant les données "utiles" du flux, et un pourcentage de
+	validité.
+	
+n°III<->n°IV:
+	Utilisation de l'API pymongo. Les données sont stockées dans mongdb sous le format BSON.
+
+n°III<->n°V:
+	Utilisation de l'API scapy + modification "maison" de la fonction sniff.	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
