@@ -1,5 +1,17 @@
 import scapy.all
 
+
+
+
+#give the sum of all datas in all the lianatrees
+def getLianaTreeDataSize(smartFlow):	
+	size=0
+	for data in smartFlow:
+		size+=len(data["payload"])
+	return size
+
+
+
 class LianaTree:
     """
     Attributs : 

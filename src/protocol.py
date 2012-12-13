@@ -3,22 +3,35 @@ import re
 
 
 #try to determine the protocol and if it uses an exotic port inspect the payload
-def inspectStreamForProtocol(smartFlow, sport, dport):
+def inspectStreamForMedia(data, sport, dport):
 	proto=findMedia(sport, dport)
 	if proto!="" and proto!="HTTP":
 		return proto
-	mostProbableMedia=''
-	for data in smartFlow:
-		if (re.search("^HTTP/1.[0-1] [0-9]{1,3} OK\r\n", data["payload"])!=None):
-			mostProbableMedia="HTTP Response"
-		else:
-			regexp_url="((?:http[s]?://)?(?:[a-zA-Z]|[0-9]|[$-_@.&#+/]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
-			result=re.search("^(GET|POST) "+regexp_url+" HTTP/1.[0-1]\r\n", data["payload"])
-			if(result!=None):
-				mostProbableMedia="HTTP "+result.group(1)+" Request "+result.group(2)
+	media=''
+	infos=''
+	if (re.search("^HTTP/1.[0-1] [0-9]{1,3} OK\r\n", data["payload"])!=None):
+		media="HTTP"
+		infos="Response"
+	else:
+		regexp_url="((?:http[s]?://)?(?:[a-zA-Z]|[0-9]|[$-_@.&#+/]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
+		result=re.search("^(GET|POST) "+regexp_url+" HTTP/1.[0-1]\r\n", data["payload"])
+		if(result!=None):
+			media="HTTP"
+			infos=result.group(1)+" Request "+result.group(2)
 
-	return mostProbableMedia
+	return (media,infos)
 
+
+	
+def getProtocol(pkt):
+	protocol="other"
+	if TCP in pkt:
+		protocol="TCP"
+	elif UDP in pkt:
+		protocol="UDP"
+	elif ICMP in pkt:
+		protocol="ICMP"
+	return protocol
 
 #find the protocol of the media transfered (HTTP, IMAP, POP, ...)
 def findMedia(dport,sport):

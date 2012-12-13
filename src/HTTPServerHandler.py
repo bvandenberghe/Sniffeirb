@@ -9,7 +9,8 @@ import SocketServer
 from JsonDisplayHandler import packetToJson
 from string import Template
 from reassemble import reassemble_stream
-import cgi
+from protocol import inspectStreamForMedia
+from lianatree import getLianaTreeDataSize
 TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
@@ -20,7 +21,13 @@ def getSniffedPackets(indexFrom,indexTo):
 	finalJson="["
 	for stream in db.stream.find({"proto": "TCP"}):
 		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
-			finalJson+=packetToJson(stream, "global")+", "
+			smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+			lianaTreeSize=getLianaTreeDataSize(smartFlow)
+			for data in smartFlow:
+				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
+				if mostProbableMedia!="":
+					stream["media"]=mostProbableMedia+" "+infos	
+			finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
 			nb+=1
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
@@ -35,7 +42,7 @@ def getPacketsData(src2, dst2):
 	temp=dst2.split(":")
 	dst=temp[0]
 	dport=temp[1]
-	print (src, sport, dst, dport)
+	#print (src, sport, dst, dport)
 	db = connectMongo(globals.sessionId)
 	#get data from column stream for specified fields
 	nb=0
@@ -44,9 +51,10 @@ def getPacketsData(src2, dst2):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
-			stream['data']=cgi.escape(data["payload"])#escape HTML but take care XSS
-			finalJson+=packetToJson(stream, "data")+", "
+			stream['data']=data["payload"]
+			finalJson+=packetToJson(stream,view="data")+", "
 			nb+=1
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]

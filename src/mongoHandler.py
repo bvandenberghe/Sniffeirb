@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import bson
-from JsonDisplayHandler import getProtocol
 from scapy.all import *
 from protocol import *
 
@@ -9,7 +8,6 @@ from protocol import *
 def insertPacket(pkt,db):
 	proto=getProtocol(pkt)
 	Type="unknown"
-	media=""
 	if(IP in pkt):
 		Type="IP"
 		if(proto=="TCP" or proto =="UDP"):
@@ -18,23 +16,23 @@ def insertPacket(pkt,db):
 		else:
 			dport=""
 			sport=""
-		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto , "media" : media, "type" : Type}
+		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto, "type" : Type}
 		
 		if(proto=="TCP"):
 			data=bson.binary.Binary(str(pkt[TCP].payload))
 			length=len(pkt[TCP].payload)
 			if(data):
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "media" : media, "data" :  data, "dataLength" : length}}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack, "data" :  data, "dataLength" : length}}},upsert=True)
 			else:
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq,"media" : media, "ack" : pkt.ack}}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%TCP.flags%"), "ts" : pkt.time, "seq" : pkt.seq, "ack" : pkt.ack}}},upsert=True)
 				
 		elif(proto=="UDP"):
 			data=bson.binary.Binary(str(pkt[UDP].payload))
 			length=len(pkt[UDP].payload)
 			if(data):
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,"media" : media, "data" : data, "dataLength" : length }}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time, "data" : data, "dataLength" : length }}},upsert=True)
 			else:
-				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,"media" : media}}},upsert=True)
+				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,}}},upsert=True)
 		#for p in db.stream.find():
 		#	print p
 
