@@ -79,23 +79,30 @@ try:
 		globals.sniffer.start()
 		print "sniffing ..."
 	if(WEBINTERFACE):
-		httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
-		globals.serverThread=httpd
-		httpd.allow_reuse_address = True # Prevent 'cannot bind to address' errors on restart
-		httpd.server_bind()     # Manually bind, to support allow_reuse_address
-		httpd.server_activate()
-		if(LAUNCHBROWSER):
-			webbrowser.open('http://localhost:'+str(PORT),new=2)
-		print 'web interface opened on http://localhost:', PORT
-		httpd.serve_forever()
-		signal.pause()
+		try:
+			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
+			globals.serverThread=httpd
+			httpd.allow_reuse_address = True # Prevent 'cannot bind to address' errors on restart
+			httpd.server_bind()     # Manually bind, to support allow_reuse_address
+			httpd.server_activate()
+			if(LAUNCHBROWSER):
+				webbrowser.open('http://localhost:'+str(PORT),new=2)
+			print 'web interface opened on http://localhost:', PORT
+			httpd.serve_forever()
+			signal.pause()
+		except KeyboardInterrupt:
+			print "Keyboard interruption detected"
+			pass
+		finally:
+			print "server shutting down ..."
+			httpd.shutdown()
+			print "program exiting ..." 
+			globals.sniff_run=0
+			exit()
 except KeyboardInterrupt:
 	print "Keyboard interruption detected"
 	pass
 finally:
-	print "server shutting down ..."
-	httpd.shutdown()
-	print "program exiting ..." 
 	globals.sniff_run=0
 	exit()
 '''
