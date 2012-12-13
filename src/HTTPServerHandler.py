@@ -43,7 +43,8 @@ def getPacketsData(src2, dst2):
 
     stream=db.stream.find_one({"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport)})#, "sport" : sport, "dport" : dport})
     if stream!=None:
-	    dataList=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+	    smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+	    dataList=smartFlow['payload']
 	    for data in dataList:
 		    stream['data']=cgi.escape(data)#escape HTML but take care XSS
 		    finalJson+=packetToJson(stream, "data")+", "

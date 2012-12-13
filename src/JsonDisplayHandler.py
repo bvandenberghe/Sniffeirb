@@ -31,7 +31,8 @@ def packetToJson(pkt, view):
 
 #give the sum of all datas in all the lianatrees
 def getLianaTreeDataSize(src, dst, sport, dport):	
-	dataList=reassemble_stream(src, dst, sport, dport)
+	smartFlow=reassemble_stream(src, dst, sport, dport)
+	dataList=smartFlow['payload']
 	size=0
 	for data in dataList:
 		size+=len(data)

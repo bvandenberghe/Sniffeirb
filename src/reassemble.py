@@ -25,7 +25,13 @@ def reassemble_stream (src, dst, sport, dport):
 	
 	dataTab=pathBuilder(liana)
 	dataTab=cleanDataTab(dataTab)
-	return rebuilding(dataTab)
+	
+	smartFlow = {
+                'payload': rebuilding(dataTab),
+          		'likely': 100
+                }
+	
+	return smartFlow
 
 #algorithm of the rebuilding of all possible paths
 def pathBuilder(liana):
