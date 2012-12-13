@@ -1,5 +1,7 @@
-import re
 # -*- coding: utf-8 -*-
+import re
+from scapy.all import *
+
 
 
 #try to determine the protocol and if it uses an exotic port inspect the payload

@@ -23,6 +23,7 @@ def getSniffedPackets(indexFrom,indexTo):
 		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
 			smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 			lianaTreeSize=getLianaTreeDataSize(smartFlow)
+			stream["media"]=""
 			for data in smartFlow:
 				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 				if mostProbableMedia!="":
