@@ -72,23 +72,9 @@ def cleanDataTab(dataTab):
 
 #remove duplicate payloads in a same lianatree
 def removeTwins(smartFlow):
-
-	'''
-	i=0
-	j=0
-
-	while i < len(smartFlow):
-		while j < len(smartFlow):
-			if(i!=j and smartFlow[i]['payload'] == smartFlow[j]['payload']):
-				smartFlow.pop(j)				
-			j+=1
-		i+=1
-		j=0
-	'''
 	seen = set()
 	seen_add = seen.add
 	return [ x for x in smartFlow if x['payload'] not in seen and not seen_add(x['payload'])]
-
 
 #reconstruction de la payload
 #rebuilding the payload of all paths
@@ -101,7 +87,6 @@ def rebuilding(dataTab):
 			payloads[count]["payload"]+=p['data']
 		count+=1
 	return payloads
-
 
 #print for debug
 def printDataTab(dataTab):

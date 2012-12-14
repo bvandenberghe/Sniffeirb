@@ -36,8 +36,6 @@ def insertPacket(pkt,db):
 		#for p in db.stream.find():
 		#	print p
 
-		    
-		      
 #initialisation timestamp is the min timestamp of all packets in the stream
 def getInitialisationTimestamp(db, src, dst, sport, dport):
 	stream=db.stream.find_one({"src": src, "dst": dst, "sport": sport, "dport": dport})

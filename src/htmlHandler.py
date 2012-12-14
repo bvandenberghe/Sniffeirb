@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import globals
 import re
-import zlib
+import cgi
+import zlib 
 
 
 #cf http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4

@@ -1,14 +1,39 @@
 
-/*In order to display a scrollable talbe*/
-.scroll {  
-    height: 450px !important;
-    overflow: scroll;
-}​
+/*In order to display a scrollable table*/
+
+.scroll {
+	 height: 100%;
+	 min-height: 570px; 
+	 overflow: hidden;
+	 overflow-y: auto;
+	  }
+
+textarea, input {
+width : 150px;
+}
 
 body {
     padding-top: 60px;
     padding-bottom: 40px;
-      }
+}
 .sidebar-nav {
     padding: 9px 0;
 }
+
+tr.row_selected  {
+	background-color: #B0BED9;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+background-color: #B0BED9 !important;
+}
+
+.ColVis TableTools{
+	float:right !important;
+}
+
+.packetTable_length{
+	float : right !important;
+	padding : 2% !important;
+}
+
