@@ -12,7 +12,6 @@ def decodeAndEscapeHTML(data):
 	print "decodage du html"
 	print httpHeader
 	print body.encode("string_escape")
-	'''
 	if httpHeader.find("Content-Encoding: gzip\r\n"):
 		tmp=body
 		try:
@@ -21,7 +20,7 @@ def decodeAndEscapeHTML(data):
 			body=zlib.decompress(tmp)
 		print "Content encoding gzip trouve"
 		body=zlib.decompress(body)
-	'''
+	
 	return httpHeader+"\r\n"+cgi.escape(body)
 
 

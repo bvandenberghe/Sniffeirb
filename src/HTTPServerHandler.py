@@ -27,7 +27,8 @@ def getSniffedPackets(indexFrom,indexTo):
 			for data in smartFlow:
 				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 				if mostProbableMedia!="":
-					stream["media"]=mostProbableMedia+" "+infos	
+					stream["media"]=mostProbableMedia+" "+infos
+			
 			finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
 			nb+=1
 	if nb>0:

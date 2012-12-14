@@ -27,7 +27,8 @@ def reassemble_stream (src, dst, sport, dport):
 	dataTab=cleanDataTab(dataTab)
 	
 	smartFlow = rebuilding(dataTab)
-	
+	smartFlow=removeTwins(smartFlow)
+#	splitDocuments(smartFlow)
 	return smartFlow
 
 #algorithm of the rebuilding of all possible paths
@@ -56,6 +57,9 @@ def pathBuilder(liana):
 		i+=1
 	return dataTab
 
+
+
+
 #Suppression des chemins non terminé dans la table (qui ont aidé à la construction des autres chemins)
 #Cleaning all partial paths
 def cleanDataTab(dataTab):
@@ -65,6 +69,20 @@ def cleanDataTab(dataTab):
 		if pkt['next']!=[]:
 			dataTab.remove(data)
 	return dataTab
+
+#remove duplicate payloads in a same lianatree
+def removeTwins(smartFlow):
+	i=0
+	j=0
+	while i < len(smartFlow):
+		while j < len(smartFlow):
+			if(i!=j and smartFlow[i]['payload'] == smartFlow[j]['payload']):
+				smartFlow.pop(j)				
+			j+=1
+		i+=1
+		j=0
+	return smartFlow
+
 
 #reconstruction de la payload
 #rebuilding the payload of all paths

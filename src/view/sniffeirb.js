@@ -64,7 +64,7 @@ $(document).ready(function() {
 				var finalDisplayedData="";
 				for(i=0;i<data.length;i++)
 				{
-					finalDisplayedData+="lianatree "+(i+1)+":<br />"+data[i].data+"<hr>"
+					finalDisplayedData+="Flux "+(i+1)+":<br />"+data[i].data+"<hr>"
 				}
 				$("#displayData").html("<div class=\"alert alert-info\"><small><strong>"+finalDisplayedData+"</strong> </small></div>");
 			}
