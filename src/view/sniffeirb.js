@@ -4,6 +4,9 @@ timestampCount = 0;
 data = undefined; // ?
 intervalId = undefined; //the id of the time loop
 paquets = []; //store all packets received
+refreshInterval=500 //ms
+
+
 
 //Create the filtertable
 $(document).ready(function() {
@@ -73,13 +76,17 @@ $(document).ready(function() {
     oTable.$('tr.row_selected').removeClass('row_selected');
     $(this).addClass('row_selected');
    } );
+	$(".TableTools").css("float","right");
+	$("#packetTable_length").css("float","right");
+	$("#packetTable_length").css("padding-right","5%");
+   
 });
 
 
 
 //none stop query to retrieve data packet	
 function startDisplayPackets(){
-	intervalId=window.setInterval("launchRetrievePackets()",500);
+	intervalId=window.setInterval("launchRetrievePackets()",refreshInterval);
 }
 function displayAllPacketsOnce()
 {
@@ -133,6 +140,14 @@ $('#effacer').click(function() {
 	paquets = [];
 	$("#packets").html('');
 });
+
+//clean the screen
+$('#parameters').click(function() {
+	console.log("klkjlkjlkjlkjl");
+	refreshInterval=$("#frequence").val();
+	$("#modal_parametre").hide();
+});
+
 
 //in order to start and stop the sniffer
 $('#startstop').click(function() {

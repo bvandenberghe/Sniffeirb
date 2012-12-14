@@ -28,3 +28,12 @@ tr.row_selected  {
 background-color: #B0BED9 !important;
 }
 
+.ColVis TableTools{
+	float:right !important;
+}
+
+.packetTable_length{
+	float : right !important;
+	padding : 2% !important;
+}
+
