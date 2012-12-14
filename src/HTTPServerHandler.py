@@ -11,6 +11,8 @@ from string import Template
 from reassemble import reassemble_stream
 from protocol import inspectStreamForMedia
 from lianatree import getLianaTreeDataSize
+from htmlHandler import decodeAndEscapeHTML
+import cgi
 TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
@@ -55,7 +57,11 @@ def getPacketsData(src2, dst2):
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
-			stream['data']=data["payload"]
+			streamTab=decodeAndEscapeHTML(data["payload"])
+			stream['data']=""
+			if streamTab!=None:
+				for a in streamTab:
+					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
 			finalJson+=packetToJson(stream,view="data")+", "
 			nb+=1
 	if nb>0:
