@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Sniff'eirb</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Web app qui sniff le réseau.">
+    <meta name="description" content="Web app which sniff the network.">
     <meta name="author" content="RSR">
 
     <!-- Le styles -->
@@ -23,10 +23,10 @@
               <a class="brand" href="#">Sniff'eirb</a>
               <div class="nav-collapse">
                 <ul class="nav">
-			    <li class="active"><a href="#" id="startstop">Lancer</a></li>
-                  <li><a href="#modal_parametre" data-toggle="modal">Paramètre</a></li>
-                  <li><a href="#about">Cartographie</a></li>
-                  <li><a href="#contact">Aide</a></li>
+			    <li class="active"><a href="#" id="startstop">Launch</a></li>
+                  <li><a href="#modal_parametre" data-toggle="modal">Paramters</a></li>
+                  <li><a href="#about">Network map</a></li>
+                  <li><a href="#contact">Help</a></li>
 			    </ul>  
 			      
 			    <ul class="nav pull-right">
@@ -34,7 +34,7 @@
 				      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Views<b class="caret"></b></a>
 				      <ul class="dropdown-menu">
 					      <li class="active"><a href="#onglet_global" data-toggle="tab">Global</a></li>
-					      <li><a href="#onglet_statistiques" data-toggle="tab">Statistiques</a></li>
+					      <li><a href="#onglet_statistiques" data-toggle="tab">Statistics</a></li>
 					      <li><a href="#onglet_cookies" data-toggle="tab">Cookies</a></li>
 					      <li><a href="#onglet_html" data-toggle="tab">HTML</a></li>
 				      </ul>
@@ -53,7 +53,7 @@
 				    <div class="well sidebar-nav" style="padding-left : 5px;padding-right:5px;">
         				<div class="scroll" >	
         					<ul class="nav nav-list">
-        						<li class="nav-header" id="IPautre">Preview data</li>
+        						<li class="nav-header" id="IPautre">Data preview</li>
         					</ul>
         				<div id="displayData">
         				</div>
@@ -98,14 +98,14 @@
 					        </div>
 					        <div class="span11" >	
 							    <!-- Boutons pour exporter les données sniffées, ou pour les effacer-->
-							    <button class="btn btn-primary" type="button">Exporter</button>
-							    <button class="btn btn-primary" type="button" id="effacer">Effacer</button>
+							    <button class="btn btn-primary" type="button">Export</button>
+							    <button class="btn btn-primary" type="button" id="effacer">Clean</button>
 					        </div>
 					    </div>
 					
 					    <!-- Contenu de l'onglet Statistique -->
 					    <div class="tab-pane" id="onglet_statistiques">
-						    <p>Statistiques</p>
+						    <p>Statistics</p>
 					    </div>
 					    <!-- Contenu de l'onglet Cookies -->
 					    <div class="tab-pane" id="onglet_cookies">
@@ -127,10 +127,10 @@
 	    <div class="modal hide fade" id="modal_parametre">
 		    <div class="modal-header">
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        			<h3>Paramètres</h3>
+        			<h3>Parameters</h3>
 		    </div>
 		    <div class="modal-body">
-	    	Fréquence de rafraichissement (en ms):
+	    	Refreshing frequency (ms):
 	       <input type="number" id="frequence" min="500" max="5000" step="100" ><br>
 			
 		      
@@ -158,7 +158,7 @@
 		    sniff_run=$sniff_run;
 		    if(sniff_run==1)
 		    {
-			    $('#startstop').text("Arrêter");
+			    $('#startstop').text("Stop");
 			    startDisplayPackets();
 		    }
 		    else

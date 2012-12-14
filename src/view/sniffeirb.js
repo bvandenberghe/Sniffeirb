@@ -106,7 +106,7 @@ function retrievePackets(from, to) {
 		  url: "/sniff?from="+from+"&to="+to+"",
 		  dataType: "json",
 		  success: function(data) {
-			if(data!=0 && data!=null)//code d'erreur
+			if(data!=0 && data!=null)//code d'error
 			{	
 				for (var i=0, length = data.length ;i<length;i++)
 				{				
@@ -128,7 +128,7 @@ function retrievePackets(from, to) {
 			}
 		  },
 		  error:function(XMLHttpRequest, textStatus, errorThrows){
-		  	//erreur ...
+		  	//error ...
 		  	//alert('pas ok');
 		  }
 		});
@@ -161,10 +161,10 @@ $('#startstop').click(function() {
 			  success: function(data) {
 
 				window.clearInterval(intervalId)
-				$('#startstop').text("Lancer");
+				$('#startstop').text("Launch");
 			},
 			  error:function(XMLHttpRequest, textStatus, errorThrows){
-				alert('erreur '+data);
+				alert('error '+data);
 			  }
 			});
 		
@@ -177,11 +177,11 @@ $('#startstop').click(function() {
 			  type: "get",
 			  dataType: "json",
 			  success: function(data) {
-				$('#startstop').text("Arrêter");
+				$('#startstop').text("Stop");
 				startDisplayPackets()
 			  },
 			  error:function(XMLHttpRequest, textStatus, errorThrows){
-				alert('erreur '+data);
+				alert('error '+data);
 			  }
 			});
 	}
