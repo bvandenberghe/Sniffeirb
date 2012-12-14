@@ -51,11 +51,12 @@ $(document).ready(function() {
     "bLengthChange": true,
     "sScrollY": "300px"
 	} );
-				
+
+
+    //Onclick event				
     $('#packetTable tbody tr').live('click', function () {
     var nTds = $('td', this);
-    
-    //Onclick event
+       
     $.ajax({
 			type: "GET",
 			url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
@@ -69,6 +70,8 @@ $(document).ready(function() {
 				$("#displayData").html("<div class=\"alert alert-info\"><small><strong>"+finalDisplayedData+"</strong> </small></div>");
 			}
 		});
+    oTable.$('tr.row_selected').removeClass('row_selected');
+    $(this).addClass('row_selected');
    } );
 });
 

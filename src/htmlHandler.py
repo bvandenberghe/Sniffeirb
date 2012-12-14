@@ -2,7 +2,7 @@
 import globals
 import re
 import cgi
-import zlib
+import zlib 
 
 #decode HTML
 def decodeAndEscapeHTML(data):

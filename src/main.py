@@ -12,6 +12,8 @@ import webbrowser
 import signal
 from connect import *
 import datetime
+from pymongo import Connection
+#from pymongo import Disconnect
 
 def printUsage():
 	print'''usage : '''+sys.argv[0]+''' [OPTIONS]
@@ -24,6 +26,7 @@ Misc:
 	--help (-h)  : print this help summary page.
 	--sniff (-s) : launch sniffer
 	--session (-S) <session_name>: use an already existing session
+	--drop-database (-d)  : remove all already existing databases 
 	'''
 
 
@@ -63,6 +66,17 @@ while(i<argSize):
 	elif(sys.argv[i]=="-S" or sys.argv[i]=="--session"):
 		globals.sessionId=str(sys.argv[i+1])
 		i+=1
+	elif(sys.argv[i]=="-d" or sys.argv[i]=="--drop-database"):
+		connection = Connection('localhost', 27017)
+		#delete all MongoDB collections 
+		print "on supprime les bases"
+		dbs=connection.database_names()
+		for d in dbs:
+			if d.startswith('sess_'):
+		#		db = connection[database]
+				print "	d : " , d
+				connection.drop_database(d)
+		
 	else:
 		print "argument: "+sys.argv[i]+" unknown"
 		printUsage()
@@ -78,6 +92,7 @@ try:
 		globals.sniffer = SnifferThread("")
 		globals.sniffer.start()
 		print "sniffing ..."
+		
 	if(WEBINTERFACE):
 		try:
 			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
