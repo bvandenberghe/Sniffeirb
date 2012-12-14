@@ -6,9 +6,12 @@ from scapy.all import *
 
 #try to determine the protocol and if it uses an exotic port inspect the payload
 def inspectStreamForMedia(data, sport, dport):
+	print "DANS INSPECT STREAM FOR MEDIA"
 	proto=findMedia(sport, dport)
+	print "	Apres find media"
 	if proto!="" and proto!="HTTP":
-		return proto
+		print "	proto ! HTTP : ", proto
+		return (proto,"")
 	media=''
 	infos=''
 	if (re.search("^HTTP/1.[0-1] [0-9]{1,3} OK\r\n", data["payload"])!=None):
