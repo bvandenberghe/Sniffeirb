@@ -150,6 +150,25 @@ $('#parameters').click(function() {
 
 
 //in order to start and stop the sniffer
+/*
+loadArchive(){
+		$.ajax({
+			  url: "/stop",
+			  type: "get",
+			  dataType: "json",
+			  success: function(data) {
+				for(i=0; i<data.length;i++){
+			
+			
+			}
+		
+			},
+			  error:function(XMLHttpRequest, textStatus, errorThrows){
+				alert('error '+data);
+			  }
+			});
+}
+*/
 $('#startstop').click(function() {
 	if(sniff_run==1)
 	{

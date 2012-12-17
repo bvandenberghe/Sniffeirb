@@ -5,15 +5,14 @@ import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 import sys
 import os
-from sniffer import *
+from dataReceiver import sniffer
 import globals
-from HTTPServerHandler import *
+from server.HTTPServerHandler import *
 import webbrowser
 import signal
-from connect import *
+from dataHandler.connect import *
 import datetime
 from pymongo import Connection
-#from pymongo import Disconnect
 
 def printUsage():
 	print'''usage : '''+sys.argv[0]+''' [OPTIONS]
@@ -73,7 +72,6 @@ while(i<argSize):
 		dbs=connection.database_names()
 		for d in dbs:
 			if d.startswith('sess_'):
-		#		db = connection[database]
 				print "	d : " , d
 				connection.drop_database(d)
 		
@@ -92,7 +90,6 @@ try:
 		globals.sniffer = SnifferThread("")
 		globals.sniffer.start()
 		print "sniffing ..."
-		
 	if(WEBINTERFACE):
 		try:
 			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
@@ -101,6 +98,7 @@ try:
 			httpd.server_bind()     # Manually bind, to support allow_reuse_address
 			httpd.server_activate()
 			if(LAUNCHBROWSER):
+				print "on lance le navigateur"
 				webbrowser.open('http://localhost:'+str(PORT),new=2)
 			print 'web interface opened on http://localhost:', PORT
 			httpd.serve_forever()
