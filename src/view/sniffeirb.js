@@ -7,6 +7,8 @@ paquets = []; //store all packets received
 refreshInterval=500 //ms
 currentSelectedArchive=undefined
 oTable=undefined;
+documentInfo=undefined;
+
 
 function initVar(){
 	timestampCount = 0;
@@ -90,8 +92,58 @@ $(document).ready(function() {
             oTable.$('tr.row_selected').removeClass('row_selected');
             $(this).addClass('row_selected');
         }
+        
+         if ( oTable.fnIsOpen(this) ) {
+		           oTable.fnClose( this );
+		         }
+		 else {
+		     oTable.fnOpen( 
+		     this, 
+		     function(){
+			      //  var nTds = $('td', this);
+			     var textResult="kjhkjh";
+       				console.log("lkjlkjlk"+$(nTds[1]).text() +" "+$(nTds[2]).text());
+					  documentInfo=$.ajax({
+							type: "GET",
+							async: false,
+							url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
+							dataType: "json",
+							success: function(data) {
+								console.log(data);
+								var finalDisplayedData="";
+								for(i=0;i<data.length;i++)
+								{
+									textResult+="Flux "+(i+1)+":<br />"+data[i].data+"<hr>"
+								}
+								console.log( textResult);								
+							}
+						});
+
+						return documentInfo.responseText;
+
+					  },
+		     "info_row" );
+       }
    } );
 });
+
+function testAjax(handleData) {
+  	$.ajax({
+							type: "GET",
+							url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
+							dataType: "json",
+							success: function(data) {
+								console.log(data);
+								var finalDisplayedData="";
+								for(i=0;i<data.length;i++)
+								{
+									textResult+="Flux "+(i+1)+":<br />"+data[i].data+"<hr>"
+								}
+								console.log( textResult);
+								handleData("<p>"+textResult+"</p>");
+							}
+						});}
+
 
 //none stop query to retrieve data packet	
 function startDisplayPackets(){
