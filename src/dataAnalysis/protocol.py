@@ -15,12 +15,11 @@ def inspectStreamForMedia(data, sport, dport):
 		media="HTTP"
 		infos="Response"
 	else:
-		regexp_url="((?:http[s]?://)?(?:[a-zA-Z]|[0-9]|[$-_@.&#+/]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
+		regexp_url="((?:http[s]?://)?(?:[a-zA-Z0-9][a-zA-Z0-9$%\-_@\.&#\+/!*\(\),]*))"
 		result=re.search("^(GET|POST) "+regexp_url+" HTTP/1.[0-1]\r\n", data["payload"])
 		if(result!=None):
 			media="HTTP"
 			infos=result.group(1)+" Request "+result.group(2)
-
 	return (media,infos)
 
 

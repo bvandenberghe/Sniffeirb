@@ -21,7 +21,7 @@ def insertPacket(pkt,db):
 		else:
 			dport=""
 			sport=""
-		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto, "type" : Type}
+		spec = {"src" : pkt[IP].src, "dst" : pkt[IP].dst, "dport" : dport, "sport" : sport, "proto" : proto, "type" : Type,"session":globals.sessionId}
 		
 		if(proto=="TCP"):
 			data=bson.binary.Binary(str(pkt[TCP].payload))
@@ -41,29 +41,29 @@ def insertPacket(pkt,db):
 
 #delete all entries into mongodb relative at sniffeirb
 def deleteAllArchives():
-	connection = Connection('localhost', 27017)
+	'''connection = connectMongo()
 	dbs=connection.database_names()
 	for d in dbs:
 		if d.startswith('sess_'):
 			connection.drop_database(d)
-	connection.disconnect()
+	connection.disconnect()'''
 
 #list all entries into mongodb relative at sniffeirb except the current one.
 def getArchive():
 	result=[]
-	connection = Connection('localhost', 27017)
+	'''connection = connectMongo()
 	dbs=connection.database_names()
 	for d in dbs:
 			if d.startswith('sess_'):
 				result.append(d)
-	connection.disconnect()
+	connection.disconnect()'''
 	return result
 
 #delete a given archive
 def deleteArchive(name):
-	connection = Connection('localhost', 27017)
+	'''connection = connectMongo()
 	connection.drop_database(name)
-	connection.disconnect()
+	connection.disconnect()'''
 
 #delete a given archive
 def loadArchive(name):
@@ -71,9 +71,10 @@ def loadArchive(name):
 
 #initialisation timestamp is the min timestamp of all packets in the stream
 def getInitialisationTimestamp(db, src, dst, sport, dport):
-	stream=db.stream.find_one({"src": src, "dst": dst, "sport": sport, "dport": dport})
+	stream=db.stream.find_one({"src": src, "dst": dst, "sport": sport, "dport": dport, "session":globals.sessionId})
 	if stream==None:
 		return None
 	minimumTS=min(stream['packets'], key=lambda x:x['ts'])['ts']
 	return minimumTS
+
 

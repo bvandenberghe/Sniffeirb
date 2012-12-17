@@ -19,22 +19,29 @@ TEMPLATE_PATH = "./view"
 
 #fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
 def getSniffedPackets(indexFrom,indexTo):
-	db = connectMongo(globals.sessionId)
+	db = connectMongo()
 	#get data from column stream for specified fields
 	nb=0
 	finalJson="["
-	for stream in db.stream.find({"proto": "TCP"}):
+	print "packet_demande"
+	for stream in db.stream.find({"proto": "TCP", "session":globals.sessionId}):
 		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
+			print "qq chose a envoyer"
 			smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 			lianaTreeSize=getLianaTreeDataSize(smartFlow)
 			stream["media"]=""
 			for data in smartFlow:
+				print "data"
 				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
+				print "a"
 				if mostProbableMedia!="":
 					stream["media"]=mostProbableMedia+" "+infos
-			
+				else:
+					stream["media"]=""	
+				print "b"
 			finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
 			nb+=1
+			print "fin"
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"
@@ -49,11 +56,11 @@ def getPacketsData(src2, dst2):
 	dst=temp[0]
 	dport=temp[1]
 	#print (src, sport, dst, dport)
-	db = connectMongo(globals.sessionId)
+	db = connectMongo()
 	#get data from column stream for specified fields
 	nb=0
 	finalJson="["
-	spec = {"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport)}
+	spec = {"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport),"session" : globals.sessionId}
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
@@ -222,7 +229,9 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.send_header('Content-type','text/html')
 				self.end_headers()
 				self.wfile.write(array['idArchive'])
-		
+		elif self.path=='/getHTML':
+			array=get_values_array(parameters)
+
 		
 		elif self.path=='/shutdown':
 			self.send_response(200)

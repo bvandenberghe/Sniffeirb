@@ -1,3 +1,4 @@
+database_name="sniffeirb_database"
 sniff_run=None
 sniffer=None
 sessionId=None

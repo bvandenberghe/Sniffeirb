@@ -14,11 +14,10 @@ import globals
 #output : stream payload reassembled
 def reassemble_stream (src, dst, sport, dport):
 	#start reassembling stream from datastream
-	db = connectMongo(globals.sessionId)
-	#db = connectMongo('sess_07-12-2012-160442')
+	db = connectMongo()
 	#get data from column stream for specified fields
-	flow=db.stream.find_one({"proto": "TCP", "src": src, "dst": dst, "sport": sport, "dport": dport})
-	 #create the twice chained list of packets
+	flow=db.stream.find_one({"proto": "TCP", "src": src, "dst": dst, "sport": sport, "dport": dport, "session":globals.sessionId})
+	#create the twice chained list of packets
 	liana=LianaTree()
 	for pkt in flow['packets']:
 		liana.feed(pkt)
