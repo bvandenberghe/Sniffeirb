@@ -2,9 +2,8 @@
 import globals
 import re
 import cgi
-import zlib 
-
-
+from io import BytesIO
+import dataAnalysis.gzip_patched as gzip
 #cf http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4
 def splitHTMLStream(data):
 	streamsTab=[]
@@ -37,12 +36,17 @@ def decodeAndEscapeHTML(data):
 	for a in streamTab:
 		if a["header"].find("Content-Encoding: gzip\r\n"):
 			tmp=a["body"]
-			try:
-				a["body"]=zlib.decompress(tmp, -zlib.MAX_WBITS)
-			except zlib.error:
-				#a["body"]=zlib.decompress(tmp)
-				print "exception can't decompress gzip"
 			print "Content encoding gzip trouve"
+			try:
+				f = BytesIO(tmp)
+				gf=gzip.GzipFile(fileobj=f)
+				a["body"]=gf.read()
+				#zlib.decompress(tmp, -zlib.MAX_WBITS)
+				f.close()
+				gf.close()
+			except Exception, e:
+				print "exception: can't decompress gzip"
+				print e
 	return streamTab
 
 
