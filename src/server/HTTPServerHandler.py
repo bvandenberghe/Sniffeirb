@@ -6,13 +6,12 @@ import os
 import signal
 import SimpleHTTPServer
 import SocketServer
-from JsonDisplayHandler import packetToJson
+from JsonDisplayHandler import *
 from string import Template
 from flowBuilder.reassemble import *
 from flowBuilder.htmlHandler import *
 from dataHandler.connect import connectMongo
 from dataReceiver.sniffer import *
-
 
 import cgi
 TEMPLATE_PATH = "./view"
@@ -193,6 +192,12 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			else:
 				#print "from "+ indexFrom+ "  to "+indexTo
 				self.wfile.write(getSniffedPackets(float(indexFrom),float(indexTo)))	
+
+		elif self.path=='/getArchive':
+			self.send_response(200)
+			self.send_header('Content-type','text/html')
+			self.end_headers()
+			self.wfile.write(sendArchiveJSON())
 		
 		elif self.path=='/shutdown':
 			self.send_response(200)

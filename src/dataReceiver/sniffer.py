@@ -15,11 +15,11 @@ class SnifferThread(Thread):
 	def __init__ (self,filter):
 		Thread.__init__(self)
 		self.filter = filter
-		self.db=connectMongo(globals.sessionId)
+		globals.dbconnection=connectMongo(globals.sessionId)
 	def run(self):
 		sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
 	def callback(self,pkt):
-		insertPacket(pkt,self.db)
+		insertPacket(pkt,globals.dbconnection)
 		
 #condition to stop the sniffer	
 def stopperCheck():

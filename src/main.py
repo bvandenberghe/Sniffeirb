@@ -74,7 +74,6 @@ while(i<argSize):
 			if d.startswith('sess_'):
 				print "	d : " , d
 				connection.drop_database(d)
-		
 	else:
 		print "argument: "+sys.argv[i]+" unknown"
 		printUsage()

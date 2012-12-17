@@ -3,7 +3,7 @@ import json
 import sys
 from scapy.all import *
 from flowBuilder.reassemble import *
-
+from dataHandler.mongoHandler import *
 
 '''def packetListToJson(packetList, indexFrom, view):
 	finalJson="["
@@ -30,5 +30,14 @@ def packetToJson(stream, view="data", size = 0):
 
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
+def sendArchiveJSON():
+	return json.JSONEncoder().encode(getArchive())
 
+#	result='{"archives":['
+#	archive=getArchive()
+#	for a in archive:
+#		result+='{archive:"'		
+#		result+=a
+#		result+='"}'
+	
 

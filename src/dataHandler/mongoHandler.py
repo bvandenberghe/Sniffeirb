@@ -3,6 +3,8 @@
 import bson
 from scapy.all import *
 from flowBuilder.protocol import *
+import globals
+from dataHandler.connect import *
 
 #add or update data into the database
 def insertPacket(pkt,db):
@@ -35,6 +37,18 @@ def insertPacket(pkt,db):
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,}}},upsert=True)
 		#for p in db.stream.find():
 		#	print p
+
+
+
+def getArchive():
+	result=[]
+	connection = Connection('localhost', 27017)
+	dbs=connection.database_names()
+	for d in dbs:
+			if d.startswith('sess_'):
+				result.append(d)
+	return result
+
 
 #initialisation timestamp is the min timestamp of all packets in the stream
 def getInitialisationTimestamp(db, src, dst, sport, dport):

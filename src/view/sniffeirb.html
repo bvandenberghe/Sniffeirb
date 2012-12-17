@@ -146,8 +146,8 @@
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         			<h3>Archive</h3>
 		    </div>
-		    <div class="modal-body">
-	    	Old sniffed flow :
+		    <div id ="idArchive" class="modal-body">
+	    	Arleady sniffed flows :
 		   </div>
 		    <div class="modal-footer">
 			    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -174,7 +174,7 @@
      <script>
 		    sniff_run=$sniff_run;
 		    //charger les info par défauts
-		    //loadArchive();
+		    loadArchive();
 		    if(sniff_run==1)
 		    {
 			    $('#startstop').text("Stop");

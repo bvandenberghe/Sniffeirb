@@ -150,25 +150,32 @@ $('#parameters').click(function() {
 
 
 //in order to start and stop the sniffer
-/*
-loadArchive(){
+
+function loadArchive(){
 		$.ajax({
-			  url: "/stop",
+			  url: "/getArchive",
 			  type: "get",
 			  dataType: "json",
 			  success: function(data) {
+			
 				for(i=0; i<data.length;i++){
-			
-			
-			}
-		
+				console.log(i+" "+data[i]);
+					$("#idArchive").append("<div id="+data[i]+">"+data[i]+"</div>");
+
+					$("#"+data[i]).click(function(){
+						for(j=0;j<data.length;j++){
+							$("#"+data[j]).css({"background-color" : ""});
+						}
+						$(this).css({"background-color": "#B0BED9"});
+					});
+				}
 			},
 			  error:function(XMLHttpRequest, textStatus, errorThrows){
-				alert('error '+data);
+				alert('error archive ');
 			  }
-			});
+		});
 }
-*/
+
 $('#startstop').click(function() {
 	if(sniff_run==1)
 	{
