@@ -22,8 +22,8 @@ def splitHTMLStream(data):
 					streamsTab.append({"header" : httpHeader, "body" : body})
 			else:
 				streamsTab.append({"header":None, "body":data})
-				break
 		else:
+			streamsTab.append({"header":None, "body":data})
 			break
 		return streamsTab
 

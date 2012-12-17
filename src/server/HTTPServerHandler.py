@@ -9,7 +9,7 @@ import SocketServer
 from JsonDisplayHandler import *
 from string import Template
 from flowBuilder.reassemble import *
-from flowBuilder.htmlHandler import *
+from dataAnalysis.htmlHandler import *
 from dataHandler.connect import connectMongo
 from dataReceiver.sniffer import *
 
@@ -61,11 +61,10 @@ def getPacketsData(src2, dst2):
 		for data in smartFlow:
 			streamTab=decodeAndEscapeHTML(data["payload"])
 			stream['data']=""
-			if streamTab!=None:
-				for a in streamTab:
-					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
-			finalJson+=packetToJson(stream,view="data")+", "
-			nb+=1
+			for a in streamTab:
+				stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
+				finalJson+=packetToJson(stream,view="data")+", "
+				nb+=1
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"

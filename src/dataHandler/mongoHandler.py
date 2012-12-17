@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import bson
 from scapy.all import *
-from flowBuilder.protocol import *
+from dataAnalysis.protocol import *
 import globals
 from dataHandler.connect import *
 
