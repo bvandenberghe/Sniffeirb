@@ -9,7 +9,7 @@ import SocketServer
 from JsonDisplayHandler import *
 from string import Template
 from flowBuilder.reassemble import *
-from flowBuilder.htmlHandler import *
+from dataAnalysis.htmlHandler import *
 from dataHandler.connect import connectMongo
 from dataReceiver.sniffer import *
 
