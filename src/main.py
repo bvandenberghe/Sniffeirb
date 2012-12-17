@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)#disable scappy ipv6 warning
 import sys
 import os
 from dataReceiver import sniffer
@@ -77,6 +77,7 @@ while(i<argSize):
 
 print "Session Name : "+str(globals.sessionId)
 try:
+	globals.dbconnection=connectMongo()
 	if(LAUNCHSNIFFER):
 		globals.sniff_run=1
 		globals.sniffer = SnifferThread("")
