@@ -23,7 +23,7 @@ $(document).ready(function() {
 	$("thead input").keyup( function () {
 		/* Filter on the column (the index) of this element */
 		oTable.fnFilter( this.value, oTable.oApi._fnVisibleToColumnIndex( 
-			oTable.fnSettings(), $("thead input").index(this) ) );
+		oTable.fnSettings(), $("thead input").index(this) ) );
 	} );
 	
 	/*
@@ -50,8 +50,8 @@ $(document).ready(function() {
 	} );
 	
 	oTable = $('#packetTable').dataTable( {
-		"sDom": 'RC<"clear">lfrtip',
-		
+		"sDom": '<"clear">lfrti<"bottom"p<"clear">>', //ajouter RC au debut pour ajouter le choix des colonnes
+
 		"oLanguage": {
 			"sSearch": "Search all columns:"
 		},
@@ -59,7 +59,7 @@ $(document).ready(function() {
 
     "aaSorting": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'], [4,'asc'] ], //enable sort on each column
     "bLengthChange": true,
-    "sScrollY": "300px"
+    "sScrollY": "350px"
 	} );
 
 
@@ -80,16 +80,16 @@ $(document).ready(function() {
 				$("#displayData").html("<div class=\"alert alert-info\"><small><strong>"+finalDisplayedData+"</strong> </small></div>");
 			}
 		});
-    oTable.$('tr.row_selected').removeClass('row_selected');
-    $(this).addClass('row_selected');
+		//gere le bold quans on clic que une ligne du tableau
+		if ( $(this).hasClass('row_selected') ) {
+	        $(this).removeClass('row_selected');
+        }
+        else {
+            oTable.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
    } );
-	$(".TableTools").css("float","right");
-	$("#packetTable_length").css("float","right");
-	$("#packetTable_length").css("padding-right","5%");
-   
 });
-
-
 
 //none stop query to retrieve data packet	
 function startDisplayPackets(){
@@ -124,12 +124,18 @@ function retrievePackets(from, to) {
 					var pktDate = new Date();
 					pktDate.setTime(data[i].initTS*1000);
 					date=pktDate.getDate()+"/"+(pktDate.getMonth()+1)+"/"+pktDate.getFullYear()+" "+pktDate.getHours()+":"+pktDate.getMinutes()+":"+pktDate.getSeconds()+":"+pktDate.getMilliseconds();
-                    //add the new packet into the filtertable                    					
+                    //add the new packet into the filtertable
+                    if(data[i].media.length > 19){
+                    	mediaTemp=data[i].media.substring(0, 18)+"..";
+                    }
+                    else{
+                    	mediaTemp=data[i].media;
+                    }
 				    $("#packetTable").dataTable().fnAddData([
 				        date,
                         data[i].src+":"+data[i].sport,
 				        data[i].dst+":"+data[i].dport,
-				        data[i].proto+" - "+data[i].media,
+				        data[i].proto+" - "+mediaTemp,
 				        data[i].size])
 				    }
 			}

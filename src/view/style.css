@@ -21,7 +21,7 @@ body {
 }
 
 tr.row_selected  {
-	background-color: #B0BED9;
+	font-weight: bold;
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
@@ -29,12 +29,17 @@ background-color: #B0BED9 !important;
 }
 
 .ColVis TableTools{
-	float:right !important;
+	float:left !important;
 }
 
 .packetTable_length{
-	float : right !important;
+	float : left !important;
 	padding : 2% !important;
+}
+
+.dataTables_length{
+	width: 35% !important;
+	float: left !important;
 }
 
 .delete{
