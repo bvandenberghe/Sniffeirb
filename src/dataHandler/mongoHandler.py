@@ -35,11 +35,17 @@ def insertPacket(pkt,db):
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time, "data" : data, "dataLength" : length }}},upsert=True)
 			else:
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,}}},upsert=True)
-		#for p in db.stream.find():
-		#	print p
 
+#delete all entries into mongodb relative at sniffeirb
+def deleteAllArchives():
+	connection = Connection('localhost', 27017)
+	dbs=connection.database_names()
+	for d in dbs:
+		if d.startswith('sess_'):
+			connection.drop_database(d)
+	connection.disconnect()
 
-
+#list all entries into mongodb relative at sniffeirb except the current one.
 def getArchive():
 	result=[]
 	connection = Connection('localhost', 27017)
@@ -47,8 +53,15 @@ def getArchive():
 	for d in dbs:
 			if d.startswith('sess_'):
 				result.append(d)
+	connection.disconnect()
 	return result
 
+#delete a given archive
+def deleteArchive(name):
+	print "delete archive",name
+	connection = Connection('localhost', 27017)
+	connection.drop_database(name)
+	connection.disconnect()
 
 #initialisation timestamp is the min timestamp of all packets in the stream
 def getInitialisationTimestamp(db, src, dst, sport, dport):

@@ -66,14 +66,7 @@ while(i<argSize):
 		globals.sessionId=str(sys.argv[i+1])
 		i+=1
 	elif(sys.argv[i]=="-d" or sys.argv[i]=="--drop-database"):
-		connection = Connection('localhost', 27017)
-		#delete all MongoDB collections 
-		print "on supprime les bases"
-		dbs=connection.database_names()
-		for d in dbs:
-			if d.startswith('sess_'):
-				print "	d : " , d
-				connection.drop_database(d)
+		deleteAllArchives()
 	else:
 		print "argument: "+sys.argv[i]+" unknown"
 		printUsage()

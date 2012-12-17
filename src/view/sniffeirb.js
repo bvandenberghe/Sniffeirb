@@ -149,24 +149,43 @@ $('#parameters').click(function() {
 });
 
 
-//in order to start and stop the sniffer
 
+//load the mongoDB entries of sniffeirb, in order to manage them
 function loadArchive(){
 		$.ajax({
 			  url: "/getArchive",
 			  type: "get",
 			  dataType: "json",
 			  success: function(data) {
-			
+				//add a new div element for all archives in mongoDB
 				for(i=0; i<data.length;i++){
-				console.log(i+" "+data[i]);
-					$("#idArchive").append("<div id="+data[i]+">"+data[i]+"</div>");
-
+					$("#idArchive").append("<div id="+data[i]+" class=selectDB><hr/>"+data[i]+' <span class="delete" id="deleteU'+data[i]+'">&nbsp</span></div>');
+					//define behaviour for deleting an archive
+					$('#deleteU'+data[i]).click(function(){
+							archiveName=$(this).attr('id').split('U');
+							//query to the server that calls the deleting function.
+							$.ajax({
+								url: "/deleteArchive",
+								type: "get",
+								data: "idArchive="+archiveName[1],
+								dataType: "json",
+								success: function(msg) {
+									$("#"+archiveName[1]).remove();
+								},
+								  error:function(XMLHttpRequest, textStatus, errorThrows){
+									alert('error delete archive :  '+textStatus + errorThrows);
+									}
+							 });
+						});
+					
+					//on click event
 					$("#"+data[i]).click(function(){
 						for(j=0;j<data.length;j++){
-							$("#"+data[j]).css({"background-color" : ""});
+							$("#"+data[j]).css({"color" : ""});
+							$("#"+data[j]).css({"font-weight": "normal"});
 						}
-						$(this).css({"background-color": "#B0BED9"});
+						$(this).css({"color": "#990000"});
+						$(this).css({"font-weight": "bold"});
 					});
 				}
 			},
@@ -176,6 +195,8 @@ function loadArchive(){
 		});
 }
 
+
+//in order to start and stop the sniffer
 $('#startstop').click(function() {
 	if(sniff_run==1)
 	{

@@ -84,13 +84,10 @@ def get_values_array(parameters):
 	if parameters==None:
 		return {}
 	param=parameters.split('&')
-	if len(param)==1:
-		return {}
 	values={}
 	for p in param:
 		tmp=p.split('=')
 		values[tmp[0]]=tmp[1]
-	#print values
 	return values
 
 class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
@@ -173,7 +170,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type','application/json')
 			self.end_headers()
-			
+
 			array=get_values_array(parameters)
 			
 			if(len(array)>=2):
@@ -198,6 +195,20 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_header('Content-type','text/html')
 			self.end_headers()
 			self.wfile.write(sendArchiveJSON())
+
+		elif self.path=='/deleteArchive':
+			array=get_values_array(parameters)
+			if len (array)==1:
+				print array['idArchive']
+				deleteArchive(array['idArchive'])
+				self.send_response(200)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+			else :
+				self.send_response(500)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+				self.wfile.write(array['idArchive'])
 		
 		elif self.path=='/shutdown':
 			self.send_response(200)
