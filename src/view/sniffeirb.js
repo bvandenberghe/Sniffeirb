@@ -52,8 +52,10 @@ $(document).ready(function() {
 	oTable = $('#packetTable').dataTable( {
 		"sDom": '<"clear">lfrti<"bottom"p<"clear">>', //ajouter RC au debut pour ajouter le choix des colonnes
 
+	//configuration of the number of raws shown
 		"oLanguage": {
-			"sSearch": "Search all columns:"
+			"sSearch": "Search all columns:",
+			"sLengthMenu": 'Display <select><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="-1">All</option></select> records'
 		},
 		"bSortCellsTop": true,
 
