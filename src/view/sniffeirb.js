@@ -5,12 +5,19 @@ data = undefined; // ?
 intervalId = undefined; //the id of the time loop
 paquets = []; //store all packets received
 refreshInterval=500 //ms
+currentSelectedArchive=undefined
+oTable=undefined;
 
-
+function initVar(){
+	timestampCount = 0;
+	data = undefined; // ?
+	paquets = []; //store all packets received
+	currentSelectedArchive=undefined
+}
 
 //Create the filtertable
 $(document).ready(function() {
-	var oTable;
+
 	
 	/* Add the events etc before DataTables hides a column */
 	$("thead input").keyup( function () {
@@ -107,7 +114,7 @@ function retrievePackets(from, to) {
 		  dataType: "json",
 		  success: function(data) {
 			if(data!=0 && data!=null)//code d'error
-			{	
+			{
 				for (var i=0, length = data.length ;i<length;i++)
 				{				
 					//on enregistre tous les paquets dans un tableau
@@ -138,16 +145,36 @@ function retrievePackets(from, to) {
 //clean the screen
 $('#effacer').click(function() {
 	paquets = [];
-	$("#packets").html('');
+  	oTable._fnClearTable();
+  	oTable._fnReDraw();
 });
 
-//clean the screen
+//change refreshing frequancy
 $('#parameters').click(function() {
-	console.log("klkjlkjlkjlkjl");
 	refreshInterval=$("#frequence").val();
 	$("#modal_parametre").hide();
 });
 
+//load old session
+$('#loadArchive').click(function() {
+	console.log("currentSelectedArchive"+currentSelectedArchive);
+	$.ajax({
+		  url: "/loadArchive",
+   		 data: "idArchive="+currentSelectedArchive,
+		  dataType: "json",
+		  success: function(data) {
+		  	oTable._fnClearTable();
+		  	oTable._fnReDraw();
+			retrievePackets(0, -1);
+			initVar();
+		  },
+		  error:function(XMLHttpRequest, textStatus, errorThrows){
+			console.log("error while loading archive");
+		  }
+		});
+
+	$("#modal_parametre").hide();
+});
 
 
 //load the mongoDB entries of sniffeirb, in order to manage them
@@ -186,6 +213,7 @@ function loadArchive(){
 						}
 						$(this).css({"color": "#990000"});
 						$(this).css({"font-weight": "bold"});
+						currentSelectedArchive=$(this).attr('id');
 					});
 				}
 			},

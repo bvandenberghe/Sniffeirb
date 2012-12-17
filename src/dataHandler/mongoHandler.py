@@ -6,6 +6,9 @@ from dataAnalysis.protocol import *
 import globals
 from dataHandler.connect import *
 
+# methode .explain pour voir le nombre d'appel qui fait pour résoudre la requete 
+# indexer les champs
+
 #add or update data into the database
 def insertPacket(pkt,db):
 	proto=getProtocol(pkt)
@@ -58,10 +61,13 @@ def getArchive():
 
 #delete a given archive
 def deleteArchive(name):
-	print "delete archive",name
 	connection = Connection('localhost', 27017)
 	connection.drop_database(name)
 	connection.disconnect()
+
+#delete a given archive
+def loadArchive(name):
+	globals.sessionId=str(name)
 
 #initialisation timestamp is the min timestamp of all packets in the stream
 def getInitialisationTimestamp(db, src, dst, sport, dport):

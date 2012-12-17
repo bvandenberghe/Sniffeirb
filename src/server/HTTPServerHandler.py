@@ -209,6 +209,21 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.end_headers()
 				self.wfile.write(array['idArchive'])
 		
+		elif self.path=='/loadArchive':
+			array=get_values_array(parameters)
+			if len (array)==1:
+				print array['idArchive']
+				loadArchive(array['idArchive'])
+				self.send_response(200)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+			else :
+				self.send_response(500)
+				self.send_header('Content-type','text/html')
+				self.end_headers()
+				self.wfile.write(array['idArchive'])
+		
+		
 		elif self.path=='/shutdown':
 			self.send_response(200)
 			self.send_header('Content-type','text/html')
