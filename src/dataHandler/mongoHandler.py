@@ -50,13 +50,10 @@ def deleteAllArchives():
 
 #list all entries into mongodb relative at sniffeirb except the current one.
 def getArchive():
+	connection = connectMongo()
 	result=[]
-	'''connection = connectMongo()
-	dbs=connection.database_names()
-	for d in dbs:
-			if d.startswith('sess_'):
-				result.append(d)
-	connection.disconnect()'''
+	for	r in connection.stream.find({ },{"session":True, "_id":False }).distinct("session"):
+		result.append(r)
 	return result
 
 #delete a given archive

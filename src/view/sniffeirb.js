@@ -53,7 +53,7 @@ $(document).ready(function() {
 	
 	oTable = $('#packetTable').dataTable( {
 		"sDom": '<"clear">lfrti<"bottom"p<"clear">>', //ajouter RC au debut pour ajouter le choix des colonnes
-
+		"sScrollXInner": "100%",
 	//configuration of the number of raws shown
 		"oLanguage": {
 			"sSearch": "Search all columns:",

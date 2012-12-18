@@ -31,6 +31,7 @@ def packetToJson(stream, view="data", size = 0):
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
 def sendArchiveJSON():
+	print " en JSON :::::::::::::", json.JSONEncoder().encode(getArchive())
 	return json.JSONEncoder().encode(getArchive())
 
 #	result='{"archives":['
