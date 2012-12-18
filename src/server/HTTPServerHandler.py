@@ -189,11 +189,9 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				indexFrom=0
 				indexTo=1
 			
-			#print "from :"+str(indexFrom)+"   to:"+str(indexTo)
 			if len(array)<2:
 				self.wfile.write("0")#code d'erreur
 			else:
-				#print "from "+ indexFrom+ "  to "+indexTo
 				self.wfile.write(getSniffedPackets(float(indexFrom),float(indexTo)))	
 
 		elif self.path=='/getArchive':

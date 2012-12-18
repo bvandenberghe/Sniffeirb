@@ -16,7 +16,6 @@ from dataHandler.mongoHandler import *
 	'''
 
 def packetToJson(stream, view="data", size = 0):
-	#print vars(stream)
 	jsonToDisplay=None
 	if(view=="global"):
 		jsonToDisplay={"initTS":stream['initTS'], "src":stream['src'], "dst":stream['dst'], "sport":stream['sport'], "dport":stream['dport'], "proto":stream['proto'],"media":stream["media"], "size" : size}
@@ -30,15 +29,7 @@ def packetToJson(stream, view="data", size = 0):
 
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
+#send all names of previous sniffed session
 def sendArchiveJSON():
-	print " en JSON :::::::::::::", json.JSONEncoder().encode(getArchive())
 	return json.JSONEncoder().encode(getArchive())
-
-#	result='{"archives":['
-#	archive=getArchive()
-#	for a in archive:
-#		result+='{archive:"'		
-#		result+=a
-#		result+='"}'
-	
 

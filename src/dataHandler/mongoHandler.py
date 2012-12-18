@@ -41,26 +41,21 @@ def insertPacket(pkt,db):
 
 #delete all entries into mongodb relative at sniffeirb
 def deleteAllArchives():
-	'''connection = connectMongo()
-	dbs=connection.database_names()
-	for d in dbs:
-		if d.startswith('sess_'):
-			connection.drop_database(d)
-	connection.disconnect()'''
+	connection = connectMongo()
+	collection=connection['stream']
+	collection.remove()
 
 #list all entries into mongodb relative at sniffeirb except the current one.
 def getArchive():
-	connection = connectMongo()
 	result=[]
-	for	r in connection.stream.find({ },{"session":True, "_id":False }).distinct("session"):
+	for	r in globals.dbconnection.stream.find({ },{"session":True, "_id":False }).distinct("session"):
 		result.append(r)
 	return result
 
 #delete a given archive
 def deleteArchive(name):
-	'''connection = connectMongo()
-	connection.drop_database(name)
-	connection.disconnect()'''
+	collection=globals.dbconnection['stream']
+	collection.remove({'session': name})
 
 #delete a given archive
 def loadArchive(name):
