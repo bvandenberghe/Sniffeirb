@@ -55,3 +55,10 @@ background-color: #B0BED9 !important;
 	padding-left :15%;
 	width : 80%;
 }
+
+
+.packetInfo{
+    word-wrap: break-word;  
+	width: 800px;
+	max-width:900px;
+} 

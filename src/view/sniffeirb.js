@@ -57,20 +57,20 @@ $(document).ready(function() {
 	//configuration of the number of raws shown
 		"oLanguage": {
 			"sSearch": "Search all columns:",
-			"sLengthMenu": 'Display <select><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="-1">All</option></select> records'
+			"sLengthMenu": 'Display <select><option value="10">10</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="-1">All</option></select> records'
 		},
 		"bSortCellsTop": true,
 
     "aaSorting": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'], [4,'asc'] ], //enable sort on each column
     "bLengthChange": true,
-    "sScrollY": "350px"
+    "sScrollY": "450px"
 	} );
 
 
     //Onclick event				
     $('#packetTable tbody tr').live('click', function () {
     var nTds = $('td', this);
-       
+/**************Code mort, a découper pour mettre un peu plus loin donc on le garde quelque temps
     $.ajax({
 			type: "GET",
 			url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
@@ -84,6 +84,7 @@ $(document).ready(function() {
 				$("#displayData").html("<div class=\"alert alert-info\"><small><strong>"+finalDisplayedData+"</strong> </small></div>");
 			}
 		});
+****************************************/		
 		//gere le bold quans on clic que une ligne du tableau
 		if ( $(this).hasClass('row_selected') ) {
 	        $(this).removeClass('row_selected');
@@ -100,27 +101,15 @@ $(document).ready(function() {
 		     oTable.fnOpen( 
 		     this, 
 		     function(){
-			      //  var nTds = $('td', this);
-			     var textResult="kjhkjh";
-       				console.log("lkjlkjlk"+$(nTds[1]).text() +" "+$(nTds[2]).text());
 					  documentInfo=$.ajax({
 							type: "GET",
 							async: false,
 							url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
 							dataType: "json",
 							success: function(data) {
-								console.log(data);
-								var finalDisplayedData="";
-								for(i=0;i<data.length;i++)
-								{
-									textResult+="Flux "+(i+1)+":<br />"+data[i].data+"<hr>"
-								}
-								console.log( textResult);								
 							}
 						});
-
-						return documentInfo.responseText;
-
+						return '<div class="packetInfo">'+documentInfo.responseText+"</div>";
 					  },
 		     "info_row" );
        }
