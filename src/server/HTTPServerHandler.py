@@ -23,25 +23,19 @@ def getSniffedPackets(indexFrom,indexTo):
 	#get data from column stream for specified fields
 	nb=0
 	finalJson="["
-	print "packet_demande"
 	for stream in db.stream.find({"proto": "TCP", "session":globals.sessionId}):
 		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
-			print "qq chose a envoyer"
 			smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 			lianaTreeSize=getLianaTreeDataSize(smartFlow)
 			stream["media"]=""
 			for data in smartFlow:
-				print "data"
 				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
-				print "a"
 				if mostProbableMedia!="":
 					stream["media"]=mostProbableMedia+" "+infos
 				else:
 					stream["media"]=""	
-				print "b"
 			finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
 			nb+=1
-			print "fin"
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"
