@@ -109,7 +109,14 @@ $(document).ready(function() {
 							success: function(data) {
 							}
 						});
-						return '<div class="packetInfo">'+documentInfo.responseText+"</div>";
+
+						var finalDisplayedData="";
+						var data = jQuery.parseJSON(documentInfo.responseText);
+						for(i=0;i<data.length;i++)
+						{
+							finalDisplayedData+="Flux "+(i+1)+":<br />"+data[i].data
+						}
+						return '<div class="packetInfo">'+finalDisplayedData+"</div>";
 					  },
 		     "info_row" );
        }
