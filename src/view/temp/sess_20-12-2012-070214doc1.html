@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="noindex, nofollow" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css" />
+        <link rel="apple-touch-icon-precomposed" href="/gfx/iphone.png"/>
+        <title>Emploi du temps de l'ENSEIRB-MATMECA</title>
+        <script type="text/javascript" src="/js/jquery-1.4.4.min.js"></script>
+        <script type="text/javaScript" src="http://eirbar.eirb.fr/bar.js"></script>
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21037691-1']);
+  _gaq.push(['_setDomainName', '.eirb.fr']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    </head>
+    <body>
+        <div class="header">
+        <h1><a href="/">
+          ENSEIRB-MATMECA: Emploi du temps
+            </a>
+        </h1>
+	</div>
+	<div class="menu">
+	  	  <div class="menu_edt">
+	    <a href="/nretrain"><img src="/gfx/buttons/edt.jpg" /></a>
+	    <a href="/nretrain.ics"><img src="/gfx/buttons/ics.jpg" /></a>
+	    <a href="/nretrain.pdf"><img src="/gfx/buttons/pdf.jpg" /></a>
+	  </div>
+	  <div class="menu_now">
+	    <a href="/nretrain/now"><img src="/gfx/buttons/now.jpg" title="Maintenant" /></a>
+	  </div>
+	  	  <div class="menu_rdv">
+	    <a href="/rdv"><img src="/gfx/buttons/rdv.jpg" title="Rendez-vous" /></a>
+	  </div>
+	  <div class="menu_pref">
+	    <a href="/settings"><img src="/gfx/buttons/preferences.jpg" /></a>
+	    	      <a href="/login"><img src="/gfx/buttons/connexion.jpg" /></a>
+	    	  </div>
+	  <div class="menu_help">
+	    <a href="/help"><img src="/gfx/buttons/aide.jpg" title="Aide" alt="Aide" /></a>
+	  </div>
+	</div>
+        <h1>Calendrier de ~nretrain</h1>
+<hr/>
+<script type="text/javascript" src="/js/calendar.js"></script>
+<script type="text/javascript" src="/js/autoload.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.9.custom.min.js"></script><script type="text/javascript" src="/js/go_date.js"></script>
+<script type="text/javascript">
+
+current_week=51;
+current_slider_week=51;
+loaded_week=51;
+max_week=51;
+lock_autoload=false;
+maintenance=false;
+
+user_login = 'nretrain';
+$(document).ready(function(){
+    loadweek('nretrain', 51);
+    $(window).scroll(function() {scroll_weeks('nretrain',51);});
+
+    $(".date").datepicker("option", "onSelect", function(dateText, inst) {
+        var date = new Date(parseInt(dateText));
+        var data = $.datepicker.iso8601Week(date);
+        window.location = "/nretrain/"+data;
+    });
+    $(".date").val("1355724143000");
+
+    $(".go_date").click(function() { $('.ui-datepicker-trigger').click(); });
+});
+</script>
+  <script type="text/javascript">
+  function one_pixel_to_the_right(){
+    var elem = $('#now_red_bar');
+    $(elem).css("margin-left", parseInt($(elem).css("margin-left"))+1);
+  }
+
+  setInterval("one_pixel_to_the_right()", 44444);
+  </script>
+<![if !IE]>
+<script type="text/javascript" src="/js/slide_loader.js"></script>
+<![endif]>
+<!--[if gte IE 9]>
+<script type="text/javascript" src="/js/slide_loader.js"></script>
+<![endif]-->
+<div id="container" class="container">
+<div class="navigation">
+  <h2>
+         Semaine 51 du 17/12/2012 au 23/12/2012                   <a class="arrow" id="arrow_right" href='/nretrain/52'>&raquo;</a>
+        </h2>
+</div>
+<div class="go_date">
+<input type="text" name="date" class="date"  style="display:none">
+<span>
+ Aller à la date</span>
+</div>
+<div id="loading">
+  <img class="loading" src="/gfx/loading.gif" style="display:none; clear:none; padding-top:10px;" />
+</div>
+<div class="calendar" style="background-image:url('/gfx/calendars/2012-51.jpg');">
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,0,0" style="width: 275px;height: 134px;position: absolute;margin-left: 0px;margin-top: 0px;" id="event_2186888" name="43071" >
+<div class="content">
+  <h2>
+            RE 315 Sécurité réseaux      </h2>
+    <div class="heure">
+      <div class="heure_debut">08:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">11:30</div>
+  </div>
+    <div class="salle">TD7</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Blanc Mathieu, Desclaux Fabrice, Geli Mathieu, Lalet,Pierre</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,0,0" style="width: 275px;height: 134px;position: absolute;margin-left: 365px;margin-top: 0px;" id="event_2186892" name="43103" >
+<div class="content">
+  <h2>
+            RE 315 Sécurité réseaux      </h2>
+    <div class="heure">
+      <div class="heure_debut">12:30</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">16:00</div>
+  </div>
+    <div class="salle">I 015</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Blanc Mathieu, Desclaux Fabrice, Geli Mathieu, Lalet,Pierre</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="td">
+
+<div class="event event_cal " rel="134,134,0,0" style="width: 113px;height: 134px;position: absolute;margin-left: 749px;margin-top: 0px;" id="event_2186896" name="43040" >
+<div class="content">
+  <h2>
+            RE 312 Réseaux de télécommunications      </h2>
+    <div class="heure">
+      <div class="heure_debut">17:15</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">18:45</div>
+  </div>
+    <div class="salle">TD4</div>
+  <div class="groupes">TD - RSR</div>
+  <div class="prof">Bouil, Jean-Marc, Picard Patrice</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,150,150" style="width: 99px;height: 134px;position: absolute;margin-left: 0px;margin-top: 150px;" id="event_2186901" name="42710" >
+<div class="content">
+  <h2>
+            IT 334 Virtualisation de systèmes      </h2>
+    <div class="heure">
+      <div class="heure_debut">08:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">09:20</div>
+  </div>
+    <div class="salle">Amphi C, I 003</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Le Goff David, Vincent,Aymeric</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,150,150" style="width: 99px;height: 134px;position: absolute;margin-left: 122px;margin-top: 150px;" id="event_2186904" name="42711" >
+<div class="content">
+  <h2>
+            IT 334 Virtualisation de systèmes      </h2>
+    <div class="heure">
+      <div class="heure_debut">09:30</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">10:50</div>
+  </div>
+    <div class="salle">Amphi C, I 003</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Le Goff David, Vincent,Aymeric</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal  small_event" rel="134,134,150,150" style="width: 72px;height: 134px;position: absolute;margin-left: 243px;margin-top: 150px;" id="event_2186906" name="42712" >
+<div class="content">
+  <h2>
+            IT 334 Virtualisation de systèmes      </h2>
+    <div class="heure">
+      <div class="heure_debut">11:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">12:00</div>
+  </div>
+    <div class="salle">Amphi C, I 003</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Le Goff David, Vincent,Aymeric</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="td">
+
+<div class="event event_cal  stacked" rel="134,64,150,150" style="width: 153px;height: 64px;position: absolute;margin-left: 668px;margin-top: 150px;" id="event_2186907" name="42586" >
+<div class="content">
+  <h2>
+            LC 301 Anglais      </h2>
+    <div class="heure">
+      <div class="heure_debut">16:15</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">18:15</div>
+  </div>
+    <div class="salle">CReL Centre de Ressources en Langues</div>
+  <div class="groupes">TD - RSR</div>
+  <div class="prof">Faucher,Jill, Floquet,Pierre, Medina,Susan</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="vie_associative">
+
+<div class="event event_cal  stacked" rel="134,61,150,223" style="width: 146px;height: 61px;position: absolute;margin-left: 810px;margin-top: 223px;" id="event_2097811" name="" >
+<div class="content">
+  <h2>
+        BDE      </h2>
+    <div class="heure">
+      <div class="heure_debut">18:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">19:55</div>
+  </div>
+    <div class="notes">Soirée poker par Pok'Eirb 19h-23h</div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,300,300" style="width: 315px;height: 134px;position: absolute;margin-left: 41px;margin-top: 300px;" id="event_2186909" name="43106" >
+<div class="content">
+  <h2>
+            RE 317 Outils d'administration 1      </h2>
+    <div class="heure">
+      <div class="heure_debut">08:30</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">12:30</div>
+  </div>
+    <div class="salle">TD15 (2ème étage )</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Medat Fabien</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,300,300" style="width: 315px;height: 134px;position: absolute;margin-left: 486px;margin-top: 300px;" id="event_2186913" name="43105" >
+<div class="content">
+  <h2>
+            RE 317 Outils d'administration 1      </h2>
+    <div class="heure">
+      <div class="heure_debut">14:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">18:00</div>
+  </div>
+    <div class="salle">TD15 (2ème étage )</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Medat Fabien</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="vie_associative">
+
+<div class="event event_cal " rel="134,134,300,300" style="width: 106px;height: 134px;position: absolute;margin-left: 851px;margin-top: 300px;" id="event_2169212" name="" >
+<div class="content">
+  <h2>
+        Eirbware      </h2>
+    <div class="heure">
+      <div class="heure_debut">18:30</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">19:55</div>
+  </div>
+    <div class="notes">Geekerie par Emmanuel Fleury<br />
+TD6<br />
+groupe de travail sur la sécurité logicielle</div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,450,450" style="width: 315px;height: 134px;position: absolute;margin-left: 0px;margin-top: 450px;" id="event_2186914" name="43107" >
+<div class="content">
+  <h2>
+            RE 317 Outils d'administration 1      </h2>
+    <div class="heure">
+      <div class="heure_debut">08:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">12:00</div>
+  </div>
+    <div class="salle">I 003</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Medat Fabien</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,450,450" style="width: 315px;height: 134px;position: absolute;margin-left: 486px;margin-top: 450px;" id="event_2186916" name="43108" >
+<div class="content">
+  <h2>
+            RE 317 Outils d'administration 1      </h2>
+    <div class="heure">
+      <div class="heure_debut">14:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">18:00</div>
+  </div>
+    <div class="salle">I 003</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Medat Fabien</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="cours">
+
+<div class="event event_cal " rel="134,134,600,600" style="width: 315px;height: 134px;position: absolute;margin-left: 0px;margin-top: 600px;" id="event_2186918" name="43109" >
+<div class="content">
+  <h2>
+            RE 317 Outils d'administration 1      </h2>
+    <div class="heure">
+      <div class="heure_debut">08:00</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">12:00</div>
+  </div>
+    <div class="salle">TD15 (2ème étage )</div>
+  <div class="groupes">Cours - RSR</div>
+  <div class="prof">Medat Fabien</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+<div class="td">
+
+<div class="event event_cal " rel="134,134,600,600" style="width: 113px;height: 134px;position: absolute;margin-left: 749px;margin-top: 600px;" id="event_2186920" name="43069" >
+<div class="content">
+  <h2>
+            RE 312 Réseaux de télécommunications      </h2>
+    <div class="heure">
+      <div class="heure_debut">17:15</div>
+<!--      <div class="heure_arrow">&rarr;</div> -->
+      <div class="heure_fin">18:45</div>
+  </div>
+    <div class="salle">TD5</div>
+  <div class="groupes">TD - RSR</div>
+  <div class="prof">Bouil, Jean-Marc, Picard Patrice</div>
+  <div class="notes"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr />
+<img id="autoload" class="loading" src="/gfx/loading.gif" style="display:none" />
+<hr />
+        <div class="footer">
+          App &amp; design by <a href="http://eirb.fr">Eirbware</a>.
+        </div>
+    </body>
+</html>

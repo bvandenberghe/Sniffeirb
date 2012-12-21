@@ -8,7 +8,7 @@ refreshInterval=500 //ms
 currentSelectedArchive=undefined
 oTable=undefined;
 documentInfo=undefined;
-
+DEBUG=undefined;
 
 function initVar(){
 	timestampCount = 0;
@@ -57,13 +57,15 @@ $(document).ready(function() {
 	//configuration of the number of raws shown
 		"oLanguage": {
 			"sSearch": "Search all columns:",
-			"sLengthMenu": 'Display <select><option value="10">10</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="-1">All</option></select> records'
+			"sLengthMenu": 'Display <select><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option><option value="300">300</option><option value="-1">All</option></select> records'
 		},
+       "iDisplayLength": 20,
 		"bSortCellsTop": true,
 
     "aaSorting": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'], [4,'asc'] ], //enable sort on each column
     "bLengthChange": true,
-    "sScrollY": "450px"
+    "sScrollY": "450px",
+	"bStateSave": false
 	} );
 
 
@@ -96,6 +98,7 @@ $(document).ready(function() {
         
          if ( oTable.fnIsOpen(this) ) {
 		           oTable.fnClose( this );
+		               $(this).unbind();
 		         }
 		 else {
 		     oTable.fnOpen( 
@@ -112,13 +115,16 @@ $(document).ready(function() {
 
 						var finalDisplayedData="";
 						var data = jQuery.parseJSON(documentInfo.responseText);
+						DEBUG=data[1];
 						for(i=0;i<data.length;i++)
 						{
-							finalDisplayedData+="Flux "+(i+1)+":<br />"+data[i].data
+						//<a href="'+data[i].link+'">see the document</a> <iframe src="'+data[i].link+'"></iframe>'
+							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4><a href="'+DEBUG.link+'">see the document</a><br /><iframe class="miniature" weight="80%" src="'+DEBUG.link+'"></iframe>'+data[i].data+"<hr>"
 						}
-						return '<div class="packetInfo">'+finalDisplayedData+"</div>";
+						return '<div class="packetInfo">'+finalDisplayedData+' </div>';
 					  },
 		     "info_row" );
+		     $(this).unbind();
        }
    } );
 });
@@ -213,7 +219,6 @@ $('#parameters').click(function() {
 
 //load old session
 $('#loadArchive').click(function() {
-	console.log("currentSelectedArchive"+currentSelectedArchive);
 	$.ajax({
 		  url: "/loadArchive",
    		 data: "idArchive="+currentSelectedArchive,

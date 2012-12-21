@@ -29,6 +29,13 @@ def packetToJson(stream, view="data", size = 0):
 
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
+def linkToJson(link):
+	jsonToDisplay=None
+	jsonToDisplay={"link":link}	
+	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
+
+
+
 #send all names of previous sniffed session
 def sendArchiveJSON():
 	return json.JSONEncoder().encode(getArchive())

@@ -24,6 +24,13 @@ tr.row_selected  {
 	font-weight: bold;
 }
 
+td{
+font-size: 10px;
+height:12px;
+}
+tr{
+height:12px;
+}
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
 background-color: #B0BED9 !important;
 }
@@ -62,3 +69,8 @@ background-color: #B0BED9 !important;
 	width: 800px;
 	max-width:900px;
 } 
+
+.miniature{
+	float:right;
+
+}
