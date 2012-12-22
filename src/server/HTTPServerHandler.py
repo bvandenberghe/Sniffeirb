@@ -27,15 +27,16 @@ def getSniffedPackets(indexFrom,indexTo):
 		if stream['initTS']!=None and stream['initTS']>indexFrom and (stream['initTS']<=indexTo or indexTo==-1):
 			smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 			lianaTreeSize=getLianaTreeDataSize(smartFlow)
-			stream["media"]=""
-			for data in smartFlow:
-				(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
-				if mostProbableMedia!="":
-					stream["media"]=mostProbableMedia+" "+infos
-				else:
-					stream["media"]=""	
-			finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
-			nb+=1
+			if lianaTreeSize!=0:
+				stream["media"]=""
+				for data in smartFlow:
+					(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
+					if mostProbableMedia!="":
+						stream["media"]=mostProbableMedia+" "+infos
+					else:
+						stream["media"]=""	
+				finalJson+=packetToJson(stream, view="global",size=lianaTreeSize)+", "
+				nb+=1
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"
@@ -58,20 +59,29 @@ def getPacketsData(src2, dst2):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+		
 		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
-			streamTab=decodeAndEscapeHTML(data["payload"])
-			stream['data']=""
-			for a in streamTab:
-				stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
+			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
+			if mostProbableMedia.startswith("HTTP"):
+				streamTab=decodeAndEscapeHTML(data["payload"])
+				stream['data']=""
+				for a in streamTab:
+					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
+					finalJson+=packetToJson(stream,view="data")+", "
+					globals.docNumber+=1
+					f=open("view/temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html","w")
+					f.write(a["body"])
+					f.close()
+					#finalJson+="link:doc"+str(globals.docNumber)+".html"
+					finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+					nb+=1
+			else:
+				stream['data']=cgi.escape(data["payload"])
 				finalJson+=packetToJson(stream,view="data")+", "
-				globals.docNumber+=1
-				f=open("view/temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html","w")
-				f.write(a["body"])
-				f.close()
-#				finalJson+="link:doc"+str(globals.docNumber)+".html"
-				finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+				finalJson+=linkToJson("")+", "
 				nb+=1
+			
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"

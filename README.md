@@ -5,9 +5,15 @@ Welcome to our 3rd year ENSEIRB's PR311 projet.
 If you want to install Sniff'eirb, you will need to install some packages:
 - python :
 - scapy:
-- python:
+- python-pymongo:
 - mongodb :
-- pymongo :
+
+------------------------------------
+Installation on Ubuntu 12.04 LTS:
+
+sudo apt-get install mongodb
+sudo apt-get install scapy
+sudo apt-get install python-pymongo
 
 -------------------------------------
 Installation on openSuSe 12.1..
