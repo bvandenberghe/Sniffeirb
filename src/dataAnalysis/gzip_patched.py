@@ -287,7 +287,6 @@ class GzipFile(io.BufferedIOBase):
             self._read_gzip_header()
             self.decompress = zlib.decompressobj(-zlib.MAX_WBITS)
             self._new_member = False
-
         # Read a chunk of data from the file
         buf = self.fileobj.read(size)
 
@@ -336,8 +335,8 @@ class GzipFile(io.BufferedIOBase):
         #if crc32 != self.crc:
         #    raise IOError("CRC check failed %s != %s" % (hex(crc32),
         #                                                hex(self.crc)))
-	#print "isize :"+str(isize)
-	#print "self.size: "+str(self.size)
+        #print "isize :"+str(isize)
+        #print "self.size: "+str(self.size)
         #if isize != (self.size & 0xffffffffL):
         #    raise IOError, "Incorrect length of data produced"
 

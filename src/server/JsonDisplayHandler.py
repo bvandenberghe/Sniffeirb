@@ -34,6 +34,10 @@ def linkToJson(link):
 	jsonToDisplay={"link":link}	
 	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
+def typeToJson(link):
+	jsonToDisplay=None
+	jsonToDisplay={"type":link}	
+	return json.dumps(jsonToDisplay,sort_keys=True)#, indent=4)
 
 
 #send all names of previous sniffed session

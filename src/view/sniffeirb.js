@@ -120,8 +120,12 @@ $(document).ready(function() {
 						{
 						//<a href="'+data[i].link+'">see the document</a> <iframe src="'+data[i].link+'"></iframe>'
 							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4>';
-							if (DEBUG.link!="")
-								finalDisplayedData+='<a href="'+DEBUG.link+'">see the document</a><br /><iframe class="miniature" weight="80%" src="'+DEBUG.link+'"></iframe>';
+								//finalDisplayedData+='<img src="/getDoc?from='+$(nTds[1]).text()+'&to='+$(nTds[2]).text()+'&doc='+i+'"/><br />';
+								if(DEBUG.type=="text")
+									if (DEBUG.link!="")
+										finalDisplayedData+='<a href=/"'+DEBUG.link+'">see the document</a><br /><iframe class="miniature" weight="80%" src="'+DEBUG.link+'"></iframe>';
+								else if(DEBUG.type=="image")
+									finalDisplayedData+='<a href="/getData?from='+$(nTds[1]).text()+'&to='+$(nTds[2]).text()+'&doc='+i+'">see the document</a><br />';
 							finalDisplayedData+=data[i].data+"<hr>";
 						}
 						return '<div class="packetInfo">'+finalDisplayedData+' </div>';

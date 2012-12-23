@@ -66,13 +66,21 @@ def getPacketsData(src2, dst2):
 			if mostProbableMedia.startswith("HTTP"):
 				streamTab=decodeAndEscapeHTML(data["payload"])
 				stream['data']=""
+				count=0
 				for a in streamTab:
 					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
 					finalJson+=packetToJson(stream,view="data")+", "
 					globals.docNumber+=1
-					writeHTTPToFile(a);
-					#finalJson+="link:doc"+str(globals.docNumber)+".html"
-					finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+					count+=1
+					ct=getContentType(a)
+					if ct!=None:
+						if(ct.startswith("image")):
+							finalJson+=typeToJson("image")+", "
+						else:
+							writeHTTPToFile(a);
+							finalJson+=typeToJson("text")+", "
+							#finalJson+="link:doc"+str(globals.docNumber)+".html"
+							finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
 					nb+=1
 			else:
 				stream['data']=cgi.escape(data["payload"])
@@ -85,6 +93,47 @@ def getPacketsData(src2, dst2):
 	finalJson+="]"
 	return finalJson
 
+def getData(src, dst, doc):
+	temp=src.split(":")
+	src=temp[0]
+	sport=temp[1]
+	temp=dst.split(":")
+	dst=temp[0]
+	dport=temp[1]
+	#print (src, sport, dst, dport)
+	db = connectMongo()
+	#get data from column stream for specified fields
+	nb=0
+	spec = {"proto": "TCP", "src" : src, "dst" : dst, "sport" : int(sport), "dport" : int(dport),"session" : globals.sessionId}
+	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
+	if stream!=None:
+		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
+		
+		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
+		for data in smartFlow:
+			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
+			if mostProbableMedia.startswith("HTTP"):
+				mydoc=getHTTPDoc(data["payload"],doc)
+				print mydoc
+				if mydoc==None:
+					return (None,None)
+				contentType=re.search("Content-Type: ?([a-zA-Z0-9/\-])", mydoc["header"])
+				
+				return (contentType,mydoc["body"])
+'''	if a["header"].find("Content-Encoding: gzip\r\n"):
+			a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
+			print "Content encoding gzip trouve"
+			try:
+				f = BytesIO(a["body"])
+				gf=gzip.GzipFile(fileobj=f)
+				a["body"]=gf.read()
+				#zlib.decompress(tmp, -zlib.MAX_WBITS)
+				f.close()
+				gf.close()
+			except Exception, e:
+				print "exception: can't decompress gzip"
+				print e
+	'''
 
 #fonction qui renvoie le template d'un fichier	
 def get_page_template(page_name):
@@ -184,7 +233,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_response(200)
 			self.send_header('Content-type','application/json')
 			self.end_headers()
-
+			
 			array=get_values_array(parameters)
 			
 			if(len(array)>=2):
@@ -235,10 +284,16 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.send_header('Content-type','text/html')
 				self.end_headers()
 				self.wfile.write(array['idArchive'])
-		elif self.path=='/getHTML':
+		elif self.path=='/getDoc':
 			array=get_values_array(parameters)
-
-		
+			f=array["from"]
+			t=array["to"]
+			doc=array["doc"]
+			(contentType,data)=getData(f,t,doc)
+			self.send_response(200)
+			self.send_header('Content-type',contentType)
+			self.end_headers()
+			self.wfile.write(data)
 		elif self.path=='/shutdown':
 			self.send_response(200)
 			self.send_header('Content-type','text/html')

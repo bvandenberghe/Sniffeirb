@@ -68,7 +68,7 @@ def decodeAndEscapeHTML(data):
 		return []
 	for a in streamTab:
 		if a["header"].find("Content-Encoding: gzip\r\n"):
-			#a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
+			a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
 			print "Content encoding gzip trouve"
 			try:
 				f = BytesIO(a["body"])
@@ -87,4 +87,22 @@ def writeHTTPToFile(doc):
 		f=open("view/temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html","w")
 		f.write(doc["body"])
 		f.close()
+		
+
+def getContentType(doc):
+	regexp=re.search("Content-Type: ?([a-zA-Z0-9\\-/]*)",doc["header"])
+	if regexp!=None:
+		return regexp.group(0)
+	return None
+
+def getHTTPDoc(data, docNb):
+	streamTab=splitHTMLStream(data)
+	print streamTab
+	docNb=int(docNb)
+	if streamTab==None:
+		return None 
+	#for a in streamTab:
+	if docNb>=len(streamTab):
+		return None
+	return streamTab[docNb]
 
