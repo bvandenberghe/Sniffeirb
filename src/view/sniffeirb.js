@@ -119,7 +119,10 @@ $(document).ready(function() {
 						for(i=0;i<data.length;i++)
 						{
 						//<a href="'+data[i].link+'">see the document</a> <iframe src="'+data[i].link+'"></iframe>'
-							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4><a href="'+DEBUG.link+'">see the document</a><br /><iframe class="miniature" weight="80%" src="'+DEBUG.link+'"></iframe>'+data[i].data+"<hr>"
+							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4>';
+							if (DEBUG.link!="")
+								finalDisplayedData+='<a href="'+DEBUG.link+'">see the document</a><br /><iframe class="miniature" weight="80%" src="'+DEBUG.link+'"></iframe>';
+							finalDisplayedData+=data[i].data+"<hr>";
 						}
 						return '<div class="packetInfo">'+finalDisplayedData+' </div>';
 					  },

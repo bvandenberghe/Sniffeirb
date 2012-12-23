@@ -70,9 +70,7 @@ def getPacketsData(src2, dst2):
 					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
 					finalJson+=packetToJson(stream,view="data")+", "
 					globals.docNumber+=1
-					f=open("view/temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html","w")
-					f.write(a["body"])
-					f.close()
+					writeHTTPToFile(a);
 					#finalJson+="link:doc"+str(globals.docNumber)+".html"
 					finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
 					nb+=1
