@@ -92,12 +92,12 @@ def writeHTTPToFile(doc):
 def getContentType(doc):
 	regexp=re.search("Content-Type: ?([a-zA-Z0-9\\-/]*)",doc["header"])
 	if regexp!=None:
-		return regexp.group(0)
+		return regexp.group(1)
 	return None
 
 def getHTTPDoc(data, docNb):
 	streamTab=splitHTMLStream(data)
-	print streamTab
+	#print streamTab
 	docNb=int(docNb)
 	if streamTab==None:
 		return None 

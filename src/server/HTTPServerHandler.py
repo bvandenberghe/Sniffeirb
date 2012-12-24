@@ -73,14 +73,15 @@ def getPacketsData(src2, dst2):
 					globals.docNumber+=1
 					count+=1
 					ct=getContentType(a)
-					if ct!=None:
-						if(ct.startswith("image")):
+					if ct!=None: 
+						if ct.strip().startswith("image"):
 							finalJson+=typeToJson("image")+", "
 						else:
-							writeHTTPToFile(a);
 							finalJson+=typeToJson("text")+", "
-							#finalJson+="link:doc"+str(globals.docNumber)+".html"
-							finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+					else:
+						writeHTTPToFile(a);
+						#finalJson+="link:doc"+str(globals.docNumber)+".html"
+						finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
 					nb+=1
 			else:
 				stream['data']=cgi.escape(data["payload"])
@@ -93,7 +94,7 @@ def getPacketsData(src2, dst2):
 	finalJson+="]"
 	return finalJson
 
-def getData(src, dst, doc):
+def getDoc(src, dst, doc):
 	temp=src.split(":")
 	src=temp[0]
 	sport=temp[1]
@@ -114,7 +115,7 @@ def getData(src, dst, doc):
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
 				mydoc=getHTTPDoc(data["payload"],doc)
-				print mydoc
+				#print mydoc
 				if mydoc==None:
 					return (None,None)
 				contentType=re.search("Content-Type: ?([a-zA-Z0-9/\-])", mydoc["header"])
@@ -286,10 +287,10 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				self.wfile.write(array['idArchive'])
 		elif self.path=='/getDoc':
 			array=get_values_array(parameters)
-			f=array["from"]
-			t=array["to"]
+			f=array["src"]
+			t=array["dst"]
 			doc=array["doc"]
-			(contentType,data)=getData(f,t,doc)
+			(contentType,data)=getDoc(f,t,doc)
 			self.send_response(200)
 			self.send_header('Content-type',contentType)
 			self.end_headers()
