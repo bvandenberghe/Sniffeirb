@@ -73,12 +73,17 @@ def getPacketsData(src2, dst2):
 					globals.docNumber+=1
 					count+=1
 					ct=getContentType(a)
-					if ct!=None: 
+					if ct!=None:
+						finalJson+=linkToJson("")+", "
 						if ct.strip().startswith("image"):
 							finalJson+=typeToJson("image")+", "
 						else:
 							finalJson+=typeToJson("text")+", "
+							writeHTTPToFile(a);
+							#finalJson+="link:doc"+str(globals.docNumber)+".html"
+							finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
 					else:
+						finalJson+=typeToJson("text")+", "
 						writeHTTPToFile(a);
 						#finalJson+="link:doc"+str(globals.docNumber)+".html"
 						finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
