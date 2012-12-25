@@ -59,7 +59,7 @@ def getPacketsData(src2, dst2):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-		
+		print smartFlow	
 		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
@@ -69,24 +69,26 @@ def getPacketsData(src2, dst2):
 				count=0
 				for a in streamTab:
 					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
-					finalJson+=packetToJson(stream,view="data")+", "
 					globals.docNumber+=1
 					count+=1
 					ct=getContentType(a)
+					infos={}
 					if ct!=None:
-						finalJson+=linkToJson("")+", "
+						infos["link"]=""	
 						if ct.strip().startswith("image"):
-							finalJson+=typeToJson("image")+", "
+							infos["type"]="image"
 						else:
-							finalJson+=typeToJson("text")+", "
+							infos["type"]="text"
 							writeHTTPToFile(a);
 							#finalJson+="link:doc"+str(globals.docNumber)+".html"
-							finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+							infos["link"]="temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html"
 					else:
-						finalJson+=typeToJson("text")+", "
+						infos["type"]="text"
 						writeHTTPToFile(a);
 						#finalJson+="link:doc"+str(globals.docNumber)+".html"
-						finalJson+=linkToJson("temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html")+", "
+						infos["link"]="temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html"
+					stream["infos"]=infos
+					finalJson+=packetToJson(stream,view="data")+", "
 					nb+=1
 			else:
 				stream['data']=cgi.escape(data["payload"])
@@ -114,7 +116,6 @@ def getDoc(src, dst, doc):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-		
 		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
@@ -122,10 +123,11 @@ def getDoc(src, dst, doc):
 				mydoc=getHTTPDoc(data["payload"],doc)
 				#print mydoc
 				if mydoc==None:
-					return (None,None)
-				contentType=re.search("Content-Type: ?([a-zA-Z0-9/\-])", mydoc["header"])
-				
-				return (contentType,mydoc["body"])
+					return (None,None,None)
+				print "header : "+str(mydoc["header"])+"\nfin"
+				contentType=getContentType(mydoc)
+				contentEncoding=getContentEncoding(mydoc)
+				return (contentType,contentEncoding,mydoc["body"])
 '''	if a["header"].find("Content-Encoding: gzip\r\n"):
 			a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
 			print "Content encoding gzip trouve"
@@ -172,7 +174,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		if self.path.endswith(".html"):
 		
 			self.send_response(200)
-			self.send_header('Content-type','text/html')
+			self.send_header('Content-Type','text/html')
 			self.end_headers()
 			
 			tmp=get_page_template(TEMPLATE_PATH+self.path)
@@ -182,7 +184,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=="/" or self.path=="/sniffeirb.html":
 		
 			self.send_response(200)
-			self.send_header('Content-type','text/html')
+			self.send_header('Content-Type','text/html')
 			self.end_headers()
 			
 			tmp=get_page_template(TEMPLATE_PATH+"/"+"sniffeirb.html")
@@ -194,7 +196,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			
 		elif self.path=='/start':
 			self.send_response(200)
-			self.send_header('Content-type','application/json')
+			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			if globals.sniff_run==None or globals.sniff_run==0:
 				print "on commence à sniffer"
@@ -206,7 +208,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 		elif self.path=='/stop':
 			self.send_response(200)
-			self.send_header('Content-type','application/json')
+			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			if globals.sniff_run==1:
 				print "on arrete de sniffer"
@@ -217,14 +219,14 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=='/sniffall':
 		
 			self.send_response(200)
-			self.send_header('Content-type','application/json')
+			self.send_header('Content-Type','application/json')
 			self.end_headers()
 
 			self.wfile.write(getSniffedPackets(0,-1))
 			
 		elif self.path=='/getdata':
 			self.send_response(200)
-			self.send_header('Content-type','application/json')
+			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			
 			array=get_values_array(parameters)
@@ -237,7 +239,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			#/sniff?from=0&to=3 renverra les paquets du numéro 0 au 3
 			
 			self.send_response(200)
-			self.send_header('Content-type','application/json')
+			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			
 			array=get_values_array(parameters)
@@ -259,7 +261,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 		elif self.path=='/getArchive':
 			self.send_response(200)
-			self.send_header('Content-type','text/html')
+			self.send_header('Content-Type','text/html')
 			self.end_headers()
 			self.wfile.write(sendArchiveJSON())
 
@@ -269,11 +271,11 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				print array['idArchive']
 				deleteArchive(array['idArchive'])
 				self.send_response(200)
-				self.send_header('Content-type','text/html')
+				self.send_header('Content-Type','text/html')
 				self.end_headers()
 			else :
 				self.send_response(500)
-				self.send_header('Content-type','text/html')
+				self.send_header('Content-Type','text/html')
 				self.end_headers()
 				self.wfile.write(array['idArchive'])
 		
@@ -283,11 +285,11 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 				print array['idArchive']
 				loadArchive(array['idArchive'])
 				self.send_response(200)
-				self.send_header('Content-type','text/html')
+				self.send_header('Content-Type','text/html')
 				self.end_headers()
 			else :
 				self.send_response(500)
-				self.send_header('Content-type','text/html')
+				self.send_header('Content-Type','text/html')
 				self.end_headers()
 				self.wfile.write(array['idArchive'])
 		elif self.path=='/getDoc':
@@ -295,14 +297,20 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			f=array["src"]
 			t=array["dst"]
 			doc=array["doc"]
-			(contentType,data)=getDoc(f,t,doc)
+			(contentType,contentEncoding,data)=getDoc(f,t,doc)
 			self.send_response(200)
-			self.send_header('Content-type',contentType)
-			self.end_headers()
-			self.wfile.write(data)
+			print "content-type: "+str(contentType)+", content-encoding: "+str(contentEncoding)
+			if contentType==None:
+				self.end_headers()
+				self.wfile.write("error")
+			else:
+				self.send_header('Content-Type',contentType)
+				self.send_header('Content-Encoding',contentEncoding)
+				self.end_headers()
+				self.wfile.write(data)
 		elif self.path=='/shutdown':
 			self.send_response(200)
-			self.send_header('Content-type','text/html')
+			self.send_header('Content-Type','text/html')
 			self.end_headers()
 			self.wfile.write("<html><body><center><h1>server shutdown</h1></center></body></html>")
 			globals.sniff_run=0

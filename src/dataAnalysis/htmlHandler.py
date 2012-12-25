@@ -95,8 +95,16 @@ def getContentType(doc):
 		return regexp.group(1)
 	return None
 
+def getContentEncoding(doc):
+	regexp=re.search("Content-Encoding: ?([a-zA-Z0-9\\-/]*)",doc["header"])
+	if regexp!=None:
+		return regexp.group(1)
+	return None
+
 def getHTTPDoc(data, docNb):
+	print data
 	streamTab=splitHTMLStream(data)
+	print streamTab
 	#print streamTab
 	docNb=int(docNb)
 	if streamTab==None:

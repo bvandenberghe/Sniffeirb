@@ -115,18 +115,16 @@ $(document).ready(function() {
 
 						var finalDisplayedData="";
 						var data = jQuery.parseJSON(documentInfo.responseText);
-						TYPE=data[1];
-						LINK=data[2];
 						for(i=0;i<data.length;i++)
 						{
 						//<a href="'+data[i].link+'">see the document</a> <iframe src="'+data[i].link+'"></iframe>'
 							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4>';
 								//finalDisplayedData+='<img src="/getDoc?from='+$(nTds[1]).text()+'&to='+$(nTds[2]).text()+'&doc='+i+'"/><br />';
 								
-								if(TYPE.type=="image")
+								if(data[i].infos.type=="image")
 									finalDisplayedData+='<img src="/getDoc?src='+$(nTds[1]).text()+'&dst='+$(nTds[2]).text()+'&doc='+i+'"/><br />';
-								if (LINK.link!="" && LINK.link!=undefined)
-										finalDisplayedData+='<a href='+LINK.link+'>see the document</a><br /><iframe class="miniature" weight="80%" src="'+LINK.link+'"></iframe>';
+								if (data[i].infos.type!="" && data[i].infos.type!=undefined)
+										finalDisplayedData+='<a href='+data[i].infos.link+'>see the document</a><br /><iframe class="miniature" weight="80%" src="'+data[i].infos.link+'"></iframe>';
 							finalDisplayedData+=data[i].data+"<hr>";
 						}
 						return '<div class="packetInfo">'+finalDisplayedData+' </div>';
