@@ -59,7 +59,7 @@ def getPacketsData(src2, dst2):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-		print smartFlow	
+		#print smartFlow	
 		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
@@ -92,8 +92,9 @@ def getPacketsData(src2, dst2):
 					nb+=1
 			else:
 				stream['data']=cgi.escape(data["payload"])
+				infos={"link":"", "type":""}
+				stream['infos']=infos
 				finalJson+=packetToJson(stream,view="data")+", "
-				finalJson+=linkToJson("")+", "
 				nb+=1
 			
 	if nb>0:
@@ -124,7 +125,7 @@ def getDoc(src, dst, doc):
 				#print mydoc
 				if mydoc==None:
 					return (None,None,None)
-				print "header : "+str(mydoc["header"])+"\nfin"
+			#	print "header : "+str(mydoc["header"])+"\nfin"
 				contentType=getContentType(mydoc)
 				contentEncoding=getContentEncoding(mydoc)
 				return (contentType,contentEncoding,mydoc["body"])

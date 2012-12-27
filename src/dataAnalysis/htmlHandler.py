@@ -7,31 +7,38 @@ import dataAnalysis.gzip_patched as gzip
 #cf http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4
 def splitHTMLStream(data):
 	streamsTab=[]
-	print data[0:200]
 	chain=data.split("\r\n\r\n")
+	f=open("test.txt","w")
+	f.write(data)
 	i=0
-	j=0
 	finalTab=[]
 	newchain=[]
 	#we create a new tab with header/body each 2 list element
 	while i < len(chain):
 		if re.match("^((?:HTTP/1\\.[0-2] [0-9]* [a-zA-Z ]*)|(?:GET|POST))",chain[i]):
-			newchain.append(chain[j])
-			newchain.append(chain[j+1])
-			j+=2
+			newchain.append(chain[i])
+			#we check the body size if there is a header Content-length and concatenate the new header at the end to create a new html stream
+			s=chain[i+1]
+			regexp=re.search("Content-Length: ?([0-9]*)",s)
+			if(regexp!=None):
+				#append body
+				res=int(regexp.group(1))
+				newchain.append(s[:res])
+				newchain.append(s[res:])
+			else:
+				newchain.append(s)
 			i+=2
 		else:
-			if i>0 and j>0:
-				newchain[j-1]+=chain[i]
+			newchain[len(newchain)-1]+=chain[i]
 			i+=1
 	i=0
+	count=0
 	while i < len(newchain):
-		if i+1>=len(newchain):
-			finalTab.append({"header":newchain[i],"body":""})
-		else:
-			finalTab.append({"header":newchain[i],"body":newchain[i+1]})
-			i+=2
-	#print finalTab
+			if i+1<len(newchain):
+				finalTab.append({"header":newchain[i],"body":newchain[i+1]})
+				i+=2
+			else:
+				finalTab.append({"header":newchain[i],"body":""})
 	return finalTab
 '''	
 		regexp=re.findall("((?:HTTP/1\\.[0-2] [0-9]* [a-zA-Z ]*\\r\\n)(?:[a-zA-Z0-9\\-_;\\.,?/\\\\= \\t:]*(?:\\r\\n)?)*)\\r\\n\\r\\n((?:.*)(?:\\r\\n\\r\\n)(?=HTTP))",data)
