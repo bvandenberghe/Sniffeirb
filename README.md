@@ -26,3 +26,7 @@ if it does not exist, add the repo :
 -zypper addrepo http://download.opensuse.org/repositories/server:database/openSUSE_12.1/server:databse.repo
 -zypper refresh
 To start mongoDB Server write the command : mongod
+
+-------------------------------------
+Installation on Windows:
+Don't bother yourself with it, it does NOT work on Windows
