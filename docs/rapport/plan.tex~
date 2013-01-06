@@ -9,13 +9,13 @@
 \usepackage{float}
 \usepackage[final]{pdfpages} 
 \pagestyle{fancy}
-\lhead{Projet Sniff'eirb}
+\lhead{Projet Sniffeir'b}
 \rhead{Rapport de fin de projet}
 
 \begin{document}
 		
 	% Page de garde
-	\title{\Large{\textbf{Sniff'eirb, sniffer intelligent}}\\\Huge{\textbf{Rapport final}}}
+	\title{\Large{\textbf{Sniffeir'b, sniffer intelligent}}\\\Huge{\textbf{Rapport final}}}
 	\author{%\textbf{Réalisateurs} 
 	Nicolas Verdier \and Nicolas Retrain \and Gabrielle Schmidt \and Benjamin Vandenberghe \and Fatima Iddir\\
 	\\
