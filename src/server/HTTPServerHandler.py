@@ -17,7 +17,8 @@ import cgi
 TEMPLATE_PATH = "./view"
 
 
-#fonction qui renvoie tous les packets du buffer du numéro indexFrom au numéro indexTo, si indexTo vaut -1 ça veux dire jusqu'à la fin
+#sends all packets in buffer from indexFrom to indexTo
+# if indexTo == -1, sends until the buffer ends
 def getSniffedPackets(indexFrom,indexTo):
 	db = connectMongo()
 	#get data from column stream for specified fields
@@ -60,7 +61,7 @@ def getPacketsData(src2, dst2):
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 		#print smartFlow	
-		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
+		#for an update lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
@@ -117,7 +118,7 @@ def getDoc(src, dst, doc):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-		#pour la mise a jour lianaTreeSize=getLianaTreeDataSize(smartFlow)
+		#for an update lianaTreeSize=getLianaTreeDataSize(smartFlow)
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
@@ -144,7 +145,7 @@ def getDoc(src, dst, doc):
 				print e
 	'''
 
-#fonction qui renvoie le template d'un fichier	
+#returns a file's template	
 def get_page_template(page_name):
 	fichier = open(page_name,'r')
 	contenu = fichier.read()
@@ -200,8 +201,8 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			if globals.sniff_run==None or globals.sniff_run==0:
-				print "on commence à sniffer"
-				#démarrage du thread du sniffer
+				print "Starting sniffer"
+				#starting sniffer thread
 				globals.sniff_run=1;
 				globals.sniffer = SnifferThread("")
 				globals.sniffer.start()
@@ -212,8 +213,8 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_header('Content-Type','application/json')
 			self.end_headers()
 			if globals.sniff_run==1:
-				print "on arrete de sniffer"
-				#arrêt du thread du sniffer
+				print "Stopping sniffer"
+				#stopping sniffer thread
 				globals.sniff_run=0;
 				self.wfile.write("1")#return true
 		
@@ -237,7 +238,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 #				self.wfile.write(getPacketsData(array["src"],array["dst"],int(array["sport"]),int(array["dport"])))
 			
 		elif self.path=='/sniff':
-			#/sniff?from=0&to=3 renverra les paquets du numéro 0 au 3
+			#for example, /sniff?from=0&to=3 sends packets from 0 to 3
 			
 			self.send_response(200)
 			self.send_header('Content-Type','application/json')

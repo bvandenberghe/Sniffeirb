@@ -34,9 +34,9 @@ def getProtocol(pkt):
 		protocol="ICMP"
 	return protocol
 
-#find the protocol of the media transfered (HTTP, IMAP, POP, ...)
+#find the protocol of the transfered media (HTTP, IMAP, POP, ...)
 def findMedia(dport,sport):
-    #sorry, bur it seems that python doesn't have switch statement, so lets do it thanks elif
+    #sorry, but it seems that python doesn't have switch statement, so lets do it thanks to elif
 
     if (dport==1 or sport==1):
         return "tcpmux - TCP Port Service Multiplexer"

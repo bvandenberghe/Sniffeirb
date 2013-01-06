@@ -91,18 +91,18 @@ try:
 			httpd.server_bind()     # Manually bind, to support allow_reuse_address
 			httpd.server_activate()
 			if(LAUNCHBROWSER):
-				print "on lance le navigateur"
+				print "Launching web browser..."
 				webbrowser.open('http://localhost:'+str(PORT),new=2)
-			print 'web interface opened on http://localhost:', PORT
+			print 'Web interface launched on http://localhost:', PORT
 			httpd.serve_forever()
 			signal.pause()
 		except KeyboardInterrupt:
 			print "Keyboard interruption detected"
 			pass
 		finally:
-			print "server shutting down ..."
+			print "Server shutting down ..."
 			httpd.shutdown()
-			print "program exiting ..." 
+			print "Program exiting ..." 
 			globals.sniff_run=0
 			exit()
 except KeyboardInterrupt:

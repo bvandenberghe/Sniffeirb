@@ -59,7 +59,7 @@ def pathBuilder(liana):
 
 
 
-#Suppression des chemins non terminé dans la table (qui ont aidé à la construction des autres chemins)
+
 #Cleaning all partial paths
 def cleanDataTab(dataTab):
 	dataTabTemp=list(dataTab)
@@ -69,13 +69,12 @@ def cleanDataTab(dataTab):
 			dataTab.remove(data)
 	return dataTab
 
-#remove duplicate payloads in a same lianatree
+#remove duplicate payloads in the same lianatree
 def removeTwins(smartFlow):
 	seen = set()
 	seen_add = seen.add
 	return [ x for x in smartFlow if x['payload'] not in seen and not seen_add(x['payload'])]
 
-#reconstruction de la payload
 #rebuilding the payload of all paths
 def rebuilding(dataTab):
 	payloads=[]

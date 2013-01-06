@@ -82,7 +82,7 @@ class GzipFile(io.BufferedIOBase):
         """
 
         # guarantee the file is opened in binary mode on platforms
-        # that care about that sort of thing
+        # that care about that sort of things
         if mode and 'b' not in mode:
             mode += 'b'
         if fileobj is None:

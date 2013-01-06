@@ -1,6 +1,6 @@
 import scapy.all
 
-#give the sum of all datas in all the lianatrees
+#give the sum of all data in all the lianatrees
 def getLianaTreeDataSize(smartFlow):	
 	size=0
 	for data in smartFlow:
@@ -20,20 +20,13 @@ class LianaTree:
     - ack
     """
 
-## VERIFIER SI ni suivant ni suiveur
 
     def __init__(self):
         self.curid = 0
-#        self.initseqs = set()
         self.packets = {}
     
      #fill the linanaTree with packets and enhance the packet with additionnal information such as next and previous packets
     def feed(self, packet):
-# DEAD CODE
-#        if "S" in packet['flags']:
-#            self.initseqs.add(packet['seq'])
-#            print "debut feed ", self.initseqs
-        # si flags syn a 1 je note le num de sequence
         if "data" in packet:
             pkt = {
                 'id': self.curid,
@@ -58,7 +51,3 @@ class LianaTree:
                     self.packets[x]['prev'].append(pkt['id'])
             self.packets[pkt['id']] = pkt
 
-
-
-    
-###########################

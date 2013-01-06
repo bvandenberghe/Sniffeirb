@@ -6,8 +6,8 @@ from dataAnalysis.protocol import *
 import globals
 from dataHandler.connect import *
 
-# methode .explain pour voir le nombre d'appel qui fait pour résoudre la requete 
-# indexer les champs
+# method .explain to check how many valls were made to solve the query 
+# make indexes on database fields
 
 #add or update data into the database
 def insertPacket(pkt,db):
@@ -39,7 +39,7 @@ def insertPacket(pkt,db):
 			else:
 				db.stream.update(spec, { "$set": {"initTS" : getInitialisationTimestamp(db, pkt[IP].src, pkt[IP].dst, sport, dport)}, "$push" : {"packets" : { "flags" : pkt.sprintf("%UDP.flags%"), "ts" : pkt.time,}}},upsert=True)
 
-#delete all entries into mongodb relative at sniffeirb
+#delete all entries into mongodb, relatively at sniffeirb
 def deleteAllArchives():
 	connection = connectMongo()
 	collection=connection['stream']
@@ -57,7 +57,7 @@ def deleteArchive(name):
 	collection=globals.dbconnection['stream']
 	collection.remove({'session': name})
 
-#delete a given archive
+#load a given archive
 def loadArchive(name):
 	globals.sessionId=str(name)
 
