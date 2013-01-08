@@ -27,7 +27,7 @@ Pour le média, cela a été plus technique. Au départ, nous l'avons simplement
 certains ports sont utilisés pour certains médias (par exemple, 80 pour HTTP). Mais en ne nous concentrant que sur cette information, nous aurions manqué
 toutes les communications d'un média sur d'autres ports (comme 8080 pour HTTP), qui, d'un point de vue de la sécurité, pouvaient être les plus intéressantes.
 Nous avons donc décidé de parser la charge utile du paquet TCP à la recherche d'expression régulière trahissant le HTTP(S), comme les en-têtes
- $$HTTP/numero_de_version$$ et les mots clés $$GET$$ ou $$POST$$ ou des URLs.
+ $HTTP/numero\_de\_version$ et les mots clés $GET$ ou $POST$ ou des URLs.
 
 
 %pourquoi il peut y en voir plusieurs flux dans une communication: 
@@ -39,11 +39,11 @@ C'est pourquoi nous avons dû prévoir de reconstruire tous les flux possibles.
 
 %comment reconstruire tous les flux possibles : lianatree, algo, problèmes rencontrées 
 \indent Pour ce faire, nous avons créé une structure de liste doublement chaînée que nous avons ensuite parcouru pour en tirer tous les flux possibles. Pour remplir cette chaîne
-doublement chaînée, baptisée $$LianaTree$$, nous avions simplement parcouru la liste des paquets d'une communication en commençant par celui qui a le plus petit numéro de séquence et 
+doublement chaînée, baptisée $LianaTree$, nous avions simplement parcouru la liste des paquets d'une communication en commençant par celui qui a le plus petit numéro de séquence et 
 nous cherchions tous ses successeurs. Le successeur d'un paquet ayant pour numéro de séquence la somme de la taille de sa charge utile et du numéro de séquence de son prédecesseur 
-(modulo $$2**32$$).
-Cependant, nous avions un problème dans certains cas, car le numéro de séquence TCP est pris au hasard parmi $$2**32$$ possibilités et il était donc possible d'avoir la fin du flux 
-avant le début (si le numéro de séquence du début de la communication était proche de $$2**32 -1$$). Finalement, nous recherchons simplement les successeurs et prédecesseurs de chaque
+(modulo $2**32$).
+Cependant, nous avions un problème dans certains cas, car le numéro de séquence TCP est pris au hasard parmi $2**32$ possibilités et il était donc possible d'avoir la fin du flux 
+avant le début (si le numéro de séquence du début de la communication était proche de $2**32 -1$). Finalement, nous recherchons simplement les successeurs et prédecesseurs de chaque
 paquet via le numéro de séquence et la taille de la charge utile.
 
 Une fois cette liste créée, nous devons la parcourir en entier en partant du paquet qui n'a pas de prédécesseur. Si plusieurs paquets n'ont pas de prédécesseur, nous recommençons le parcours autant de fois que nécessaire. Nous réalisons un parcours en largeur de la liste qui découle de ce paquet et nous concaténons les charges utiles au fur et à mesure. À la fin, nous éliminons
