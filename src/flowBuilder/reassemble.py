@@ -34,6 +34,7 @@ def reassemble_stream (src, dst, sport, dport):
 def pathBuilder(liana):
 	i=0
 	dataTab=[]
+	#dataTab will contain several tables of packets
 	while (i<len(liana.packets)):
 		currentPacket=liana.packets[i]
 		addedPacket=False
@@ -41,9 +42,11 @@ def pathBuilder(liana):
 		for currentData in dataTabTemp:
 			lastPacket=currentData[len(currentData)-1]
 			ind=0
+			#for each next of the current packet
 			for currentNext in lastPacket['next']:
 				ind+=1
 				if currentNext==currentPacket['id']:
+					#if the current packet is the next of another
 					newData=list(currentData)
 					newData.append(currentPacket)
 					dataTab.append(newData)
