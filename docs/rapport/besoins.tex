@@ -1,38 +1,36 @@
-\section{L'état de l'art}%à renommer
+
+%%%%%%%%%%%%%%%%%%%%%%%% TODO BY BENJAMIN %%%%%%%%%%%%%%%%%%%%%%
+
+\section{L'état de l'art}
 %notamment le logiciel qui est sensé faire pareil que nous et bien sur tcpdump et wireshark
-Un grand nombre de logiciels et de librairies proposent des fonctiaonnalités de captures réseaux de bas niveau (d'un point de vu utilisateur final). 
-Nous pouvons notament citer libpcap, Scapy, Winpcap ou encore tcpdump. Wireshark est
+Il existe un grand nombre de logiciels et de librairies qui proposent des fonctionnalités de captures réseaux de bas niveau et d'analyse de paquets (d'un point de vu utilisateur final). 
+Nous pouvons notamment citer libpcap, Scapy, Winpcap ou encore tcpdump. Ces outils ont été un modèle d'inspiration pour tenter de réaliser notre propre \textit{Sniffer}\footnote{Terme anglicisé désginant un dispositif permettant d'analyser le trafic d'un réseau} réseau.\\
 
--wireshark
--TCPdump
--l'autre qui va revenir cette nuit
--scapy
--Libpcap
--Winpcap
-
-\section{Nos objectifs}%à renommer
-
-\subsection{Premières étapes}%à renommer
-Dans un premier temps, nous souhaitions retrouver les fonctionnalités principales de Wireshark. Par exemple, afficher une lsite des paquets circulant sur le réseaux, ainsi que les informations s'y rapportant (timestamp, ip source, ip destination, port, protocole...). Cependant,  nous n'avons pas souhaité implémenter les fonctionnalité avancées de Wireshark pour plusieurs raison. En effet nous voulions apporter une solution nouvelle, et plus simple d'utilisation à un utilisateur néophyte. 
-Ainsi nous avons défini trois premiers objectifs : 
-
+\section{Nos objectifs}
+\subsection{Premières étapes}
+L'objectif premier était tout d'abord de retrouver les fonctionnalités principales de Wireshark, comme par exemple afficher une liste des paquets circulant sur le réseaux ainsi que les informations s'y rapportant (timestamp, adresse IP source, adresse IP destination, port, protocole...), tout en apportant une solution différente et plus simple d'utilisation à un utilisateur néophyte. Ainsi nous avons défini trois premiers objectifs :
 \begin{itemize}
-\item Récupérer les flux* d'un réseau.
-\item Stocker les flux.
-\item Afficher les flux.
+\item Récupérer les communications\footnote{Une communication est définie par un échange réseau entre deux paires (Adresse IP ; Port).} en clair d'un réseau.
+\item Stocker les paquets de cette communication.
+\item Afficher les différents flux\footnote{Un flux est défini comme un assemblage possible des paquets d'une communication.} possibles de cette communication.\\
 \end{itemize}
-* : cf la section n° X.
 
-\subsection{La valeur ajoutée de Sniff'eirb}%à renommer
+\subsection{La valeur ajoutée de Sniff'eirb}
 
--création de l'arbre des possibilités pour les flux TCP
--Gestion du protocole http : reconstruction des pages webs (principal objectif).
+Le but de ce projet n'étant pas de reproduire un Wireshark, nous devions y apporter des atouts significatifs. Plusieurs fonctionnalités ont donc été implémentées :
 
+\begin{description}
+\item[L'arbre des possibilités pour les flux TCP :] Lors de la capture des paquets circulant sur le réseau pour une même communication, des événements inatendus, comme la répétition de paquets ou encore la perte de certains,  pouvaient survenir. La capture de tous les paquets permet donc de connaître les différentes façons de les réassembler pour obtenir un flux décrivant la communication. 
+\item[La gestion du protocole HTTP :] La reconstruction des pages webs visitées par un utilisateur sur le réseau était le fil conducteur du projet. L'analyse des paquets circulant sur le réseau est le principal outil pour arriver à cette fin.\\
+\end{description}
 
 \subsection{Les idées abandonées ou non implémentées}
--cookies
--ghost mode
--choisir l'interface réseau
--exporter en pcap
--UDP
--restrictions des protocoles
+En parallèle, beaucoup d'idées durent être abandonnée du fait d'un manque de temps et d'énergie pour les traiter. Voici une liste non exhaustive de ces idées :
+%% \begin{description}
+%% %% -cookies
+%% %% -ghost mode
+%% %% -choisir l'interface réseau
+%% %% -exporter en pcap
+%% %% -UDP
+%% %% -restrictions des protocoles
+%% \end{description}
