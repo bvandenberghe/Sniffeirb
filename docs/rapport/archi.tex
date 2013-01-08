@@ -4,11 +4,15 @@
 \section{L'architecture générale}
 
 Nous avons choisi dès le départ de suivre une architecture de type MVC, et nous nous y sommes tenu tout au long du projet. Afin de nous facilité le découpage du code, et de définir nos principales interfaces nous
-avons conçu au démarrage du projet une architecture globale. Elle est représentée dans la figure 1. %METTRE l'image Archi.png
+avons conçu au démarrage du projet une architecture globale. Elle est représentée dans la figure \ref{Architecture}. %METTRE l'image Archi.png
 
-\begin{figure}
-
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{Archi.png}
+\caption{Architecture de Sniffeirb}
+\label{Architecture}
 \end{figure}
+
 Nous avons choisi d'utiliser le langage python pour notre projet, en parti pour ses nombreuses bibliothèques, y compris pour les captures réseaux. De plus nous avions tous envi d'approfondir nos connaissances dans 
 un langage de programmation autre que le C,C++ ou java.
 
@@ -36,7 +40,10 @@ Nous avons choisi d'utiliser une base no-sql mongo pour ses performances et sa s
 
 \subsection{Acquisition des données}
 Ce composant récupère les données réseau, et les met dans la base de données. Les paquets sont regroupé par communications.
-Nous utilisons le module scapy de python afin de récupérer les paquets.
+Nous utilisons le module scapy de python afin de récupérer les paquets. Il est de plus au niveau que la lib pcap ou winpcacp, ce qui facilite la capture des paquêts réseau.
+
+\subsection{Paquets}
+Ceci représente le réseau, et les paquets qui circulent. En paramétrant la carte réseau
 
 \section{La base du sniffer : la récupération des paquets et leur stockage}
 
