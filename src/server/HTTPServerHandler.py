@@ -65,7 +65,8 @@ def getPacketsData(src2, dst2):
 		for data in smartFlow:
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
-				streamTab=decodeAndEscapeHTML(data["payload"])
+				#streamTab=decodeAndEscapeHTML(data["payload"])
+				streamTab=splitHTMLStream(data["payload"])
 				stream['data']=""
 				count=0
 				for a in streamTab:
