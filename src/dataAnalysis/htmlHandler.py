@@ -8,14 +8,30 @@ import dataAnalysis.gzip_patched as gzip
 
 def splitHTMLStream(data):
 	streamsTab=[]
-	print data
+	#print data.encode('string_escape')
 	stop=False
+	#print'_______________________________________________________'	
+	#print data
+	#print'_______________________________________________________'	
+	regexp=re.findall(r"((?:(?:HTTP/1\.[0-2] [0-9]* [a-zA-Z ]*)|(?:(?:GET|POST)[a-zA-Z0-9\./\\\-_~%# ]*)).*?\r\n\r\n)",data,flags=re.DOTALL)#.*? for non greedy .*
+	#we need to transform the non overlapping findall into an overlapping one
+	list_indexes=[]
+	print regexp
+	for a in regexp:
+		list_indexes.append(data.find(a))
+	print list_indexes
+	for i in range(0,len(list_indexes)):
+		header_start=list_indexes[i]
+		header_end=list_indexes[i]+len(regexp[i])
+		if i+1>=len(list_indexes):
+			body_end=len(data)
+		else:
+			body_end=list_indexes[i+1]
+		#print header_start
+		#print header_end
+		#print body_end
+		streamsTab.append({"header":data[header_start:header_end],"body":data[header_end:body_end]})
 	#print '------------------------------------------------'
-	regexp=re.findall(r"((?:(?:HTTP/1\.[0-2] [0-9]* [a-zA-Z ]*)|(?:GET|POST)).*?)\r\n\r\n(.*)",data,flags=re.DOTALL)
-	#print regexp
-	#print '------------------------------------------------'
-	for (header,body) in regexp:
-		streamsTab.append({"header":header,"body":body})
 	return streamsTab
 
 
