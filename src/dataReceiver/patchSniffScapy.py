@@ -1,11 +1,10 @@
 from scapy.all import *
 
 @conf.commands.register
-def sniff2(count=0, store=1, offline=None, prn = None, lfilter=None, L2socket=None, timeout=None, stopperTimeout=None, stopper = None, *arg, **karg):
+def sniff2(store=1, offline=None, prn = None, lfilter=None, L2socket=None,  stopperTimeout=None, stopper = None, *arg, **karg):
     """Sniff packets
-sniff([count=0,] [prn=None,] [store=1,] [offline=None,] [lfilter=None,] + L2ListenSocket args) -> list of packets
+sniff( [prn=None,] [store=1,] [offline=None,] [lfilter=None,] + L2ListenSocket args) -> list of packets
 
-  count: number of packets to capture. 0 means infinity
   store: wether to store sniffed packets or discard them
     prn: function to apply to each packet. If something is returned,
          it is displayed. Ex:
@@ -14,7 +13,6 @@ lfilter: python function applied to each packet to determine
          if further action may be done
          ex: lfilter = lambda x: x.haslayer(Padding)
 offline: pcap file to read packets from, instead of sniffing them
-timeout: stop sniffing after a given time (default: None)
 stopperTimeout: break the select to check the returned value of 
          stopper() and stop sniffing if needed (select timeout)
 stopper: function returning true or false to stop the sniffing process
@@ -30,8 +28,6 @@ L2socket: use the provided L2socket
         s = PcapReader(offline)
 
     lst = []
-    if timeout is not None:
-        stoptime = time.time()+timeout
     remain = None
 
     if stopperTimeout is not None:
@@ -39,11 +35,6 @@ L2socket: use the provided L2socket
     remainStopper = None
     while 1:
         try:
-            if timeout is not None:
-                remain = stoptime-time.time()
-                if remain <= 0:
-                    break
-
             if stopperTimeout is not None:
                 remainStopper = stopperStoptime-time.time()
                 if remainStopper <=0:
@@ -73,8 +64,6 @@ L2socket: use the provided L2socket
                     r = prn(p)
                     if r is not None:
                         print r
-                if count > 0 and c >= count:
-                    break
         except KeyboardInterrupt:
             print "Forcing program to quit..."
             os.killpg(os.getpgid(0),signal.SIGKILL)

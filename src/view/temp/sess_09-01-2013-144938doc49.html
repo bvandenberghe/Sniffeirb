@@ -1,0 +1,48 @@
+/**
+ * Eirbar pour eirb.fr
+ * By Eirbware 
+ */
+
+var HOST = 'http://eirbar.eirb.fr';
+var HOST_NOTIFICATIONS = 'http://notifications.eirb.fr';
+
+var LOGIN;
+
+function loadCss(file)
+{
+    var css = '<link rel="stylesheet" type="text/css" href="'+file+'" />';
+    $("head").append(css);
+}
+
+function initTip()
+{
+    $.getScript(HOST + '/js/jquery.poshytip.min.js', function() {
+        $('#eirbar .tip').poshytip({
+            className: 'tip-twitter',
+            showTimeout: 80,
+            alignTo: 'target',
+            alignX: 'center',
+            offsetY: 25,
+            allowTipHover: false,
+            fade: false,
+            slide: false
+        });
+    });
+}
+
+function initLogin()
+{
+    $.getScript('http://auth.eirb.fr/logged', function() {
+        var img;
+        var link;
+        var msg;
+        LOGIN = isLogged();
+        if (LOGIN == false) {
+            img = HOST + '/css/logout.png';
+            msg = 'Cliquez pour vous connecter';
+            link = 'http://auth.eirb.fr/login?redirect='+document.URL
+        }
+        else {
+            img = HOST + '/css/login.png';
+            msg = '~'+LOGIN+' connecté<br/>Cliquez pour vous déconnecter';
+            link = 'http://auth.eirb.fr/log
