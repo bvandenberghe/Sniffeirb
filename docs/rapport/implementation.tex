@@ -1,11 +1,26 @@
 \section{La base du sniffer : la récupération des paquets et leur stockage}
 %scapy, mongo
 
+La partie principale de notre projet est de capturer un flux réseau, nous nous sommes appuyés donc sur la bibliothèque Scapy. Cependant la fontion de capture
+réseau fournie par Scapy permet de lancer une capture sur un nombre fixe de paquet ou un temps donné. Dans notre projet nous voulions pouvoir sniffer
+le réseau un temps indéterminé, jusqu'à une interaction de l'utilisateur. Nous avons donc repris le code de la fonction "sniff" de Scapy et modifié de telle sorte
+qu'une fonction de contrôle soit appelée régulièrement. Ainsi nous pouvons couper et lancer le sniffer de façon évènementielle. 
 
--patch de scapy pour pouvoir sniffer infiniment (jusqu'à l'appel d'une fonction)
+En parallèle de la capture nous stockons les paquets capturés dans une base de données. Celle-ci est composée d'une unique collection. Chaque collection
+est composée de documents dont les champs peuvent varier selon le type de paquets. Un document correspond à une communication\footnote{Une communication est définie par un échange réseau entre deux paires (Adresse IP ; Port).}. Ce qui signifie que l'on ne prend pas en compte les éventuels paquets qui utilisent un autre protocole qu'IP.
 
--mongodb, no sql, index, 
--pymongo
+Chaque document possèdent certains champs dans tous les cas. Il s'agit des champs :
+\begin{itemize}
+\item adresses IP source et destination
+\item ports sources et destination 
+\item protocole (TCP, UDP, ICMP ou "other")
+\item type (IP)
+\item session (un identifiant de type $sess_date$)
+\end{itemize}
+
+et du document paquets.
+Les documents paquets étant eux-mêmes composés de tous les champs utiles des paquets, le tout au format BSON.
+
 
 
 \section{La reconstruction}
