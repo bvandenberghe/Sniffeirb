@@ -12,6 +12,7 @@ from flowBuilder.reassemble import *
 from dataAnalysis.htmlHandler import *
 from dataHandler.connect import connectMongo
 from dataReceiver.sniffer import *
+import commands
 
 import cgi
 TEMPLATE_PATH = "./view"
@@ -319,6 +320,7 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.wfile.write("<html><body><center><h1>server shutdown</h1></center></body></html>")
 			globals.sniff_run=0
 			print "forcing program to quit ..."
+			commands.getoutput('rm view/temp/*')
 			os.killpg(os.getpgid(0),signal.SIGKILL)
 		else:
 			self.path=TEMPLATE_PATH+self.path

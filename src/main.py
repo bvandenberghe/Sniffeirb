@@ -14,6 +14,8 @@ from dataHandler.connect import *
 import datetime
 from pymongo import Connection
 from string import *
+import commands
+
 
 def readPcap():
 	print "reading pcap file"
@@ -136,6 +138,7 @@ try:
 		finally:
 			print "Server shutting down ..."
 			httpd.shutdown()
+			commands.getoutput('rm view/temp/*')
 			print "Program exiting ..." 
 			globals.sniff_run=0
 			exit()
