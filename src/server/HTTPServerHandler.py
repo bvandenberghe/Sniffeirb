@@ -92,6 +92,7 @@ def getPacketsData(src2, dst2):
 					finalJson+=packetToJson(stream,view="data")+", "
 					nb+=1
 			else:
+				
 				stream['data']=cgi.escape(data["payload"])
 				infos={"link":"", "type":""}
 				stream['infos']=infos
