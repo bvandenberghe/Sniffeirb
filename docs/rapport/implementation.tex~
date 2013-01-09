@@ -10,12 +10,50 @@
 
 \section{La reconstruction}
 
+Un des principaux objectifs de Sniff'eirb était de rendre l'exploitation des données capturées la plus évidente possible.
+Nous avons donc décidé de permettre l'affichage des échanges HTTP, notamment celui des pages HTML et des images. Pour ce
+faire, nous avons commencé par reconstruire les différents flux de données.
+
 \subsection{Recontruction d'un flux}
-Reconnaissance des protocoles : ARP TCP UDP ..
-qu est ce qu'un flux : 
-pourquoi il peut y en voir plusieurs : 
-comment reconstruire tous les flux possibles : lianatree, algo, problèmes rencontrées 
-comment choisir le meilleur : 
+
+Comme nous ne pouvions pas implémenter la reconstruction de flux de la même façon pour tous les protocoles de couche 4 (UDP et TCP) et
+que nous voulions présenter un résultat démonstratif même pour le néophyte, nous nous sommes consacrés au protocole* TCP, puis au média* HTTP.
+
+
+%Reconnaissance des protocoles : TCP UDP .. et du média
+\indent Il a donc tout d'abord fallu reconnaître le protocole qui nous intéresse et le média, avant d'en reconstruire le flux. Comme nous l'avons vu 
+dans la partie précédente, le protocole est facilement retrouvable directement dans la base de données (puisqu'il s'agit d'un champ du paquet IP). 
+Pour le média, cela a été plus technique. Au départ, nous l'avons simplement déterminé grâce au port (source ou destination). En effet, traditionnellement,
+certains ports sont utilisés pour certains médias (par exemple, 80 pour HTTP). Mais en ne nous concentrant que sur cette information, nous aurions manqué
+toutes les communications d'un média sur d'autres ports (comme 8080 pour HTTP), qui, d'un point de vue de la sécurité, pouvaient être les plus intéressantes.
+Nous avons donc décidé de parser la charge utile du paquet TCP à la recherche d'expression régulière trahissant le HTTP(S), comme les en-têtes
+ $HTTP/numero\_de\_version$ et les mots clés $GET$ ou $POST$ ou des URLs.
+
+
+%pourquoi il peut y en voir plusieurs flux dans une communication: 
+\indent À ce moment-là, nous disposons donc de l'ensemble des paquets appartenant à la même communication* ainsi que du média qui correspond. Comme le protocole est TCP,
+il paraît assez facile de reconstruire le flux : on classe les paquets par numéro de séquence croissant et on concatène les charges utiles. Cependant, cette démarche 
+n'est pas possible. En effet, il arrive parfois que plusieurs paquets arrivent avec le même numéro de séquence, voire qu'il manque des paquets au milieu du flux.
+C'est pourquoi nous avons dû prévoir de reconstruire tous les flux possibles.
+
+
+%comment reconstruire tous les flux possibles : lianatree, algo, problèmes rencontrées 
+\indent Pour ce faire, nous avons créé une structure de liste doublement chaînée que nous avons ensuite parcouru pour en tirer tous les flux possibles. Pour remplir cette chaîne
+doublement chaînée, baptisée $LianaTree$, nous avions simplement parcouru la liste des paquets d'une communication en commençant par celui qui a le plus petit numéro de séquence et 
+nous cherchions tous ses successeurs. Le successeur d'un paquet ayant pour numéro de séquence la somme de la taille de sa charge utile et du numéro de séquence de son prédecesseur 
+(modulo $2**32$).
+Cependant, nous avions un problème dans certains cas, car le numéro de séquence TCP est pris au hasard parmi $2**32$ possibilités et il était donc possible d'avoir la fin du flux 
+avant le début (si le numéro de séquence du début de la communication était proche de $2**32 -1$). Finalement, nous recherchons simplement les successeurs et prédecesseurs de chaque
+paquet via le numéro de séquence et la taille de la charge utile.
+
+Une fois cette liste créée, nous devons la parcourir en entier en partant du paquet qui n'a pas de prédécesseur. Si plusieurs paquets n'ont pas de prédécesseur, nous recommençons le parcours autant de fois que nécessaire. Nous réalisons un parcours en largeur de la liste qui découle de ce paquet et nous concaténons les charges utiles au fur et à mesure. À la fin, nous éliminons
+ les doublons et renvoyons le résultat.
+
+
+
+%comment choisir le meilleur : 
+Dans le cas où nous aurions plusieurs flux, nous avons décidé de les afficher tous, mais dans l'ordre où ils nous paraissent le plus cohérent. Cette cohérence est définie spécifiquement 
+pour le type de document. Dans le cas de document HTML en texte, nous calculons le pourcentage de balises bien fermées par rapport au nombre total.
 
 \subsection{Recontruction d'un Document}
 Reconnaissance des protocoles : HTTP, FTP, HTTPS, IMAP, SNMP, ...

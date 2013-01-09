@@ -28,14 +28,14 @@ Dans le but de fournir un programme utilisable sur le plus grand nombre de navig
 
 \subsection{Serveur web}
 Le serveur web est l'interface entre les requêtes html provenant du client, et vers les différentes actions possibles du sniffer. Après avoir lancé une action le serveur renvoie si besoin est des données au client au format
-JSON.
+JSON. Nous n'avons pas utilisé de serveur déjà fourni dans un framework python, trop lourd pour l'utilisation que nous en faisons.
 Nous avons choisi d'utiliser JSON pour plusieurs raisons. C'est un format de données structuré, moins verbeux que le xml, et qui est très bien intégré avec le javascript et le python. 
 
 \subsection{Analyse et reconstruction}
 Ce composant analyse une communication pour determiner son protocole, reconstruit les flux possibles et reconstruit les documents qui transitent en donnant un pourcentage de validité. Nous n'assurons seulement la reconstruction des documents sur le protocle html pour le moment (page html et images).
 
 \subsection{Base de données}
-La base de données sert à stocker les paquets réseau regroupé par communication.	Stocker les données nous permet de rejouer des échanges de données (soit pour le débugage, soit suite à une amélioration algorithmique du projet).	
+La base de données sert à stocker les paquets réseaux regroupés par communication.	Stocker les données nous permet de rejouer des échanges de données (soit pour le débugage, soit suite à une amélioration algorithmique du projet).	
 Nous avons choisi d'utiliser une base no-sql mongo pour ses performances et sa souplesse. Elle s'utilise aisément en python grâce au module pymongo.
 
 \subsection{Acquisition des données}
@@ -43,20 +43,6 @@ Ce composant récupère les données réseau, et les met dans la base de donnée
 Nous utilisons le module scapy de python afin de récupérer les paquets. Il est de plus au niveau que la lib pcap ou winpcacp, ce qui facilite la capture des paquêts réseau.
 
 \subsection{Paquets}
-Ceci représente le réseau, et les paquets qui circulent. En paramétrant la carte réseau
+Ceci représente le réseau, et les paquets qui circulent. En paramétrant la carte réseau en monitnor, l'utilisateur peut alors écouter tout le réseau et analyser les paquets sniffés.
 
-\section{La base du sniffer : la récupération des paquets et leur stockage}
-
-
-\section{La reconstruction...}
-
-\subsection{... des flux}
-
-\subsection{... puis des documents}
-
-\section{L'affichage}
-
-\section{Choix des outils}
--python
--javascript
 
