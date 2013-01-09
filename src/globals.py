@@ -5,3 +5,4 @@ sessionId=None
 serverThread=None
 dbconnection=None
 docNumber=0
+PCAP=""

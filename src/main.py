@@ -13,6 +13,18 @@ import signal
 from dataHandler.connect import *
 import datetime
 from pymongo import Connection
+from string import *
+
+def readPcap():
+	print "reading pcap file"
+	if globals.PCAP :
+		try :
+			sniff(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=callback, store=0, offline=globals.PCAP)
+		except scapy.error.Scapy_Exception :
+			print "error pcap file "
+				
+def callback(pkt):
+	insertPacket(pkt,globals.dbconnection)
 
 def printUsage():
 	print'''usage : '''+sys.argv[0]+''' [OPTIONS]
@@ -26,6 +38,7 @@ Misc:
 	--sniff (-s) : launch sniffer
 	--session (-S) <session_name>: use an already existing session
 	--drop-database (-d)  : remove all already existing databases 
+	--file (-f) <pcap_file_name> : launch the sniffer on given pcap file
 	'''
 
 
@@ -40,7 +53,7 @@ WEBINTERFACE=False
 LAUNCHSNIFFER=False
 LAUNCHBROWSER=False
 i=1
-globals.sessionId=str(datetime.datetime.now().strftime("sess_%d-%m-%Y-%H%M%S"))
+globals.sessionId="sess"+str(datetime.datetime.now().strftime("_%d-%m-%Y-%H%M%S"))
 while(i<argSize):
 	if(sys.argv[i]=="-p" or sys.argv[i]=="--port"):
 		if(argSize>i+1):
@@ -48,25 +61,43 @@ while(i<argSize):
 			i=i+1
 		else:
 			printUsage()
+			
+	elif(sys.argv[i]=="-f" or sys.argv[i]=="--file"):
+		if(argSize>i+1):
+			globals.PCAP=sys.argv[i+1]
+			i=i+1
+			if globals.PCAP :
+				name1=rsplit(globals.PCAP,"/",1)
+				name2= rsplit(name1[1], ".", 1)
+				globals.sessionId=name2[0]+str(datetime.datetime.now().strftime("_%d-%m-%Y-%H%M%S"))
+		else:
+			printUsage()
+			
 	elif(sys.argv[i]=="-wi" or sys.argv[i]=="--web-interface"):
 		if not os.geteuid()==0:
   			print "\nWarning: need root privileges to start the sniffer from Web Interface\n"
 		WEBINTERFACE=True
+
 	elif(sys.argv[i]=="-s" or sys.argv[i]=="--sniff"):
 		if not os.geteuid()==0:
   			sys.exit("\nNeed root privileges to use this option\n")
   		else:
 			LAUNCHSNIFFER=True
+
 	elif(sys.argv[i]=="-n" or sys.argv[i]=="--nav"):
 		LAUNCHBROWSER=True
+
 	elif(sys.argv[i]=="-h" or sys.argv[i]=="--help"):
 		printUsage()
 		exit()
+
 	elif(sys.argv[i]=="-S" or sys.argv[i]=="--session"):
 		globals.sessionId=str(sys.argv[i+1])
 		i+=1
+
 	elif(sys.argv[i]=="-d" or sys.argv[i]=="--drop-database"):
 		deleteAllArchives()
+
 	else:
 		print "argument: "+sys.argv[i]+" unknown"
 		printUsage()
@@ -78,11 +109,14 @@ while(i<argSize):
 print "Session Name : "+str(globals.sessionId)
 try:
 	globals.dbconnection=connectMongo()
+	if globals.PCAP :
+		readPcap()
+	
 	if(LAUNCHSNIFFER):
 		globals.sniff_run=1
 		globals.sniffer = SnifferThread("")
 		globals.sniffer.start()
-		print "sniffing ..."
+		print "Sniffing ..."
 	if(WEBINTERFACE):
 		try:
 			httpd = SocketServer.ThreadingTCPServer((HOST, PORT),HTTPServerHandler,False)
