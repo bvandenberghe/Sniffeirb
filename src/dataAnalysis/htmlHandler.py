@@ -5,11 +5,28 @@ import cgi
 from io import BytesIO
 import dataAnalysis.gzip_patched as gzip
 #cf http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4
+
+def splitHTMLStream(data):
+	streamsTab=[]
+	print data
+	stop=False
+	#print '------------------------------------------------'
+	regexp=re.findall(r"((?:(?:HTTP/1\.[0-2] [0-9]* [a-zA-Z ]*)|(?:GET|POST)).*?)\r\n\r\n(.*)",data,flags=re.DOTALL)
+	#print regexp
+	#print '------------------------------------------------'
+	for (header,body) in regexp:
+		streamsTab.append({"header":header,"body":body})
+	return streamsTab
+
+
+
+
+'''
 def splitHTMLStream(data):
 	streamsTab=[]
 	chain=data.split("\r\n\r\n")
-	f=open("test.txt","w")
-	f.write(data)
+	#f=open("test.txt","w")
+	#f.write(data)
 	i=0
 	finalTab=[]
 	newchain=[]
@@ -41,7 +58,7 @@ def splitHTMLStream(data):
 			finalTab.append({"header":newchain[i],"body":""})
 			i+=1
 	return finalTab
-'''	
+
 		regexp=re.findall("((?:HTTP/1\\.[0-2] [0-9]* [a-zA-Z ]*\\r\\n)(?:[a-zA-Z0-9\\-_;\\.,?/\\\\= \\t:]*(?:\\r\\n)?)*)\\r\\n\\r\\n((?:.*)(?:\\r\\n\\r\\n)(?=HTTP))",data)
 		print regexp
 		for (header,body) in regexp:
@@ -110,9 +127,8 @@ def getContentEncoding(doc):
 	return None
 
 def getHTTPDoc(data, docNb):
-	print data
+	#print data
 	streamTab=splitHTMLStream(data)
-	print streamTab
 	#print streamTab
 	docNb=int(docNb)
 	if streamTab==None:
