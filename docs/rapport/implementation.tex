@@ -1,12 +1,12 @@
 \section{La base du sniffer : la récupération des paquets et leur stockage}
 %scapy, mongo
 
+La partie principale de notre projet est de capturer un flux réseau, nous nous sommes appuyés donc sur la bibliothèque Scapy. Cependant la fontion de capture
+réseau fournie par Scapy permet de lancer une capture sur un nombre fixe de paquet ou un temps donné. Dans notre projet nous voulions pouvoir sniffer
+le réseau un temps indéterminé, jusqu'à une interaction de l'utilisateur. Nous avons donc repris le code de la fontion "sniff" de scapy et modifié de telle sorte
+qu'une fonction de contrôle est appelée régulièrement. Ainsi nous pouvons couper et lancer le sniffer de façon évènementielle. 
 
--patch de scapy pour pouvoir sniffer infiniment (jusqu'à l'appel d'une fonction)
-
--mongodb, no sql, index, 
--pymongo
-
+En parallèle de la capture nous stockons les paquets capturés dans une base de données. 
 
 \section{La reconstruction}
 
