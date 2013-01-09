@@ -34,11 +34,12 @@ def splitHTMLStream(data):
 	i=0
 	count=0
 	while i < len(newchain):
-			if i+1<len(newchain):
-				finalTab.append({"header":newchain[i],"body":newchain[i+1]})
-				i+=2
-			else:
-				finalTab.append({"header":newchain[i],"body":""})
+		if i+1<len(newchain):
+			finalTab.append({"header":newchain[i],"body":newchain[i+1]})
+			i+=2
+		else:
+			finalTab.append({"header":newchain[i],"body":""})
+			i+=1
 	return finalTab
 '''	
 		regexp=re.findall("((?:HTTP/1\\.[0-2] [0-9]* [a-zA-Z ]*\\r\\n)(?:[a-zA-Z0-9\\-_;\\.,?/\\\\= \\t:]*(?:\\r\\n)?)*)\\r\\n\\r\\n((?:.*)(?:\\r\\n\\r\\n)(?=HTTP))",data)
@@ -76,7 +77,7 @@ def decodeAndEscapeHTML(data):
 	for a in streamTab:
 		if a["header"].find("Content-Encoding: gzip\r\n"):
 			a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
-			print "Content encoding gzip trouve"
+			print "Content encoding gzip found"
 			try:
 				f = BytesIO(a["body"])
 				gf=gzip.GzipFile(fileobj=f)
