@@ -305,14 +305,10 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			(contentType,contentEncoding,data)=getDoc(f,t,doc)
 			self.send_response(200)
 			print "content-type: "+str(contentType)+", content-encoding: "+str(contentEncoding)
-			if contentType==None:
-				self.end_headers()
-				self.wfile.write("error")
-			else:
-				self.send_header('Content-Type',contentType)
-				self.send_header('Content-Encoding',contentEncoding)
-				self.end_headers()
-				self.wfile.write(data)
+			self.send_header('Content-Type',contentType)
+			self.send_header('Content-Encoding',contentEncoding)
+			self.end_headers()
+			self.wfile.write(data)
 		elif self.path=='/shutdown':
 			self.send_response(200)
 			self.send_header('Content-Type','text/html')
