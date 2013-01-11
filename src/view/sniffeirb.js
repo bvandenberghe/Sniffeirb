@@ -124,7 +124,7 @@ $(document).ready(function() {
 								if(data[i].infos.type=="image")
 									finalDisplayedData+='<img src="/getDoc?src='+$(nTds[1]).text()+'&dst='+$(nTds[2]).text()+'&doc='+i+'"/><br />';
 								else if (data[i].infos.type!="" || data[i].infos.type!=undefined)
-										finalDisplayedData+='<a href='+data[i].infos.link+'>see the document</a><br /><iframe class="miniature" weight="80%" src="'+data[i].infos.link+'"></iframe>';
+										finalDisplayedData+='<a href='+data[i].infos.link+'>see the document</a><br /><iframe class="miniature" weight="80%" src="/getDoc?src='+$(nTds[1]).text()+'&dst='+$(nTds[2]).text()+'&doc='+i+'"></iframe>';
 							finalDisplayedData+=data[i].data+"<hr>";
 						}
 						return '<div class="packetInfo">'+finalDisplayedData+' </div>';
