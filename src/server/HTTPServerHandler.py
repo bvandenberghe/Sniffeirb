@@ -62,13 +62,11 @@ def getPacketsData(src2, dst2):
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
 		#for an update lianaTreeSize=getLianaTreeDataSize(smartFlow)
-		print "taille", len(smartFlow)
 		for data in smartFlow:
-			ind = 0	
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
-				#streamTab=decodeAndEscapeHTML(data["payload"])
-				streamTab=splitHTMLStream(data["payload"])
+				streamTab=decodeAndEscapeHTML(data["payload"])
+				#streamTab=splitHTMLStream(data["payload"])
 				count=0
 	
 				for doc in streamTab:
@@ -280,7 +278,6 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=='/deleteArchive':
 			array=get_values_array(parameters)
 			if len (array)==1:
-				print array['idArchive']
 				deleteArchive(array['idArchive'])
 				self.send_response(200)
 				self.send_header('Content-Type','text/html')
@@ -294,7 +291,6 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		elif self.path=='/loadArchive':
 			array=get_values_array(parameters)
 			if len (array)==1:
-				print array['idArchive']
 				loadArchive(array['idArchive'])
 				self.send_response(200)
 				self.send_header('Content-Type','text/html')

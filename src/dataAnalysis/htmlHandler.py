@@ -17,10 +17,8 @@ def splitHTMLStream(data):
 	regexp=re.findall(r"((?:(?:HTTP/1\.[0-2] [0-9]* [a-zA-Z ]*)|(?:(?:GET|POST)[a-zA-Z0-9\./\\\-_~%# ]*)).*?\r\n\r\n)",data,flags=re.DOTALL)#.*? for non greedy .*
 	#we need to transform the non overlapping findall into an overlapping one
 	list_indexes=[]
-	print regexp
 	for a in regexp:
 		list_indexes.append(data.find(a))
-	print list_indexes
 	for i in range(0,len(list_indexes)):
 		header_start=list_indexes[i]
 		header_end=list_indexes[i]+len(regexp[i])
