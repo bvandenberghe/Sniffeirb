@@ -21,7 +21,8 @@ class SnifferThread(Thread):
 			sniff2(filter="!(host 127.0.0.1) and !(arp) and !(ip6)", prn=self.callback, stopperTimeout=2, stopper=stopperCheck, store=0)
 	def callback(self,pkt):
 		insertPacket(pkt,globals.dbconnection)
-		print "dans le call"		
+		print "numero de seq",pkt.seq
+		
 #condition to stop the sniffer	
 def stopperCheck():
 	#print sniff_run

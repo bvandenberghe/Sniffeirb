@@ -23,8 +23,11 @@ def reassemble_stream (src, dst, sport, dport):
 		liana.feed(pkt)
 	
 	dataTab=pathBuilder(liana)
+	printDataTab(dataTab)
+	print "#########################"
 	dataTab=cleanDataTab(dataTab)
-	
+	printDataTab(dataTab)
+	print "----------------------------"
 	smartFlow = rebuilding(dataTab)
 	smartFlow=removeTwins(smartFlow)
 #	splitDocuments(smartFlow)
@@ -60,9 +63,6 @@ def pathBuilder(liana):
 	return dataTab
 
 
-
-
-
 #Cleaning all partial paths
 def cleanDataTab(dataTab):
 	dataTabTemp=list(dataTab)
@@ -91,8 +91,11 @@ def rebuilding(dataTab):
 
 #print for debug
 def printDataTab(dataTab):
+	i=0
 	for d in dataTab:
+		print "index : ", i
 		for p in d:
-			print p['id'],p['next']
+			print "id ", p['id'], "seq ",p['seq'],"next id", p['next']
 		print "\n"
+	i+=1
 
