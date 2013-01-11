@@ -20,6 +20,40 @@ Chaque document possèdent certains champs dans tous les cas. Il s'agit des cham
 et du document paquets.
 Les documents paquets étant eux-mêmes composés de tous les champs utiles des paquets, le tout au format BSON.
 
+\begin{verbatim}
+{
+        "_id" : ObjectId("50edc0fe10b95715ceddf583"),
+        "dport" : 80,
+        "dst" : "50.57.168.107",
+        "initTS" : 1357758718.609804,
+        "packets" : [
+                {
+                        "ack" : 0,
+                        "flags" : "S",
+                        "ts" : 1357758718.609804,
+                        "seq" : NumberLong("3047389275")
+                },
+                {
+                        "ack" : NumberLong("3368619615"),
+                        "flags" : "A",
+                        "ts" : 1357758718.736191,
+                        "seq" : NumberLong("3047389276")
+                },
+                {
+                        "ack" : NumberLong("3368619615"),
+                        "flags" : "A",
+                        "ts" : 1357758722.540476,
+                        "seq" : NumberLong("3047389276")
+                }
+        ],
+        "proto" : "TCP",
+        "session" : "sess_09-01-2013-201054",
+        "sport" : 53879,
+        "src" : "192.168.1.101",
+        "type" : "IP"
+}
+
+\end{verbatim}
 
 \section{La reconstruction}
 
