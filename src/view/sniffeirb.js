@@ -72,21 +72,6 @@ $(document).ready(function() {
     //Onclick event				
     $('#packetTable tbody tr').live('click', function () {
     var nTds = $('td', this);
-/**************Code mort, a découper pour mettre un peu plus loin donc on le garde quelque temps
-    $.ajax({
-			type: "GET",
-			url: "/getdata?src="+$(nTds[1]).text()+"&dst="+$(nTds[2]).text(),
-			dataType: "json",
-			success: function(data) {
-				var finalDisplayedData="";
-				for(i=0;i<data.length;i++)
-				{
-					finalDisplayedData+="Flux "+(i+1)+":<br />"+data[i].data+"<hr>"
-				}
-				$("#displayData").html("<div class=\"alert alert-info\"><small><strong>"+finalDisplayedData+"</strong> </small></div>");
-			}
-		});
-****************************************/		
 		//gere le bold quans on clic que une ligne du tableau
 		if ( $(this).hasClass('row_selected') ) {
 	        $(this).removeClass('row_selected');
@@ -117,6 +102,7 @@ $(document).ready(function() {
 						var data = jQuery.parseJSON(documentInfo.responseText);
 						for(i=0;i<data.length;i++)
 						{
+						
 						//<a href="'+data[i].link+'">see the document</a> <iframe src="'+data[i].link+'"></iframe>'
 							finalDisplayedData+='<h4>Flux '+(i+1)+':</h4>';
 								//finalDisplayedData+='<img src="/getDoc?from='+$(nTds[1]).text()+'&to='+$(nTds[2]).text()+'&doc='+i+'"/><br />';
@@ -126,6 +112,7 @@ $(document).ready(function() {
 								else if (data[i].infos.type!="" || data[i].infos.type!=undefined)
 										finalDisplayedData+='<a href='+data[i].infos.link+'>see the document</a><br /><iframe class="miniature" weight="80%" src="/getDoc?src='+$(nTds[1]).text()+'&dst='+$(nTds[2]).text()+'&doc='+i+'"></iframe>';
 							finalDisplayedData+=data[i].data+"<hr>";
+
 						}
 						return '<div class="packetInfo">'+finalDisplayedData+' </div>';
 					  },

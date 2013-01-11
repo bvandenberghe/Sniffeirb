@@ -61,20 +61,22 @@ def getPacketsData(src2, dst2):
 	stream=db.stream.find_one(spec)#, "sport" : sport, "dport" : dport})
 	if stream!=None:
 		smartFlow=reassemble_stream(stream["src"], stream["dst"], stream["sport"], stream["dport"])
-		#print smartFlow	
 		#for an update lianaTreeSize=getLianaTreeDataSize(smartFlow)
+		print "taille", len(smartFlow)
 		for data in smartFlow:
+			ind = 0	
 			(mostProbableMedia,infos)=inspectStreamForMedia(data,stream["sport"],stream["dport"])
 			if mostProbableMedia.startswith("HTTP"):
 				#streamTab=decodeAndEscapeHTML(data["payload"])
 				streamTab=splitHTMLStream(data["payload"])
-				stream['data']=""
 				count=0
-				for a in streamTab:
-					stream['data']+="Header :<br />"+cgi.escape(a["header"])+"<br />Body :<br />"+cgi.escape(a["body"])+"<br /><br />"
+	
+				for doc in streamTab:
+					stream['data']=""
+					stream['data']+="Header :<br />"+cgi.escape(doc["header"])+"<br />Body :<br />"+cgi.escape(doc["body"])+"<br /><br />"
 					globals.docNumber+=1
 					count+=1
-					ct=getContentType(a)
+					ct=getContentType(doc)
 					infos={}
 					if ct!=None:
 						infos["link"]=""	
@@ -82,12 +84,12 @@ def getPacketsData(src2, dst2):
 							infos["type"]="image"
 						else:
 							infos["type"]="text"
-							writeHTTPToFile(a);
+							writeHTTPToFile(doc);
 							#finalJson+="link:doc"+str(globals.docNumber)+".html"
 							infos["link"]="temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html"
 					else:
 						infos["type"]="text"
-						writeHTTPToFile(a);
+						writeHTTPToFile(doc);
 						#finalJson+="link:doc"+str(globals.docNumber)+".html"
 						infos["link"]="temp/"+globals.sessionId+"doc"+str(globals.docNumber)+".html"
 					stream["infos"]=infos
@@ -104,6 +106,7 @@ def getPacketsData(src2, dst2):
 	if nb>0:
 		finalJson=finalJson[:len(finalJson)-2]
 	finalJson+="]"
+	
 	return finalJson
 
 def getDoc(src, dst, doc):
@@ -236,6 +239,10 @@ class HTTPServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			
 			array=get_values_array(parameters)
 			if(len(array)==2):
+				f=open ("toto.txt", 'w')
+				f.write(getPacketsData(array["src"],array["dst"]))
+				f.write('----------------------\n')
+				f.close()
 				self.wfile.write(getPacketsData(array["src"],array["dst"]))
 #			if(len(array)==4):
 #				self.wfile.write(getPacketsData(array["src"],array["dst"],int(array["sport"]),int(array["dport"])))

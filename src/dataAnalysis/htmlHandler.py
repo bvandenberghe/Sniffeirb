@@ -7,6 +7,7 @@ import dataAnalysis.gzip_patched as gzip
 #cf http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4
 
 def splitHTMLStream(data):
+
 	streamsTab=[]
 	#print data.encode('string_escape')
 	stop=False
@@ -31,7 +32,6 @@ def splitHTMLStream(data):
 		#print header_end
 		#print body_end
 		streamsTab.append({"header":data[header_start:header_end],"body":data[header_end:body_end]})
-	#print '------------------------------------------------'
 	return streamsTab
 
 
@@ -108,6 +108,7 @@ def decodeAndEscapeHTML(data):
 	if streamTab==None:
 		return []
 	for a in streamTab:
+#		print "-----------------------\n",str(a),"---------------"
 		if a["header"].find("Content-Encoding: gzip\r\n"):
 			a["body"]=a["body"][a["body"].find("\x1f\x8b"):]#because sometimes a few caracters at the begining keep gzip from working
 			print "Content encoding gzip found"
