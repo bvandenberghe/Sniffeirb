@@ -1,7 +1,7 @@
 \section{L'état de l'art}
 %notamment le logiciel qui est sensé faire pareil que nous et bien sur tcpdump et wireshark JUSTNIFFER
-Il existe un grand nombre de logiciels et de librairies qui proposent des fonctionnalités de captures réseaux de bas niveau et d'analyse de paquets (d'un point de vu utilisateur final). 
-Nous pouvons notamment citer libpcap, Scapy, Winpcap ou encore tcpdump. Ces outils ont été un modèle d'inspiration pour tenter de réaliser notre propre \textit{Sniffer}\footnote{Terme anglicisé désginant un dispositif permettant d'analyser le trafic d'un réseau} réseau.\\
+Il existe un grand nombre de logiciels et de librairies qui proposent des fonctionnalités de captures réseaux de bas niveau et d'analyse de paquets.
+Nous pouvons notamment citer Libpcap, Scapy, Winpcap ou encore Tcpdump. Ces outils ont été des modèles d'inspiration pour réaliser notre propre \textit{Sniffer}\footnote{Terme anglicisé désginant un dispositif permettant d'analyser le trafic d'un réseau.} réseau.\\
 
 \section{Nos objectifs}
 \subsection{Premières étapes}
@@ -18,11 +18,11 @@ Le but de ce projet n'étant pas de reproduire un Wireshark, nous devions y appo
 
 \begin{description}
 \item[L'arbre des possibilités pour les flux TCP :] Lors de la capture des paquets circulant sur le réseau pour une même communication, des événements inatendus, comme la répétition de paquets ou encore la perte de certains,  pouvaient survenir. La capture de tous les paquets permet donc de connaître les différentes façons de les réassembler pour obtenir un flux décrivant la communication. 
-\item[La gestion du protocole HTTP :] La reconstruction des pages webs visitées par un utilisateur sur le réseau était le fil conducteur du projet. L'analyse des paquets circulant sur le réseau est le principal outil pour arriver à cette fin.\\
+\item[La gestion du protocole HTTP :] La reconstruction des pages webs visitées par un utilisateur sur le réseau était le fil conducteur du projet. L'analyse des paquets circulant sur le réseau était la première étape afin d' arriver à cette fin.\\
 \end{description}
 
 \subsection{Les idées abandonées ou non implémentées}
-En parallèle, beaucoup d'idées durent être abandonnée du fait d'un manque de temps pour les traiter. Voici une liste non exhaustive de ces idées :
+Beaucoup d'idées durent être abandonnée du fait d'un manque de temps pour les traiter. Voici une liste non exhaustive de ces idées :
 \begin{description}
 %% -cookies
   \item[Récupérer les cookies d'un utilisateur du réseau] afin de les réinjecter dans le navigateur et pouvoir accéder aux données personnelles de cet utilisateur.
