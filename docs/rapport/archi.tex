@@ -21,6 +21,7 @@ un langage de programmation autre que le C, C++ ou Java.
 \subsection{Client}
 Le client est soit le terminal dans lequel on lance le programme, soit un navigateur web. Nous n'offrons pas tout à fait les mêmes services sur ces deux interfaces, ceci est lié à notre volonté d'avoir une utilisation simple. 
 De ce fait, le terminal permet seulement de lancer une capture, ou de lancer le programme avec différentes options (lancement du serveur web, choix d'une ancienne capture à charger, choix du nom de la nouvelle capture, chargement d'un fichier pcap..).
+
 L'interface web permet de lancer une capture, d'afficher les flux des différentes communications, de reconstruire les documents et de changer certains paramètres.
 
 Le navigateur utilise des requêtes AJAX afin d'interagir avec  le programme.
@@ -28,7 +29,9 @@ Dans le but de fournir un programme utilisable sur le plus grand nombre de navig
 
 \subsection{Serveur web}
 Le serveur web est l'interface entre les requêtes HTML provenant du client et les différentes actions possibles du sniffer. Après avoir lancé une action, le serveur renvoie si besoin est des données au navigateur au format
-JSON. Nous n'avons pas utilisé de serveur déjà fourni dans un framework Python, trop lourd pour l'utilisation que nous en faisons.
+JSON. 
+
+Nous n'avons pas utilisé de serveur déjà fourni dans un framework Python, trop lourd pour l'utilisation que nous en faisons.
 Nous avons choisi d'utiliser JSON pour plusieurs raisons. C'est un format de données structuré, moins verbeux que le XML, et qui est très bien intégré avec le JavaScript et le Python. De plus le format JSON est identique au format BSON utilisé par la base de données. 
 
 \subsection{Analyse et reconstruction}
@@ -36,6 +39,7 @@ Ce composant analyse une communication pour déterminer son protocole, reconstru
 
 \subsection{Base de données}
 La base de données sert à stocker les paquets réseaux regroupés par communication. Stocker les données nous permet de rejouer des échanges de données (soit pour le débugage, soit suite à une amélioration algorithmique du projet).	
+
 Nous avons choisi d'utiliser la base NoSQL Mongo pour ses performances et sa souplesse. Elle s'utilise aisément en Python grâce au module Pymongo. Il faut donc installer mongodb et lancer le service mongod pour pouvoir utiliser le sniffer.
 
 \subsection{Acquisition des données}

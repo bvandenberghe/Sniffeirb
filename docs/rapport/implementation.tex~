@@ -24,6 +24,8 @@ Les documents paquets étant eux-mêmes composés de tous les champs utiles des 
 
 
 Dans l'exemple ci-dessous, on peut voir un document de notre collection où l'on retrouve tous les élements indiqués, classés par ordre alphabétique.
+\begin{figure}[h!]
+\centering
 
 \begin{verbatim}
 {
@@ -59,6 +61,8 @@ Dans l'exemple ci-dessous, on peut voir un document de notre collection où l'on
 }
 
 \end{verbatim}
+\caption{Extrait de la base Mongo : un document}
+\end{figure}
 
 \section{La reconstruction}
 
@@ -113,7 +117,9 @@ Une fois cette liste créée, nous devons la parcourir en entier en partant du p
 \subsection{Reconstruction d'un document}
 
 Afin de reconstruire des documents, nous parsons chaque flux HTTP pour trouver les en-têtes et corps des requêtes. Après cette première étape, nous analysons le corps trouvé par rapport au content-type de l'en-tête.
-Plusieurs cas sont alors possibles. Si le content-type précise qu'il sagit d'un document gzippé, nous décompressons le document grâce à la bibliothèque gzip. Une autre solution est d'envoyer directement au navigateur le document reconstruit, et laissons le navigateur gérer la décompression.
+Plusieurs cas sont alors possibles. Si le content-type précise qu'il s'agit d'un document gzippé, nous décompressons le document grâce à la bibliothèque gzip. 
+
+Une autre solution est d'envoyer directement au navigateur le document reconstruit, et laissons le navigateur gérer la décompression.
 Dans le cas où il ne s'agit pas de gzip, nous crééons des fichiers html pour tous les fichiers textes, et nous envoyons au navigateur les flux binaires dans le cas d'images.
 
 
@@ -125,7 +131,7 @@ initialiser la premiere page et des variables globales javascript. Ceci permet d
 
 Ensuite, après l'initiailisation toutes les actions de l'utilisateur sont envoyées en AJAX via le framework JQuery.
 
-Pour la mise en page nous nous sommes appuyés sur le framework Boostrap, ainsi que sur Datatables pour la création du tableau. Datatables nous a
+Pour la mise en page nous nous sommes appuyés sur le framework Bootstrap, ainsi que sur Datatables pour la création du tableau. Datatables nous a
 permis par exemple d'intégrer les filtres, les tris, et l'actualisation en temps réel des données. 
 Nous avons dû toutefois modifier quelques fichiers de Bootstrap et de Datatables afin de les faire fonctionner ensemble.
 
