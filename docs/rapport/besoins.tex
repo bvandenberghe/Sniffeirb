@@ -1,6 +1,3 @@
-
-%%%%%%%%%%%%%%%%%%%%%%%% TODO BY BENJAMIN %%%%%%%%%%%%%%%%%%%%%%
-
 \section{L'état de l'art}
 %notamment le logiciel qui est sensé faire pareil que nous et bien sur tcpdump et wireshark JUSTNIFFER
 Il existe un grand nombre de logiciels et de librairies qui proposent des fonctionnalités de captures réseaux de bas niveau et d'analyse de paquets (d'un point de vu utilisateur final). 
@@ -25,12 +22,17 @@ Le but de ce projet n'étant pas de reproduire un Wireshark, nous devions y appo
 \end{description}
 
 \subsection{Les idées abandonées ou non implémentées}
-En parallèle, beaucoup d'idées durent être abandonnée du fait d'un manque de temps et de connaissances pour les traiter. Voici une liste non exhaustive de ces idées :
-%% \begin{description}
-%% %% -cookies
-%% %% -ghost mode
-%% %% -choisir l'interface réseau
-%% %% -exporter en pcap
-%% %% -UDP
-%% %% -restrictions des protocoles
-%% \end{description}
+En parallèle, beaucoup d'idées durent être abandonnée du fait d'un manque de temps pour les traiter. Voici une liste non exhaustive de ces idées :
+\begin{description}
+%% -cookies
+  \item[Récupérer les cookies d'un utilisateur du réseau] afin de les réinjecter dans le navigateur et pouvoir accéder aux données personnelles de cet utilisateur.
+%% -ghost mode
+  \item[Établir un mode \emph{ghost}] qui permettrait au Sniffer d'être quasiment indétectable sur le réseau. 
+%% -choisir l'interface réseau
+  \item[Permettre le choix de l'interface réseau] pour pouvoir écouter sur un réseau choisi.  
+%% -exporter en pcap
+  \item[Exporter les données au format \emph{pcap}] afin de pouvoir réutiliser ces données avec d'autres analyseurs réseau.
+%% -UDP
+  \item[Supporter l'analyse des paquets transmis en UDP] pour récupérer toujours plus d'informations qui transitent sur le réseau.
+%% -restrictions des protocoles
+\end{description}
