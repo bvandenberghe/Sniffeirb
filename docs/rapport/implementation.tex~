@@ -1,0 +1,132 @@
+\section{La base du sniffer : la récupération des paquets et leur stockage}
+%scapy, mongo
+
+La partie principale de notre projet est de capturer un flux réseau, nous nous sommes donc appuyés sur la bibliothèque Scapy. Cependant, la fonction de capture
+réseau fournie par Scapy permet de lancer une capture sur un nombre fixe de paquet ou un temps donné. C'est également à la fin de la capture que l'utilisateur peut récupérer les données. 
+
+Dans notre projet, nous voulions pouvoir sniffer
+le réseau un temps indéterminé, jusqu'à une interaction de l'utilisateur, et traiter les données au fur et à mesure. Nous avons donc repris le code de la fonction "sniff" de Scapy et modifié de telle sorte
+qu'une fonction de contrôle soit appelée régulièrement. Ainsi, nous pouvons couper et lancer le sniffer de façon évènementielle, et récupérer les données en temps réel. 
+
+En parallèle de la capture, nous stockons les paquets capturés dans une base de données. Celle-ci est composée d'une unique collection. Cette collection comporte plusieurs sessions qui permettent d'identifier les différentes captures réalisées. Ensuite, chaque session est composée de communications, elles-mêmes composées de un ou plusieurs documents dont les champs peuvent varier selon le type de paquets. Un document correspond à une communication\footnote{Une communication est définie par un échange réseau entre deux paires (Adresse IP ; Port).}. Ce qui signifie que l'on ne prend pas en compte les éventuels paquets qui utilisent un autre protocole qu'IP.
+
+Chaque document possèdent certains champs dans tous les cas. Il s'agit des champs :
+\begin{itemize}
+\item adresses IP source et destination
+\item ports sources et destination 
+\item protocole (TCP, UDP, ICMP ou "other")
+\item type (IP)
+\item session (un identifiant de type $sess\_date$)
+\end{itemize}
+
+et du document paquets.
+Les documents paquets étant eux-mêmes composés de tous les champs utiles des paquets, le tout au format BSON.
+
+
+Dans l'exemple ci-dessous, on peut voir un document de notre collection où l'on retrouve tous les élements indiqués, classés par ordre alphabétique.
+
+\begin{verbatim}
+{
+        "_id" : ObjectId("50edc0fe10b95715ceddf583"),
+        "dport" : 80,
+        "dst" : "50.57.168.107",
+        "initTS" : 1357758718.609804,
+        "packets" : [
+                {
+                        "ack" : 0,
+                        "flags" : "S",
+                        "ts" : 1357758718.609804,
+                        "seq" : NumberLong("3047389275")
+                },
+                {
+                        "ack" : NumberLong("3368619615"),
+                        "flags" : "A",
+                        "ts" : 1357758718.736191,
+                        "seq" : NumberLong("3047389276")
+                },
+                {
+                        "ack" : NumberLong("3368619615"),
+                        "flags" : "A",
+                        "ts" : 1357758722.540476,
+                        "seq" : NumberLong("3047389276")
+                }
+        ],
+        "proto" : "TCP",
+        "session" : "sess_09-01-2013-201054",
+        "sport" : 53879,
+        "src" : "192.168.1.101",
+        "type" : "IP"
+}
+
+\end{verbatim}
+
+\section{La reconstruction}
+
+Un des principaux objectifs de Sniff'eirb était de rendre l'exploitation des données capturées la plus évidente possible.
+Nous avons donc décidé de permettre l'affichage des échanges HTTP, notamment celui des pages HTML et des images. Pour ce
+faire, nous avons commencé par reconstruire les différents flux de données.
+
+\subsection{Recontruction d'un flux}
+
+Comme nous ne pouvions pas implémenter la reconstruction de flux de la même façon pour tous les protocoles de couche 4 (UDP et TCP) et
+que nous voulions présenter un résultat démonstratif même pour le néophyte, nous nous sommes consacrés au protocole TCP, puis au média HTTP.
+
+
+\subsubsection {Reconnaissance du protocole et du média}
+Il a donc tout d'abord fallu reconnaître le protocole qui nous intéresse et le média, avant d'en reconstruire le flux. Comme nous l'avons vu 
+dans la partie précédente, le protocole est facilement retrouvable directement dans la base de données (puisqu'il s'agit d'un champ du paquet IP). 
+Pour le média, cela a été plus technique. 
+
+Au départ, nous l'avons simplement déterminé grâce au port (source ou destination). En effet, traditionnellement,
+certains ports sont utilisés pour certains médias (par exemple, 80 pour HTTP). Mais en ne nous concentrant que sur cette information, nous aurions manqué
+toutes les communications d'un média sur d'autres ports (comme 8080 pour HTTP), qui, d'un point de vue de la sécurité, pouvaient être les plus intéressantes.
+
+
+Nous avons donc décidé de parser la charge utile du paquet TCP à la recherche d'expression régulière trahissant le HTTP(S), comme les en-têtes
+ $HTTP/numero\_de\_version$ et les mots clés $GET$ ou $POST$ ou des URLs.
+
+
+\subsubsection{La multiplicité des flux possibles}%pourquoi il peut y en voir plusieurs flux dans une communication: 
+À ce moment-là, nous disposons donc de l'ensemble des paquets appartenant à la même communication ainsi que du média qui correspond. Comme le protocole est TCP,
+il paraît assez facile de reconstruire le flux : on classe les paquets par numéro de séquence croissant et on concatène les charges utiles.
+
+ Cependant, cette démarche 
+n'est pas possible. En effet, il arrive parfois que plusieurs paquets arrivent avec le même numéro de séquence, voire qu'il manque des paquets au milieu de la communication.
+C'est pourquoi nous avons dû prévoir de reconstruire tous les flux possibles.
+
+
+\subsubsection{La reconstruction de tous ces flux}%comment reconstruire tous les flux possibles : lianatree, algo, problèmes rencontrées 
+Pour ce faire, nous avons créé une structure de liste doublement chaînée que nous avons ensuite parcouru pour en tirer tous les flux possibles. Pour remplir cette chaîne
+doublement chaînée, baptisée $LianaTree$, nous avions simplement parcouru la liste des paquets d'une communication en commençant par celui qui a le plus petit numéro de séquence et 
+nous cherchions tous ses successeurs. 
+
+Le successeur d'un paquet ayant pour numéro de séquence la somme de la taille de sa charge utile et du numéro de séquence de son prédecesseur 
+(modulo $2^{32}$).
+
+Cependant, nous avions un problème dans certains cas, car le numéro de séquence TCP est pris au hasard parmi $2^{32}$ possibilités et il était donc possible d'avoir la fin du flux 
+avant le début (si le numéro de séquence du début de la communication était proche de $2^{32} -1$). Finalement, nous recherchons simplement les successeurs et prédecesseurs de chaque
+paquet via le numéro de séquence et la taille de la charge utile.
+
+Une fois cette liste créée, nous devons la parcourir en entier en partant du paquet qui n'a pas de prédécesseur. Si plusieurs paquets n'ont pas de prédécesseur, nous recommençons le parcours autant de fois que nécessaire. Nous réalisons un parcours en largeur de la liste qui découle de ce paquet et nous concaténons les charges utiles au fur et à mesure. À la fin, nous éliminons les doublons et renvoyons le résultat.
+
+
+\subsection{Recontruction d'un document}
+
+Afin de reconstruire des documents, nous parsons chaque flux HTTP pour trouver les en-têtes et corps des requêtes. Après cette première étape, nous analysons le corps trouvé par rapport au content-type de l'en-tête.
+Plusieurs cas sont alors possibles. Si le content-type précise qu'il sagit d'un document gzippé, nous décompressons le document grâce à la bibliothèque gzip. Une autre solution est d'envoyer directement au navigateur le document reconstruit, et laissons le navigateur gérer la décompression.
+Dans le cas où il ne s'agit pas de gzip, nous crééons des fichiers html pour tous les fichiers textes, et nous envoyons au navigateur les flux binaires dans le cas d'images.
+
+
+
+\section{L'affichage}
+Afin d'avoir un retour visuel des fonctionnalités implémentées, nous avons décidé d'afficher les résultats dans une page web interactive. 
+Nous avons donc codé un serveur web minimaliste pour récupérer des requêtes HTTP du navigateur. Le serveur utilise un template HTML pour
+initialiser la premiere page et des variables globales javascript. Ceci permet de séparer le code HTML du code python pour respecter le modèle MVC.
+Ensuite, après l'initiailisation toutes les actions de l'utilisateur sont envoyées en AJAX via le framework JQuery.
+Pour la mise en page nous nous sommes appuyés sur le framework Boostrap, ainsi que sur Datatables pour la création du tableau. Datatables nous a
+permis par exemple d'intégrer les filtres, les tris, et l'actualisation en temps réel des données. 
+Nous avons dû toutefois modifier quelques fichiers de Bootstrap et de Datatables afin de les faire fonctionner ensemble.
+
+
+Vous trouverez en annexe des captures d'écran de l'interface graphique de sniffeirb.
+
