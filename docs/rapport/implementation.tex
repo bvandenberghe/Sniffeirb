@@ -107,22 +107,23 @@ Cependant, nous avions un problème dans certains cas, car le numéro de séquen
 avant le début (si le numéro de séquence du début de la communication était proche de $2^{32} -1$). Finalement, nous recherchons simplement les successeurs et prédecesseurs de chaque
 paquet via le numéro de séquence et la taille de la charge utile.
 
-Une fois cette liste créée, nous devons la parcourir en entier en partant du paquet qui n'a pas de prédécesseur. Si plusieurs paquets n'ont pas de prédécesseur, nous recommençons le parcours autant de fois que nécessaire. Nous réalisons un parcours en largeur de la liste qui découle de ce paquet et nous concaténons les charges utiles au fur et à mesure. À la fin, nous éliminons
- les doublons et renvoyons le résultat.
+Une fois cette liste créée, nous devons la parcourir en entier en partant du paquet qui n'a pas de prédécesseur. Si plusieurs paquets n'ont pas de prédécesseur, nous recommençons le parcours autant de fois que nécessaire. Nous réalisons un parcours en largeur de la liste qui découle de ce paquet et nous concaténons les charges utiles au fur et à mesure. À la fin, nous éliminons les doublons et renvoyons le résultat.
 
 
+\subsection{Recontruction d'un document}
 
-\subsubsection{Le choix du meilleur flux}%comment choisir le meilleur : 
-Dans le cas où nous aurions plusieurs flux, nous avons décidé de les afficher tous, mais dans l'ordre où ils nous paraissent le plus cohérent. Cette cohérence est définie spécifiquement 
-pour le type de document. Dans le cas de document HTML en texte, nous calculons le pourcentage de balises bien fermées par rapport au nombre total de balises.
+Afin de reconstruire des documents, nous parsons chaque flux HTTP pour trouver les en-têtes et corps des requêtes. Après cette première étape, nous analysons le corps trouvé par rapport au content-type de l'en-tête.
+Plusieurs cas sont alors possibles. Si le content-type précise qu'il sagit d'un document gzippé, nous décompressons le document grâce à la bibliothèque gzip. Une autre solution est d'envoyer directement au navigateur le document reconstruit, et laissons le navigateur gérer la décompression.
+Dans le cas où il ne s'agit pas de gzip, nous crééons des fichiers html pour tous les fichiers textes, et nous envoyons au navigateur les flux binaires dans le cas d'images.
 
-\subsection{Recontruction d'un Document}
 
--reconstruction des pages html (.html et .gzip!)
--reconstruction des images
 
 \section{L'affichage}
--création d'un serveur web minimaliste
--template html
--jquery datatables bootstrap
--Ajax
+Afin d'avoir un retour visuel des fonctionnalités implémentées, nous avons décidé d'afficher les résultats dans une page web interactive. 
+Nous avons donc codé un serveur web minimaliste pour récupérer des requêtes HTTP du navigateur. Le serveur utilise un template HTML pour
+initialiser la premiere page et des variables globales javascript. Ceci permet de séparer le code HTML du code python pour respecter le modèle MVC.
+Ensuite, après l'initiailisation toutes les actions de l'utilisateur sont envoyées en AJAX via le framework JQuery.
+Pour la mise en page nous nous sommes appuyés sur le framework Boostrap, ainsi que sur Datatables pour la création du tableau. Datatables nous a
+permis par exemple d'intégrer les filtres, les tris, et l'actualisation en temps réel des données. 
+Nous avons dû toutefois modifier quelques fichiers de Bootstrap et de Datatables afin de les faire fonctionner ensemble.
+
